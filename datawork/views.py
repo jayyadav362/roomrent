@@ -115,7 +115,7 @@ def room_allot(r):
         d.save()
         return redirect('room_allot')
     data = {
-        "roomallot": RoomAllot.objects.filter(user_id__username=r.user),
+        "roomallot": RoomAllot.objects.exclude(user_id__username=r.user,ra_status='0'),
         "user": RoomOwner.objects.filter(user_id__username=r.user),
         "userdata": User.objects.filter(username=r.user),
         "renter": User.objects.all(),
