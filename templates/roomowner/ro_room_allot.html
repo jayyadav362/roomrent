@@ -1,0 +1,68 @@
+{% extends 'roomowner/ro_base.html' %}
+{% block content %}
+    <div class="col-lg-9">
+    <div class="row">
+        <div class="col-lg-5">
+            <div class="card">
+                <div class="card-header">Add room</div>
+                <div class="card-body">
+                    <form action="{% url 'room_allot' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="">Select Renter</label>
+                                    <select name="renter" id="select_renter" class="form-control">
+                                        <option selected disabled="true">---------</option>
+                                        {% for rn in renter %}
+                                            <option value="{{ rn.id }}">{{ rn.first_name }} {{ rn.last_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Select Room</label>
+                                    <select name="ra_room_id" class="form-control">
+                                        <option selected disabled="true">---------</option>
+                                        {% for rm in room %}
+                                            <option value="{{ rm.r_id }}">{{ rm.r_title }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-block btn-success">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-7">
+            <div class="card">
+                <div class="card-header">Rooms Allot</div>
+                <div class="card-body">
+                    <table class="table table-hover">
+
+                        <tr>
+                            <th>Renter Name</th>
+                            <th>Room</th>
+                            <th>Status</th>
+                        </tr>
+                        {% for r in roomallot %}
+                            <tr>
+                            <td><a href="{% url 'view_renter_profile' r.renter.id %}" class="nav-link p-0 m-0">{{ r.renter.first_name }} {{ r.renter.last_name }}</a></td>
+                            <td>{{ r.ra_room_id.r_title }}</td>
+                            <td>
+                                {% if r.ra_status == '1' %}
+                                    <a href="{% url 'allot_pending' r.ra_id %}" class=" nav-link p-0 m-0"><i class="fas fa-check-circle fa-2x text-success"></i></a>
+                                {% elif r.ra_status == '2' %}
+                                    <a href="{% url 'allot_active' r.ra_id %}" class=" nav-link p-0 m-0"><i class="far fa-times-circle fa-2x text-danger"></i></a>
+                                 {% else %}
+                                    <a href="{% url 'allot_active' r.ra_id %}" class=" nav-link p-0 m-0"><i class="fas fa-pause-circle fa-2x text-warning"></i></a>
+                                {% endif %}
+                            </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}

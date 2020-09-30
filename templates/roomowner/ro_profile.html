@@ -1,0 +1,36 @@
+{% extends 'roomowner/ro_base.html' %}
+{% block content %}
+<div class="col-lg-9">
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card">
+            <img src="{{ user.0.ro_id_proof.url }}" alt="" class="" width="100%" height="250px">
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-hover">
+                    <tr>
+                        <th>Name</th>
+                        <td>{{ userdata.0.first_name }} {{ userdata.0.last_name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td>{{ userdata.0.email }}</td>
+                    </tr>
+                    <tr>
+                        <th>Contact</th>
+                        <td>{{ user.0.ro_contact }}</td>
+                    </tr>
+                    <tr>
+                        <th>Address</th>
+                        <td>{{ user.0.ro_street }},{{ user.0.ro_city.c_name }},{{ user.0.ro_city.s_name.s_name }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

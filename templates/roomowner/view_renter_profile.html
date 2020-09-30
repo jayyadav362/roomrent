@@ -1,0 +1,70 @@
+{% extends 'roomowner/ro_base.html' %}
+{% block content %}
+<div class="col-lg-9 bg-white mb-2">
+    <div class="card-header  text-center bg-info text-light">Renter Profile</div>
+
+<div class="row mt-2 mb-2">
+    <div class="col-lg-4">
+        <div class="">
+            <center>
+            <img src="{{ renter_profile.rr_image.url }}" alt="" class="rounded-circle " width="150px" height="150px">
+                <br>
+            <label for="" class="text-muted text-center h4 mt-2">{{ user_r.first_name }} {{ user_r.last_name }}</label>
+                </center>
+        </div>
+        <div class="card">
+            <img src="{{ renter_profile.rr_id_proof.url }}" alt="" class="" width="100%" height="250px">
+            <label for="" class="text-muted text-center mt-2">Id Proof</label>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="card border-0">
+                <table class="table table-hover bg-light">
+                    <tr>
+                        <th>Name</th>
+                        <td>{{ user_r.first_name }} {{ user_r.last_name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td>{{ user_r.email }}</td>
+                    </tr>
+                    <tr>
+                        <th>Contact</th>
+                        <td>{{ renter_profile.rr_contact }}</td>
+                    </tr>
+                    <tr>
+                        <th>Address</th>
+                        <td>{{ renter_profile.rr_street }},{{ renter_profile.rr_city.c_name }},{{ renter_profile.rr_city.s_name.s_name }}</td>
+                    </tr>
+                </table>
+        </div>
+        <div class="card">
+            <div class="card-body">
+            <table class="table table-hover">
+                <tr>
+                    <th>Room Name</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+                {% for rl in room_al %}
+                    <tr>
+                    <td><a href="{% url 'room_view' rl.ra_room_id.r_id %}" class="nav-link m-0 p-0">{{ rl.ra_room_id.r_title }}</a></td>
+                    <td>
+                        {% if rl.ra_status == '1' %}
+                            <span class="text-success">Active</span>
+                        {% elif rl.ra_status == '2' %}
+                            <span class="text-danger">Pending</span>
+                        {% else %}
+                            <span class="text-warning">Request</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ rl.ra_doc|date:'d M,Y' }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
