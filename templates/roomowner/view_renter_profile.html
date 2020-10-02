@@ -34,7 +34,7 @@
                     </tr>
                     <tr>
                         <th>Address</th>
-                        <td>{{ renter_profile.rr_street }},{{ renter_profile.rr_city.c_name }},{{ renter_profile.rr_city.s_name.s_name }}</td>
+                        <td>{{ renter_profile.rr_street }},{{ renter_profile.city.name }},{{ renter_profile.state.name }}</td>
                     </tr>
                 </table>
         </div>
@@ -60,6 +60,10 @@
                     </td>
                     <td>{{ rl.ra_doc|date:'d M,Y' }}</td>
                     </tr>
+                {% empty %}
+                        <tr>
+                            <td colspan="3"><div class="alert alert-danger h6 text-center p-5" role="alert">No room allot availables!</div></td>
+                        </tr>
                 {% endfor %}
             </table>
             </div>

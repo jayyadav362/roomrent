@@ -7,7 +7,7 @@
                 <div class="card">
                 <div class="card-header ">Step: 2</div>
                     <div class="card-body">
-                        <form action="{% url 'register_owner' %}" method="post" enctype="multipart/form-data">
+                        <form action="{% url 'register_owner' %}" id="register" data-cities-url="{% url 'ajax_load_cities' %}" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                             {% for form in form %}
                                 <div class="form-group">

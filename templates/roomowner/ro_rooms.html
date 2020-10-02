@@ -25,17 +25,18 @@
         <div class="col-lg-7">
             <div class="card">
                 <div class="card-header">My Rooms</div>
-                <div class="card-body">
-                    <table class="table table-hover">
+                <div class="card-body ">
+                    <table class="table table-hover ">
                         <tr>
                             <th>Name</th>
                             <th>Allot</th>
                             <th>Status</th>
                             <th>View</th>
+                            <th>Edit</th>
                         </tr>
                     {% load template_tags %}
                         {% for r in rooms %}
-                            <tr>
+                            <tr class="">
                             <td>{{ r.r_title }}</td>
 
                             <td>
@@ -53,7 +54,8 @@
                                     <span class="text-danger">Pending</span>
                                 {% endif %}
                             </td>
-                            <td><a href="{% url 'room_view' r.r_id %}" class="m-0 p-0"><i class="fas fa-eye fa-2x text-primary"></i></a></td>
+                            <td><a href="{% url 'room_view' r.r_id %}" class="m-0 p-0"><i class="fas fa-eye fa-2x text-info"></i></a></td>
+                            <td><a href="{% url 'room_edit' r.r_id %}" class="m-0 p-0"><i class="fas fa-edit fa-2x text-primary"></i></a></td>
                             </tr>
                         {% endfor %}
                     </table>

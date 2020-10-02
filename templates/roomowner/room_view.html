@@ -42,21 +42,26 @@
                     <tr>
                         <th>Name</th>
                         <th>View</th>
+                        <th>Date</th>
                         <th>Actions</th>
                     </tr>
                     {% for rq in room_renter_request %}
-                                    <tr>
-                                    <td>{{ rq.renter.first_name }} {{ rq.renter.last_name }}</td>
+                                    <tr class="bg-dark">
+                                    <td class="text-light">{{ rq.renter.first_name }} {{ rq.renter.last_name }}</td>
                                     <td><a href="{% url 'view_renter_profile' rq.renter.id %}" class="nav-link p-0 m-0"><i class="fas fa-eye fa-2x text-primary"></i></a></td>
+                                    <td>{{ rq.ra_doc|date:'d M,Y' }}</td>
                                     <td>
                                         <div class="form-inline">
                                                 <a href="{% url 'allot_active' rq.ra_id %}" class=" nav-link p-0 m-0"><i class="fas fa-check-circle fa-2x text-success"></i></a>
-                                                <a href="{% url 'allot_pending' rq.ra_id %}" class=" nav-link p-0 m-0 ml-2"><i class="far fa-times-circle fa-2x text-danger"></i></a>
-                                                <a href="{% url 'allot_delete' rq.ra_id %}" class=" nav-link p-0 m-0 ml-2"><i class="fas fa-trash fa-2x text-dark"></i></a>
+                                                <a href="{% url 'allot_delete' rq.ra_id %}" class=" nav-link p-0 m-0 ml-2"><i class="far fa-times-circle fa-2x text-danger"></i></a>
                                         </div>
                                     </td>
                                     </tr>
-                            {% endfor %}
+                    {% empty %}
+                        <tr>
+                            <td colspan="4"><div class="alert alert-danger h6 text-center p-5" role="alert">No renter request availables!</div></td>
+                        </tr>
+                    {% endfor %}
                 </table>
             </div>
         </div>

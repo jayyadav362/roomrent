@@ -21,7 +21,6 @@
                 {% elif request.session.name == 'owner' %}
                     <li class="nav-item"><a href="{% url 'owner_profile' %}" class="nav-link ml-2">{{ request.user.first_name }} {{ request.user.last_name }}</a></li>
                 {% else %}
-                     <h1>nothing</h1>
                 {% endif %}
             <li class="nav-item"><a href="{% url 'logouts' %}" class="nav-link text-light btn btn-danger btn-sm">Logout</a></li>
             {% else %}
@@ -34,13 +33,26 @@
 {% block content %}{% endblock %}
 {% block footer %}{% endblock %}
 </body>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
- <script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
         $(document).ready(function () {
-            $(".form-group>input,select,textarea").addClass("form-control")
-        })
+            $(".form-group>input,select,textarea").addClass("form-control");
+             $("#id_state").change(function () {
+                const url = $("#register").attr("data-cities-url");  // get the url of the `load_cities` view
+                const stateId = $(this).val();  // get the selected country ID from the HTML input
+
+                $.ajax({                       // initialize an AJAX request
+                    url: url,                    // set the url of the request (= /persons/ajax/load-cities/ )
+                    data: {
+                        'state_id': stateId       // add the country id to the GET parameters
+                    },
+                    success: function (data) {   // `data` is the return of the `load_cities` view function
+                        $("#id_city").html(data);  // replace the contents of the city input with the data that came from the server
+                    }
+                });
+
+            });
+        });
     </script>
 </html>

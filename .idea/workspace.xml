@@ -2,14 +2,34 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2c4061c7-7552-421d-8c4a-029c83d7b337" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/templates/city_dropdown_list_options.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/roomowner/ro_my_renter.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/roomowner/ro_roomallot_pending.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/roomowner/ro_roomallot_request.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/roomowner/room_edit.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/datawork/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/datawork/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/datawork/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/datawork/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/datawork/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/datawork/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roomrent/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/roomrent/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/register_owner.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/register_owner.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/register_renter.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/register_renter.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_room_allot.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_room_allot.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_rooms.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_rooms.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomowner/room_view.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/room_view.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomowner/view_renter_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/view_renter_profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomrenter/rr_base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomrenter/rr_base.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
+    <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -37,6 +57,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$USER_HOME$/Downloads/coaching/coaching" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RunManager">
     <configuration name="roomrent" type="Python.DjangoServer" factoryName="Django server">
@@ -82,30 +103,53 @@
       <workItem from="1601106573776" duration="41899000" />
       <workItem from="1601281659178" duration="40468000" />
       <workItem from="1601450179351" duration="734000" />
-      <workItem from="1601453969049" duration="677000" />
+      <workItem from="1601453969049" duration="1068000" />
+      <workItem from="1601474393187" duration="11581000" />
+      <workItem from="1601561800351" duration="26423000" />
+      <workItem from="1601650127432" duration="14069000" />
     </task>
+    <task id="LOCAL-00001" summary="exclude status">
+      <created>1601454878233</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1601454878233</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="exclude status" />
+    <option name="LAST_COMMIT_MESSAGE" value="exclude status" />
   </component>
   <component name="WindowStateProjectService">
     <state x="275" y="22" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1601106668974">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="275" y="22" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.728@0.0.1366.728" timestamp="1601106668974" />
-    <state x="413" y="111" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1601230022538">
+    <state x="413" y="111" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1601661891521">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="413" y="111" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1366.728@0.0.1366.728" timestamp="1601230022538" />
-    <state x="463" y="119" key="FileChooserDialogImpl" timestamp="1601362472766">
+    <state x="413" y="111" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1366.728@0.0.1366.728" timestamp="1601661891521" />
+    <state x="308" y="0" key="CommitChangelistDialog2" timestamp="1601454877243">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="463" y="119" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1601362472766" />
-    <state x="492" y="281" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1601454800112">
+    <state x="308" y="0" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1601454877243" />
+    <state x="463" y="119" key="FileChooserDialogImpl" timestamp="1601565032175">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="492" y="281" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1366.728@0.0.1366.728" timestamp="1601454800112" />
+    <state x="463" y="119" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1601565032175" />
+    <state x="184" y="6" key="SettingsEditor" timestamp="1601578539751">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="184" y="6" key="SettingsEditor/0.0.1366.728@0.0.1366.728" timestamp="1601578539751" />
+    <state x="492" y="281" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1601454981966">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="492" y="281" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1366.728@0.0.1366.728" timestamp="1601454981966" />
     <state x="346" y="49" width="672" height="678" key="search.everywhere.popup" timestamp="1601393665482">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
