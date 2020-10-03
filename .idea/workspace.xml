@@ -2,26 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2c4061c7-7552-421d-8c4a-029c83d7b337" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/templates/city_dropdown_list_options.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/roomowner/ro_my_renter.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/roomowner/ro_roomallot_pending.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/roomowner/ro_roomallot_request.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/roomowner/room_edit.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/pending.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/datawork/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/datawork/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/datawork/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/datawork/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/datawork/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/datawork/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roomrent/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/roomrent/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/roomrent/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/roomrent/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/register_owner.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/register_owner.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/register_renter.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/register_renter.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_room_allot.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_room_allot.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_rooms.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_rooms.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/roomowner/room_view.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/room_view.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/roomowner/view_renter_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/view_renter_profile.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/roomrenter/rr_base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomrenter/rr_base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/logins.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/logins.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +43,7 @@
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/coaching/coaching" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/djangoecom-master/djangoecom-master" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
@@ -106,7 +94,7 @@
       <workItem from="1601453969049" duration="1068000" />
       <workItem from="1601474393187" duration="11581000" />
       <workItem from="1601561800351" duration="26423000" />
-      <workItem from="1601650127432" duration="14069000" />
+      <workItem from="1601650127432" duration="31339000" />
     </task>
     <task id="LOCAL-00001" summary="exclude status">
       <created>1601454878233</created>
@@ -138,10 +126,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="308" y="0" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1601454877243" />
-    <state x="463" y="119" key="FileChooserDialogImpl" timestamp="1601565032175">
+    <state x="463" y="119" key="FileChooserDialogImpl" timestamp="1601714304653">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="463" y="119" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1601565032175" />
+    <state x="463" y="119" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1601714304653" />
     <state x="184" y="6" key="SettingsEditor" timestamp="1601578539751">
       <screen x="0" y="0" width="1366" height="728" />
     </state>

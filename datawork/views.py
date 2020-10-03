@@ -7,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse,HttpResponse
 from django.db.models import Q
 from datetime import datetime
-import json as simplejson
+from django.contrib import messages
 # Create your views here.
 def home(r):
     data = {}
@@ -18,44 +18,104 @@ def load_cities(request):
     state_id = request.GET.get('state_id')
     cities = City.objects.filter(state__id=state_id).all()
     return render(request, 'city_dropdown_list_options.html', {'cities': cities})
-    # return JsonResponse(list(cities.values('id', 'name')), safe=False)
 
+def register_pending(r):
+    return render(r,'pending.html')
+
+
+
+# def logins(r):
+#     mu = LoginForm(r.POST or None)
+#     if r.method == 'POST':
+#         if mu.is_valid:
+#             email = r.POST['email']
+#             password = r.POST['password']
+#             status = 0
+#             try:
+#                 username = User.objects.get(email=email.lower()).username
+#                 try:
+#                     profile = RoomRenter.objects.get(user_id__username=username)
+#                     status = 1
+#                     r.session['name'] = 'renter'
+#                 except ObjectDoesNotExist:
+#                     profile = RoomOwner.objects.get(user_id__username=username)
+#                     status = 2
+#                     r.session['name'] = 'owner'
+#
+#                 u = profile.user_id.username
+#                 user = authenticate(username=u,password=password)
+#                 if user is not None:
+#                     login(r, user)
+#                 else:
+#                     messages.error(r, "Your password is incorrect!")
+#                     return redirect('logins')
+#
+#
+#                 if status == 1:
+#                     return redirect('renter_profile')
+#                 elif status == 2:
+#                     return redirect('owner_profile')
+#
+#             except User.DoesNotExist:
+#                 messages.error(r,"The email address or password is incorrect. Please retry...")
+#                 return redirect('logins')
+#
+#     data = {"form": mu}
+#     return render(r, 'logins.html', data)
 
 def logins(r):
-    mu = LoginForm(r.POST or None)
+    form = LoginForm(r.POST or None)
     if r.method == 'POST':
-        if mu.is_valid:
+        if form.is_valid:
             email = r.POST['email']
             password = r.POST['password']
-            username = User.objects.get(email=email.lower()).username
-
             status = 0
             try:
-                profile = RoomRenter.objects.get(user_id__username=username)
-                status = 1
-                r.session['name'] = 'renter'
-            except ObjectDoesNotExist:
-                profile = RoomOwner.objects.get(user_id__username=username)
-                status = 2
-                r.session['name'] = 'owner'
+                username = User.objects.get(email=email.lower()).username
+                try:
+                    try:
+                        profile = RoomRenter.objects.get(user_id__username=username)
+                        status = 1
+                        r.session['name'] = 'renter'
+                    except ObjectDoesNotExist:
+                        profile = RoomOwner.objects.get(user_id__username=username)
+                        status = 2
+                        r.session['name'] = 'owner'
 
-            u = profile.user_id.username
-            user = authenticate(username=u,password=password)
-            login(r, user)
+                    u = profile.user_id.username
+                    user = authenticate(username=u,password=password)
+                    if user is not None:
+                        login(r, user)
+                    else:
+                        messages.error(r,"Your password is incorrect!")
+                        return redirect('logins')
 
-            if status == 1:
-                return redirect('renter_profile')
-            elif status == 2:
-                return redirect('owner_profile')
-            else:
+
+                    if status == 1:
+                        return redirect('renter_profile')
+                    elif status == 2:
+                        return redirect('owner_profile')
+
+                except ObjectDoesNotExist:
+                    user = authenticate(username=username, password=password)
+                    r.session['name'] = 'pending'
+                    if user is not None:
+                        login(r, user)
+                        return render(r, 'pending.html')
+                    else:
+                        messages.error(r, "Your password is incorrect!")
+                        return redirect('logins')
+
+            except User.DoesNotExist:
+                messages.error(r,"The email address or password is incorrect. Please retry...")
                 return redirect('logins')
 
-    data = {"form": mu}
+    data = {"form": form}
     return render(r, 'logins.html', data)
 
 def logouts(r):
     logout(r)
-    return redirect('homepage')
+    return redirect('logins')
 
 # room renter -------------------------------------
 def user_register_renter(r):
@@ -84,6 +144,9 @@ def register_renter(r):
 
 @login_required(login_url=logins)
 def renter_profile(r):
+    check = RoomRenter.objects.filter(user_id__username=r.user).count()
+    if check ==0:
+        return render(r,'pending.html')
     data = {
         "user": RoomRenter.objects.filter(user_id__username=r.user),
         "userdata": User.objects.filter(username=r.user),

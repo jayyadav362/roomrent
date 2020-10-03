@@ -8,11 +8,19 @@
                     <div class="card-body">
                         <form action="{% url 'logins' %}" method="post">
                         {% csrf_token %}
+                            {% for foo in messages %}
+                                <div class="alert {{ foo.tags }}  alert-dismissible fade show " role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    {{ foo }}
+                                </div>
+                            {% endfor %}
                             {% for f in form %}
                                 <div class="form-group">
                                     {{ f.label_tag }}
-                                {{ f }}
-                                    <label for="">{{ f.errors }}</label>
+                                    {{ f }}
+                                    <label for="" class="text-danger">{{ f.errors }}</label>
                                 </div>
                             {% endfor %}
 

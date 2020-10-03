@@ -7,6 +7,7 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.home,name="homepage"),
+    path('register_pending',views.register_pending,name="register_pending"),
     path('ajax/load-cities/', views.load_cities, name='ajax_load_cities'), # AJAX
     path('user_register_renter/',views.user_register_renter,name="user_register_renter"),
     path('register_renter/',views.register_renter,name="register_renter"),
