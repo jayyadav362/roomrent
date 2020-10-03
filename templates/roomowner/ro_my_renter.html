@@ -15,6 +15,14 @@
                             <th>Date</th>
                             <th>Actions</th>
                         </tr>
+                        {% for foo in messages %}
+                                <div class="alert {{ foo.tags }}  alert-dismissible fade show " role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    {{ foo }}
+                                </div>
+                        {% endfor %}
                         {% for r in renters %}
                             <tr>
                             <td><a href="{% url 'view_renter_profile' r.renter.id %}" class="nav-link p-0 m-0">{{ r.renter.first_name }} {{ r.renter.last_name }}</a></td>

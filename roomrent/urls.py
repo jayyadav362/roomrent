@@ -17,6 +17,8 @@ urlpatterns = [
     path('owner_profile/',views.owner_profile,name="owner_profile"),
     path('owner_rooms/',views.owner_rooms,name="owner_rooms"),
     path('room_allot/',views.room_allot,name="room_allot"),
+    path('password_change_owner/',views.password_change_owner,name="password_change_owner"),
+    path('password_change_renter/',views.password_change_renter,name="password_change_renter"),
     path('my_renter/',views.my_renter,name="my_renter"),
     path('room_allot_request/',views.room_allot_request,name="room_allot_request"),
     path('room_allot_pending/',views.room_allot_pending,name="room_allot_pending"),
@@ -28,6 +30,5 @@ urlpatterns = [
     path('view_renter_profile/<str:rnt_id>', views.view_renter_profile,name="view_renter_profile"),
     path('room_view/<str:rm_id>', views.room_view,name="room_view"),
     path('room_edit/<int:et_id>', views.room_edit,name="room_edit"),
-
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 

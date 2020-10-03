@@ -4,64 +4,17 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import JsonResponse,HttpResponse
+from django.http import JsonResponse
 from django.db.models import Q
 from datetime import datetime
 from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 # Create your views here.
+
 def home(r):
     data = {}
     return render(r,'home.html',data)
-
-# AJAX
-def load_cities(request):
-    state_id = request.GET.get('state_id')
-    cities = City.objects.filter(state__id=state_id).all()
-    return render(request, 'city_dropdown_list_options.html', {'cities': cities})
-
-def register_pending(r):
-    return render(r,'pending.html')
-
-
-
-# def logins(r):
-#     mu = LoginForm(r.POST or None)
-#     if r.method == 'POST':
-#         if mu.is_valid:
-#             email = r.POST['email']
-#             password = r.POST['password']
-#             status = 0
-#             try:
-#                 username = User.objects.get(email=email.lower()).username
-#                 try:
-#                     profile = RoomRenter.objects.get(user_id__username=username)
-#                     status = 1
-#                     r.session['name'] = 'renter'
-#                 except ObjectDoesNotExist:
-#                     profile = RoomOwner.objects.get(user_id__username=username)
-#                     status = 2
-#                     r.session['name'] = 'owner'
-#
-#                 u = profile.user_id.username
-#                 user = authenticate(username=u,password=password)
-#                 if user is not None:
-#                     login(r, user)
-#                 else:
-#                     messages.error(r, "Your password is incorrect!")
-#                     return redirect('logins')
-#
-#
-#                 if status == 1:
-#                     return redirect('renter_profile')
-#                 elif status == 2:
-#                     return redirect('owner_profile')
-#
-#             except User.DoesNotExist:
-#                 messages.error(r,"The email address or password is incorrect. Please retry...")
-#                 return redirect('logins')
-#
-#     data = {"form": mu}
-#     return render(r, 'logins.html', data)
 
 def logins(r):
     form = LoginForm(r.POST or None)
@@ -113,9 +66,21 @@ def logins(r):
     data = {"form": form}
     return render(r, 'logins.html', data)
 
+
 def logouts(r):
     logout(r)
     return redirect('logins')
+
+@login_required(login_url=logins)
+def register_pending(r):
+    return render(r,'pending.html')
+
+# AJAX
+@login_required(login_url=logins)
+def load_cities(request):
+    state_id = request.GET.get('state_id')
+    cities = City.objects.filter(state__id=state_id).all()
+    return render(request, 'city_dropdown_list_options.html', {'cities': cities})
 
 # room renter -------------------------------------
 def user_register_renter(r):
@@ -144,14 +109,31 @@ def register_renter(r):
 
 @login_required(login_url=logins)
 def renter_profile(r):
-    check = RoomRenter.objects.filter(user_id__username=r.user).count()
-    if check ==0:
-        return render(r,'pending.html')
     data = {
         "user": RoomRenter.objects.filter(user_id__username=r.user),
         "userdata": User.objects.filter(username=r.user),
     }
     return render(r,'roomrenter/rr_profile.html',data)
+
+@login_required(login_url=logins)
+def password_change_owner(r):
+    if r.method == 'POST':
+        form = PasswordChangeForm(r.user, r.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(r, user)  # Important!
+            messages.success(r, 'Your password was successfully updated!')
+            return redirect('password_change_renter')
+        else:
+            messages.error(r, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(r.user)
+    data = {
+        "form":form,
+        "user": RoomRenter.objects.filter(user_id__username=r.user),
+        "userdata": User.objects.filter(username=r.user),
+    }
+    return render(r, 'roomrenter/rr_password_change.html', data)
 
 # room owner -------------------------------------------------
 def user_register_owner(r):
@@ -189,6 +171,26 @@ def owner_profile(r):
     return render(r,'roomowner/ro_profile.html',data)
 
 @login_required(login_url=logins)
+def password_change_owner(r):
+    if r.method == 'POST':
+        form = PasswordChangeForm(r.user, r.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(r, user)  # Important!
+            messages.success(r, 'Your password was successfully updated!')
+            return redirect('password_change_owner')
+        else:
+            messages.error(r, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(r.user)
+    data = {
+        "form":form,
+        "user": RoomOwner.objects.filter(user_id__username=r.user),
+        "userdata": User.objects.filter(username=r.user),
+    }
+    return render(r, 'roomowner/ro_password_change.html', data)
+
+@login_required(login_url=logins)
 def owner_rooms(r):
     rm = AddRoomForm(r.POST or None, r.FILES or None)
     if r.method == "POST":
@@ -217,37 +219,22 @@ def room_allot(r):
         return JsonResponse(response_content, safe=False)
 
     if r.method == "POST":
-        d = RoomAllot()
-        user = User.objects.get(username=r.user)
-        d.user_id = user
-        d.renter = User(r.POST.get('renter'))
-        d.ra_room_id = Room(r.POST.get('ra_room_id'))
-        d.slug = r.POST.get('rr_id')
-        d.save()
-        return redirect('room_allot')
-
-        # check_renter_room = RoomAllot.objects.get(Q(ra_room_id=r.POST.get('ra_room_id')) & Q(renter=r.POST.get('renter')),ra_status='1')
-        # check=0
-        # try:
-        #     check_renter_room
-        #     print('Already allot this room!')
-        #     check = 1
-        # except ObjectDoesNotExist:
-        #     d = RoomAllot()
-        #     user = User.objects.get(username=r.user)
-        #     d.user_id = user
-        #     d.renter = User(r.POST.get('renter'))
-        #     d.ra_room_id = Room(r.POST.get('ra_room_id'))
-        #     d.ra_slug = r.POST.get('rr_id')
-        #     d.save()
-        #     check = 2
-        #
-        # if check == 1:
-        #     return redirect('room_allot')
-        # elif check == 2:
-        #     return redirect('room_allot')
-        # else:
-        #     return redirect('owner_profile')
+        try:
+            # check renter room-----------
+            check = RoomAllot.objects.get(Q(ra_room_id=r.POST.get('ra_room_id')) & Q(renter=r.POST.get('renter')),ra_status='1')
+            if check is not None:
+                messages.error(r,"this renter is already in this room!")
+                return redirect('room_allot')
+        except ObjectDoesNotExist:
+            d = RoomAllot()
+            user = User.objects.get(username=r.user)
+            d.user_id = user
+            d.renter = User(r.POST.get('renter'))
+            d.ra_room_id = Room(r.POST.get('ra_room_id'))
+            d.ra_slug = r.POST.get('rr_id')
+            d.save()
+            messages.success(r, "room alloting successfully!")
+            return redirect('room_allot')
 
     data = {
         "user": RoomOwner.objects.filter(user_id__username=r.user),
@@ -286,12 +273,18 @@ def room_allot_pending(r):
 
 @login_required(login_url=logins)
 def allot_active(r,a_id):
-    active = RoomAllot.objects.get(ra_id=a_id,ra_room_id__r_status='1')
-    #check = RoomAllot.objects.get(Q(ra_room_id=active.ra_room_id) & Q(renter=active.renter))
-    active.ra_status = '1'
-    active.ra_doc = datetime.now()
-    active.save()
-    return redirect('room_allot')
+    active = RoomAllot.objects.get(ra_id=a_id, ra_room_id__r_status='1')
+    try:
+        check = RoomAllot.objects.get(Q(ra_room_id=active.ra_room_id) & Q(renter=active.renter),ra_status=1)
+        if check is not None:
+            messages.error(r, "this renter is already allot in this room!")
+            return redirect('my_renter')
+    except ObjectDoesNotExist:
+        active.ra_status = '1'
+        active.ra_doc = datetime.now()
+        active.save()
+        messages.success(r, "room alloting active successfully!")
+        return redirect('my_renter')
 
 @login_required(login_url=logins)
 def allot_pending(r,p_id):
@@ -337,6 +330,9 @@ def room_edit(r,et_id):
         if re.is_valid():
             re.save()
             return redirect("../room_view/"+str(room.r_id))
+    else:
+        re = EditRoomForm(instance=room)
+
     data = {
         "form":re,
         "user": RoomOwner.objects.filter(user_id__username=r.user),

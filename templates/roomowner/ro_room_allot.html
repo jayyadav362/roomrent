@@ -26,6 +26,14 @@
                 <div class="card-body">
                     <form action="{% url 'room_allot' %}" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
+                                {% for foo in messages %}
+                                <div class="alert {{ foo.tags }}  alert-dismissible fade show " role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    {{ foo }}
+                                </div>
+                                {% endfor %}
                                 <div class="form-group">
                                     <label for="">Select Renter</label>
                                     <select name="renter" id="select_renter" class="form-control" >
