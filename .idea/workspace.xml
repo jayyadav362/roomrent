@@ -2,16 +2,24 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2c4061c7-7552-421d-8c4a-029c83d7b337" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/templates/roomowner/ro_password_change.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/roomrenter/rr_password_change.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/image/96b7428cafcc4c05868d801ab7f375a3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/image/IMG_20200418_204032.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/profile/IMG_20191102_202311.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/profile/IMG_20200428_150801_049.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/profile/PicsArt_03-31-11.09.20.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/profile/proof/1LUHaLMg1yYf8CN9SLX9a34a.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/profile/proof/7U0FfXLTSFL8YPBftMFhBFK5.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/profile/proof/IMG-20200713-WA0018.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/profile/proof/aaShMT9BJ13MAgYyQ1F3HQMC.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/profile/sfd_2-compressed.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/datawork/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/datawork/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/datawork/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/datawork/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/roomrent/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/roomrent/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_my_renter.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_my_renter.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_room_allot.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_room_allot.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_rooms.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_rooms.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roomrent/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/roomrent/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomowner/room_edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/room_edit.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomrenter/rr_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomrenter/rr_profile.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,13 +43,16 @@
     <option name="UPDATE_TYPE" value="MERGE" />
   </component>
   <component name="ProjectId" id="1hOlf2F7j0O1WwqksrmfIDkZMnA" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -97,6 +108,7 @@
       <workItem from="1601474393187" duration="11581000" />
       <workItem from="1601561800351" duration="26423000" />
       <workItem from="1601650127432" duration="40417000" />
+      <workItem from="1601882004107" duration="15155000" />
     </task>
     <task id="LOCAL-00001" summary="exclude status">
       <created>1601454878233</created>
@@ -112,6 +124,7 @@
     <option name="version" value="1" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="exclude status" />
     <option name="LAST_COMMIT_MESSAGE" value="exclude status" />
   </component>
@@ -120,10 +133,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="275" y="22" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.728@0.0.1366.728" timestamp="1601106668974" />
-    <state x="413" y="111" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1601661891521">
+    <state x="413" y="111" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1601890941913">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="413" y="111" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1366.728@0.0.1366.728" timestamp="1601661891521" />
+    <state x="413" y="111" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1366.728@0.0.1366.728" timestamp="1601890941913" />
     <state x="308" y="0" key="CommitChangelistDialog2" timestamp="1601454877243">
       <screen x="0" y="0" width="1366" height="728" />
     </state>

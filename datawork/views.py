@@ -79,7 +79,7 @@ def register_pending(r):
 @login_required(login_url=logins)
 def load_cities(request):
     state_id = request.GET.get('state_id')
-    cities = City.objects.filter(state__id=state_id).all()
+    cities = City.objects.filter(state__id=state_id).all().order_by('name')
     return render(request, 'city_dropdown_list_options.html', {'cities': cities})
 
 # room renter -------------------------------------
@@ -116,7 +116,7 @@ def renter_profile(r):
     return render(r,'roomrenter/rr_profile.html',data)
 
 @login_required(login_url=logins)
-def password_change_owner(r):
+def password_change_renter(r):
     if r.method == 'POST':
         form = PasswordChangeForm(r.user, r.POST)
         if form.is_valid():
@@ -341,7 +341,6 @@ def room_edit(r,et_id):
     return render(r,'roomowner/room_edit.html',data)
 
 #--------------------------------------------------------------------------
-
 
 
 

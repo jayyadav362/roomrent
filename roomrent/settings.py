@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'datawork.apps.DataworkConfig',
+    'django_truncate'
 ]
 
 
