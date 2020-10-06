@@ -13,8 +13,35 @@ from django.contrib.auth.forms import PasswordChangeForm
 # Create your views here.
 
 def home(r):
+
     data = {}
     return render(r,'home.html',data)
+
+def state_search(r):
+    if 'term' in r.GET:
+        qs = State.objects.filter(name__icontains=r.GET.get('term'))[:5]
+        titles = list()
+        for state in qs:
+            titles.append(state.name)
+        return JsonResponse(titles, safe=False)
+
+def city_search(r):
+    if 'term' in r.GET:
+        qs = City.objects.filter(name__icontains=r.GET.get('term'))[:5]
+        titles = list()
+        for city in qs:
+            titles.append(city.name)
+        return JsonResponse(titles, safe=False)
+    
+def search_room(r):
+    if r.method == 'GET':
+        data = {
+            "house":RoomOwner.objects.filter(Q(state__name=r.GET.get('state')) & Q(city__name=r.GET.get('city')))
+        }
+    else:
+        data = {"house":RoomOwner.objects.all()}
+        
+    return render(r,'search.html',data)
 
 def logins(r):
     form = LoginForm(r.POST or None)

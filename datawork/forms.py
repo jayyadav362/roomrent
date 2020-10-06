@@ -1,7 +1,7 @@
 from django.forms import ModelForm
 from .models import *
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm
 from django import forms
 
 class RegisterForm(UserCreationForm):
@@ -33,7 +33,7 @@ class RegisterOwnerForm(ModelForm):
             except (ValueError, TypeError):
                 pass  # invalid input from the client; ignore and fallback to empty City queryset
         elif self.instance.pk:
-            self.fields['city'].queryset = self.instance.country.city_set.order_by('name')
+            self.fields['city'].queryset = self.instance.state.city_set.order_by('name')
 
 class LoginForm(ModelForm):
     class Meta:

@@ -1,6 +1,22 @@
 {% extends 'base.html' %}
+{% block content %}
 <div class="container">
-    <div class="row">
-
+<div class="row mt-3">
+    <div class="col-lg-10 mx-auto">
+        <div class="card bg-light">
+            <div class="card-body">
+                <div class="container">
+                    <form action="{% url 'search_room' %}" method="get">
+                        <div class="row p-3">
+                            <div class="col-lg-5"><input type="text"  id="state"  name="state" placeholder="Select state" class="form-control"></div>
+                            <div class="col-lg-5"><input type="text" id="city" name="city" placeholder="Select city" class="form-control"></div>
+                            <div class="col-lg-2"><input type="submit" value="search" class="btn btn-outline-success btn-block"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+</div>
+{% endblock %}
