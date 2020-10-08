@@ -7,6 +7,7 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.home,name="homepage"),
+    path('room_request/<int:rq_id>', views.room_request, name="room_request"),
     path('state_search',views.state_search,name="state_search"),
     path('city_search',views.city_search,name="city_search"),
     path('search_room',views.search_room,name="search_room"),
@@ -32,6 +33,7 @@ urlpatterns = [
     path('roomallot/delete/<int:d_id>', views.allot_delete,name="allot_delete"),
     path('view_renter_profile/<str:rnt_id>', views.view_renter_profile,name="view_renter_profile"),
     path('room_view/<str:rm_id>', views.room_view,name="room_view"),
+    path('house_view/<str:h_id>', views.house_view,name="house_view"),
     path('room_edit/<int:et_id>', views.room_edit,name="room_edit"),
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 

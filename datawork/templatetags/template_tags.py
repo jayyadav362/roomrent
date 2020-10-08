@@ -10,3 +10,11 @@ def room_allot_count(context):
         return qs.count()
     else:
         return 0
+
+@register.filter
+def room_count(context):
+    qs = Room.objects.filter(user_id=context, r_status='1')
+    if qs.exists():
+        return qs.count()
+    else:
+        return 0

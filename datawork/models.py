@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
-from  django.db import connection
+
 class State(models.Model):
     name = models.CharField(max_length=100,unique=True)
     slug = models.SlugField()
@@ -116,6 +116,7 @@ class PaymentPaid(models.Model):
         return self.pp_txn
 
     def save(self, *args, **kwargs):
+        self.slug = slugify(self.pp_txn)
         super(PaymentPaid, self).save(*args, **kwargs)
 
 class RoomAllot(models.Model):

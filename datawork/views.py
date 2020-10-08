@@ -43,6 +43,26 @@ def search_room(r):
         
     return render(r,'search.html',data)
 
+def house_view(r,h_id):
+    owner = RoomOwner.objects.get(ro_id=h_id)
+    data = {
+        "house":owner,
+        "room":Room.objects.filter(user_id__username=owner.user_id.username)
+    }
+    return render(r,'house_view.html',data)
+
+def room_request(r,rq_id):
+    request = RoomAllot()
+    user = User.objects.get(username=r.user)
+    request.renter = user
+    room = Room.objects.get(r_id=rq_id)
+    request.ra_room_id = Room(room.r_id)
+    request.user_id = User(room.user_id_id)
+    request.ra_status = '0'
+    request.save()
+    messages.success(r, "room request successfully!")
+    return redirect('renter_profile')
+
 def logins(r):
     form = LoginForm(r.POST or None)
     if r.method == 'POST':
@@ -115,6 +135,7 @@ def user_register_renter(r):
     if r.method == "POST":
         if u.is_valid():
             u.save()
+            r.session['name'] = 'renter'
             a = authenticate(username=u.cleaned_data['username'], password=u.cleaned_data['password1'])
             login(r, a)
             return redirect('register_renter')
@@ -168,6 +189,7 @@ def user_register_owner(r):
     if r.method == "POST":
         if u.is_valid():
             u.save()
+            r.session['name'] = 'owner'
             a = authenticate(username=r.POST.get('username'), password=r.POST.get('password1'))
             login(r, a)
             return redirect('register_owner')
@@ -258,7 +280,7 @@ def room_allot(r):
             d.user_id = user
             d.renter = User(r.POST.get('renter'))
             d.ra_room_id = Room(r.POST.get('ra_room_id'))
-            d.ra_slug = r.POST.get('rr_id')
+            d.slug = r.POST.get('ra_room_id')
             d.save()
             messages.success(r, "room alloting successfully!")
             return redirect('room_allot')

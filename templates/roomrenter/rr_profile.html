@@ -30,7 +30,25 @@
                 </table>
             </div>
         </div>
+        <div class="row">
+
+        </div>
     </div>
+    <div class="col-lg-5 mt-2">
+        <div class="card">
+            {% for foo in messages %}
+                <div class="alert {{ foo.tags }}  alert-dismissible fade show " role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{ foo }}
+                </div>
+            {% endfor %}
+            <div class="card-header">Room Request</div>
+            <div class="card-body"></div>
+        </div>
+    </div>
+    <div class="col-lg-7 mt-2"></div>
 </div>
 </div>
 {% endblock %}

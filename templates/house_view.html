@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load template_tags %}
+{% block content %}
+    <div class="container">
+    <div class="row mt-3">
+        <div class="col-lg-4">
+            <div class="card">
+                <img src="{{ house.ro_house_image.url }}" alt="" class="w-100" height="300px">
+                <div class="card-body">
+                    <h6 class="text-center text-uppercase">{{ house.ro_house }}</h6>
+                    <p class="text-center">{{ house.user_id.first_name }} {{ house.user_id.last_name }} | {{ house.ro_street }} ,{{ house.city }} ,{{ house.state }}</p>
+                    <p class=""><i class="fa fa-phone"></i>- {{ house.ro_contact }}</p>
+                    <p class=""><i class="fa fa-envelope"></i>- {{ house.user_id.email }}</p>
+                </div>
+                <div class="card-body">
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            {% for r in room %}
+                <div class="card mb-2">
+                    <div class="card-body p-1 m-1">
+                        <div class="row">
+                            <div class="col-lg-5 ">
+                                <img src="{{ r.r_image.url }}" alt="" class="w-100" height="200px">
+                                <p class="text-muted text-center text-capitalize mt-2 m-0 p-0 bg-light">{{ r.r_title }}</p>
+                            </div>
+                            <div class="col-lg-7">
+                                <p class="mt-3 text-success">Type:<span class="text-muted"> {{ r.r_type }}</span> <span class="float-right text-success mr-3">₹ {{ r.r_rent }}</span></p>
+                                <div class="alert alert-success small text-muted " role="alert">{{ r.r_desc }}</div>
+
+                                {% if r|room_allot_count == 0 %}
+                                    {% if request.user.is_authenticated %}
+                                        {%  if request.session.name == 'renter' %}
+                                            <a href="{% url 'room_request' r.r_id %}" class="btn btn-dark float-right mt-2">Request for room</a>
+                                        {% elif request.session.name == 'owner' %}
+                                            <span class="alert alert-danger">You can't request for room! You are a Owner</span>
+                                        {% elif request.session.name == 'pending' %}
+                                            <a href="{% url 'register_pending' %}" class="btn btn-outline-warning">Please complete Register!</a>
+                                        {% endif %}
+                                     {% else %}
+                                        <span class="alert alert-danger">You can't request for room! Please login first</span>
+                                     {% endif %}
+
+                                {% else %}
+                                    <span class="badge badge-danger float-right mt-2 px-4 py-2">Booked</span>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                  <div class="alert alert-danger h6 text-center p-5" role="alert">No room availables!</div>
+            {% endfor %}
+        </div>
+    </div>
+    </div>
+{% endblock %}
