@@ -45,23 +45,28 @@ def search_room(r):
 
 def house_view(r,h_id):
     owner = RoomOwner.objects.get(ro_id=h_id)
+    room_query = RoomQueryForm(r.POST or None)
+    if r.method == 'POST':
+        if room_query.is_valid:
+            s = room_query.save(commit=False)
+            s.user_id = User(owner.user_id_id)
+            s.save()
+            messages.success(r, "Room Query send successfully!")
+            return redirect("../house_view/" + str(owner.ro_id))
     data = {
+        "form":room_query,
         "house":owner,
         "room":Room.objects.filter(user_id__username=owner.user_id.username)
     }
     return render(r,'house_view.html',data)
 
-def room_request(r,rq_id):
-    request = RoomAllot()
-    user = User.objects.get(username=r.user)
-    request.renter = user
-    room = Room.objects.get(r_id=rq_id)
-    request.ra_room_id = Room(room.r_id)
-    request.user_id = User(room.user_id_id)
-    request.ra_status = '0'
-    request.save()
-    messages.success(r, "room request successfully!")
-    return redirect('renter_profile')
+def room_view(r,r_id):
+    room = Room.objects.get(r_id=r_id)
+    data = {
+        "room_view": room,
+        "room_owner": RoomOwner.objects.get(user_id__username=room.user_id),
+    }
+    return render(r,'room_view.html',data)
 
 def logins(r):
     form = LoginForm(r.POST or None)
@@ -113,6 +118,18 @@ def logins(r):
     data = {"form": form}
     return render(r, 'logins.html', data)
 
+@login_required(login_url=logins)
+def room_request(r,rq_id):
+    request = RoomAllot()
+    user = User.objects.get(username=r.user)
+    request.renter = user
+    room = Room.objects.get(r_id=rq_id)
+    request.ra_room_id = Room(room.r_id)
+    request.user_id = User(room.user_id_id)
+    request.ra_status = '0'
+    request.save()
+    messages.success(r, "room request successfully!")
+    return redirect('renter_profile')
 
 def logouts(r):
     logout(r)
@@ -158,10 +175,18 @@ def register_renter(r):
 @login_required(login_url=logins)
 def renter_profile(r):
     data = {
+        "room_request": RoomAllot.objects.filter(renter__username=r.user, ra_status='0'),
         "user": RoomRenter.objects.filter(user_id__username=r.user),
         "userdata": User.objects.filter(username=r.user),
     }
     return render(r,'roomrenter/rr_profile.html',data)
+
+@login_required(login_url=logins)
+def request_delete(r,r_id):
+    delete = RoomAllot.objects.get(ra_id=r_id)
+    delete.delete()
+    messages.error(r, "room request delete successfully!")
+    return redirect('renter_profile')
 
 @login_required(login_url=logins)
 def password_change_renter(r):
@@ -182,6 +207,15 @@ def password_change_renter(r):
         "userdata": User.objects.filter(username=r.user),
     }
     return render(r, 'roomrenter/rr_password_change.html', data)
+
+def renter_rooms(r):
+    data = {
+        "user": RoomRenter.objects.filter(user_id__username=r.user),
+        "userdata": User.objects.filter(username=r.user),
+        "rooms_a": RoomAllot.objects.filter(renter__username=r.user, ra_status='1'),
+        "rooms_p": RoomAllot.objects.filter(renter__username=r.user, ra_status='2'),
+    }
+    return render(r,'roomrenter/rr_rooms.html',data)
 
 # room owner -------------------------------------------------
 def user_register_owner(r):
@@ -361,7 +395,7 @@ def view_renter_profile(r,rnt_id):
     return render(r,'roomowner/view_renter_profile.html',data)
 
 @login_required(login_url=logins)
-def room_view(r,rm_id):
+def owner_room_view(r,rm_id):
     data = {
         "room_view": Room.objects.get(r_id=rm_id),
         "room_renter": RoomAllot.objects.filter(ra_room_id=rm_id,ra_status='1'),
@@ -369,16 +403,16 @@ def room_view(r,rm_id):
         "user": RoomOwner.objects.filter(user_id__username=r.user),
         "userdata": User.objects.filter(username=r.user),
     }
-    return render(r,'roomowner/room_view.html',data)
+    return render(r, 'roomowner/ro_room_view.html', data)
 
 @login_required(login_url=logins)
-def room_edit(r,et_id):
+def owner_room_edit(r,et_id):
     room = Room.objects.get(r_id=et_id)
     re = EditRoomForm(r.POST or None,instance=room)
     if r.method == "POST":
         if re.is_valid():
             re.save()
-            return redirect("../room_view/"+str(room.r_id))
+            return redirect("../ro_room_view/"+str(room.r_id))
     else:
         re = EditRoomForm(instance=room)
 
@@ -387,7 +421,20 @@ def room_edit(r,et_id):
         "user": RoomOwner.objects.filter(user_id__username=r.user),
         "userdata": User.objects.filter(username=r.user),
     }
-    return render(r,'roomowner/room_edit.html',data)
+    return render(r, 'roomowner/ro_room_edit.html', data)
+
+def owner_room_query(r):
+    data = {
+        "query": RoomQuery.objects.filter(user_id__username=r.user),
+        "user": RoomOwner.objects.filter(user_id__username=r.user),
+        "userdata": User.objects.filter(username=r.user),
+    }
+    return render(r,'roomowner/ro_room_query.html',data)
+
+def query_delete(r,q_id):
+    query = RoomQuery.objects.get(m_id=q_id)
+    query.delete()
+    return redirect('owner_room_query')
 
 #--------------------------------------------------------------------------
 

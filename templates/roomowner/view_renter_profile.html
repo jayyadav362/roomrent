@@ -47,7 +47,7 @@
                     <th>Date</th>
                 </tr>
                 {% for rl in room_al %}
-                    <tr>
+                    <tr class="small">
                     <td><a href="{% url 'room_view' rl.ra_room_id.r_id %}" class="nav-link m-0 p-0">{{ rl.ra_room_id.r_title }}</a></td>
                     <td>
                         {% if rl.ra_status == '1' %}

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
+# from django.contrib.gis.db import models
 
 class State(models.Model):
     name = models.CharField(max_length=100,unique=True)
@@ -30,19 +31,20 @@ class RoomOwner(models.Model):
     user_id = models.ForeignKey(User,on_delete=models.CASCADE)
     ro_image = models.ImageField(upload_to="profile")
     ro_contact = models.CharField(max_length=10,unique=True)
-    ro_street = models.TextField(max_length=300)
+    ro_street = models.TextField(max_length=200)
     ro_id_proof = models.ImageField(upload_to="profile/proof")
     ro_house = models.CharField(max_length=100)
     ro_house_image = models.ImageField(upload_to="image")
     state = models.ForeignKey(State,on_delete=models.CASCADE)
     city = models.ForeignKey(City,on_delete=models.CASCADE)
+    #location = models.PointField()
 
     def __str__(self):
         return self.user_id.first_name
 
 class RoomType(models.Model):
     rt_id = models.AutoField(primary_key=True)
-    rt_title = models.CharField(max_length=200)
+    rt_title = models.CharField(max_length=100)
     slug = models.SlugField()
 
     def __str__(self):
@@ -56,10 +58,10 @@ class RoomType(models.Model):
 class Room(models.Model):
     r_id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(User,on_delete=models.CASCADE)
-    r_title = models.CharField(max_length=200)
+    r_title = models.CharField(max_length=100)
     r_rent = models.CharField(max_length=100)
     r_type = models.ForeignKey(RoomType,on_delete=models.DO_NOTHING)
-    r_desc = models.TextField(max_length=300)
+    r_desc = models.TextField(max_length=200)
     r_image = models.ImageField(upload_to="image")
     slug = models.SlugField()
     r_status = models.CharField(max_length=20, default='1',choices=(("0", "Pending"), ("1", "Active")))
@@ -77,7 +79,7 @@ class RoomRenter(models.Model):
     user_id = models.ForeignKey(User,on_delete=models.CASCADE)
     rr_contact = models.CharField(max_length=10,unique=True)
     rr_image = models.ImageField(upload_to="profile")
-    rr_street = models.TextField(max_length=300)
+    rr_street = models.TextField(max_length=200)
     state = models.ForeignKey(State,on_delete=models.DO_NOTHING)
     city = models.ForeignKey(City,on_delete=models.DO_NOTHING)
     rr_id_proof = models.ImageField(upload_to="profile/proof")
@@ -134,4 +136,16 @@ class RoomAllot(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.ra_room_id.r_title)
         super(RoomAllot, self).save(*args, **kwargs)
+
+class RoomQuery(models.Model):
+    m_id = models.AutoField(primary_key=True)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    m_name = models.CharField(max_length=100)
+    m_contact = models.CharField(max_length=10)
+    m_message = models.CharField(max_length=200)
+    m_doc = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user_id.username+'|'+self.m_name
+
 

@@ -50,3 +50,7 @@ class EditRoomForm(ModelForm):
         model = Room
         fields = ['r_title','r_type','r_rent','r_desc']
 
+class RoomQueryForm(ModelForm):
+    class Meta:
+        model = RoomQuery
+        exclude = ['m_id','user_id']

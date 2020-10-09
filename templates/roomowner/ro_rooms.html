@@ -36,14 +36,14 @@
                         </tr>
                     {% load template_tags %}
                         {% for r in rooms %}
-                            <tr class="">
+                            <tr class="small">
                             <td>{{ r.r_title }}</td>
 
                             <td>
                                 {% if r|room_allot_count == 0 %}
-                                    <span class=" badge badge-danger rounded-circle p-2 ">!Empty Renter</span>
+                                    <span class=" badge badge-danger rounded-circle p-1 ">!Empty Renter</span>
                                 {% else %}
-                                    <span class=" badge badge-success rounded-circle p-2 ">{{ r|room_allot_count }} Renter</span>
+                                    <span class=" badge badge-success rounded-circle p-1 ">{{ r|room_allot_count }} Renter</span>
                                 {% endif %}
                             </td>
 
@@ -54,9 +54,13 @@
                                     <span class="text-danger">Pending</span>
                                 {% endif %}
                             </td>
-                            <td><a href="{% url 'room_view' r.r_id %}" class="m-0 p-0"><i class="fas fa-eye fa-2x text-info"></i></a></td>
+                            <td><a href="{% url 'owner_room_view' r.r_id %}" class="m-0 p-0"><i class="fas fa-eye fa-lg text-info"></i></a></td>
 
-                            <td><a href="{% url 'room_edit' r.r_id %}" class="m-0 p-0"><i class="fas fa-edit fa-2x text-primary"></i></a></td>
+                            <td><a href="{% url 'owner_room_edit' r.r_id %}" class="m-0 p-0"><i class="fas fa-edit fa-lg text-primary"></i></a></td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="4"><div class="alert alert-danger h6 text-center p-5" role="alert">No room availables!</div></td>
                             </tr>
                         {% endfor %}
                     </table>

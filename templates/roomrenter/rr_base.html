@@ -9,25 +9,29 @@
 
 </head>
 <body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-info">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-info sticky-top">
         <a href="{% url 'homepage' %}" class="navbar-brand">Room Rent</a>
         <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a href="{% url 'renter_profile' %}" class="nav-link ml-2">{{ request.user.first_name }} {{ request.user.last_name }}</a></li>
             <li class="nav-item"><a href="{% url 'logouts' %}" class="nav-link">Logout</a></li>
         </ul>
     </nav>
-    <div class="container mt-5">
+    <div class="container-fluid mt-3">
         <div class="row">
             <div class="col-lg-3">
-                <div class="card border-0 shadow-sm">
-                    <img src="{{ user.0.rr_image.url }}" class="" width="100%" height="250px" alt="logo">
+                <div class="card border-0 bg-light">
+                    <center>
+                    <img src="{{ user.0.rr_image.url }}" class="shadow-sm mt-2" width="50%" height="150px" alt="logo">
                     <div class="card-body">
                         <h1 class="text-truncate h6 p-0 m-0  text-center text-uppercase text-muted">{{ userdata.0.first_name }} {{ userdata.0.last_name }}</h1>
                     </div>
+                   </center>
                 </div>
-                <ul class="list-group mt-1">
-                          <li class="list-group-item"><a href="">Payment</a></li>
-                          <li class="list-group-item"><a href="">Room</a></li>
-                          <li class="list-group-item"><a href="">Setting</a></li>
+                <ul class="list-group mt-1 ">
+                          <li class="list-group-item bg-light"><a href="{% url 'renter_profile' %}" class="nav-link small p-0 m-0 ml-5">Dashboard</a></li>
+                          <li class="list-group-item bg-light"><a href="" class="nav-link small p-0 m-0 ml-5">Payment</a></li>
+                          <li class="list-group-item bg-light"><a href="{% url 'renter_rooms' %}" class="nav-link small p-0 m-0 ml-5">My Rooms</a></li>
+                          <li class="list-group-item bg-light"><a href="{% url 'password_change_renter' %}" class="nav-link small p-0 m-0 ml-5">Settings</a></li>
                 </ul>
             </div>
             {% block content %}{% endblock %}

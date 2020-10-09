@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 <body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
         <a href="{% url 'homepage' %}" class="navbar-brand">Room Rent</a>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item"><a href="{% url 'logouts' %}" class="nav-link">Logout</a></li>
@@ -27,13 +27,15 @@
                    </center>
                 </div>
                 <ul class="list-group mt-1 ">
+                          <li class="list-group-item bg-light"><a href="{% url 'owner_profile' %}" class="nav-link small p-0 m-0 ml-5">Dashboard</a></li>
                           <li class="list-group-item bg-light"><a href="" class="nav-link small p-0 m-0 ml-5">Payment</a></li>
                           <li class="list-group-item bg-light"><a href="{% url 'owner_rooms' %}" class="nav-link small p-0 m-0 ml-5">My Rooms</a></li>
                           <li class="list-group-item bg-light"><a href="{% url 'my_renter' %}" class="nav-link small p-0 m-0 ml-5">My Renter</a></li>
+                          <li class="list-group-item bg-light"><a href="{% url 'owner_room_query' %}" class="nav-link small p-0 m-0 ml-5">Room Query</a></li>
                           <li class="list-group-item bg-light"><a href="{% url 'room_allot' %}" class="nav-link small p-0 m-0 ml-5">Room Allot</a></li>
                           <li class="list-group-item bg-light"><a href="{% url 'room_allot_request' %}" class="nav-link small p-0 m-0 ml-5">Room Allot Request</a></li>
                           <li class="list-group-item bg-light"><a href="{% url 'room_allot_pending' %}" class="nav-link small p-0 m-0 ml-5">Room Allot Pending</a></li>
-                          <li class="list-group-item bg-light"><a href="" class="nav-link small p-0 m-0 ml-5">Setting</a></li>
+                          <li class="list-group-item bg-light"><a href="{% url 'password_change_owner' %}" class="nav-link small p-0 m-0 ml-5">Settings</a></li>
                 </ul>
             </div>
             {% block content %}{% endblock %}

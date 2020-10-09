@@ -18,3 +18,35 @@ def room_count(context):
         return qs.count()
     else:
         return 0
+
+@register.filter
+def room_owner_contact(context):
+    qs = RoomOwner.objects.get(user_id=context)
+    if qs:
+        return qs.ro_contact
+    else:
+        return 0
+
+@register.filter
+def room_owner_house(context):
+    qs = RoomOwner.objects.get(user_id=context)
+    if qs:
+        return qs.ro_house
+    else:
+        return 0
+
+@register.filter
+def room_owner_id(context):
+    qs = RoomOwner.objects.get(user_id=context)
+    if qs:
+        return qs.ro_id
+    else:
+        return 0
+
+@register.filter
+def room_renter_contact(context):
+    qs = RoomRenter.objects.get(user_id=context)
+    if qs:
+        return qs.rr_contact
+    else:
+        return 0

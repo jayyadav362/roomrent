@@ -1,0 +1,61 @@
+{% extends 'roomrenter/rr_base.html' %}
+{% block content %}
+<div class="col-lg-9">
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card">
+                <div class="card-header">My Active Rooms</div>
+                <div class="card-body ">
+                    <table class="table table-hover ">
+                        <tr>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>View</th>
+                        </tr>
+                        {% for r in rooms_a %}
+                            <tr class="small">
+                            <td class="text-muted">{{ r.ra_room_id.r_title }}</td>
+                            <td>
+                                <span class="text-success">Active</span>
+                            </td>
+                            <td><a href="{% url 'room_view' r.ra_room_id.r_id %}" class="m-0 p-0"><i class="fas fa-eye fa-lg text-info"></i></a></td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="3"><div class="alert alert-danger h6 text-center p-5" role="alert">No rooms availables!</div></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+    </div>
+     <div class="col-lg-6">
+        <div class="card">
+                <div class="card-header">My Pending Rooms</div>
+                <div class="card-body ">
+                    <table class="table table-hover ">
+                        <tr>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>View</th>
+                        </tr>
+                        {% for r in rooms_p %}
+                            <tr class="small">
+                            <td class="text-muted">{{ r.ra_room_id.r_title }}</td>
+                            <td>
+                                <span class="text-danger">Pending</span>
+                            </td>
+                            <td><a href="{% url 'room_view' r.ra_room_id.r_id %}" class="m-0 p-0"><i class="fas fa-eye fa-lg text-info"></i></a></td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="3"><div class="alert alert-danger h6 text-center p-5" role="alert">No rooms availables!</div></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+    </div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'roomowner/ro_base.html' %}
+{% block content %}
+    <div class="col-lg-9">
+            <div class="card">
+                <div class="card-header">Rooms Query</div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <tr>
+                            <th>Name</th>
+                            <th>Contact</th>
+                            <th>Date</th>
+                            <th>Message</th>
+                            <th>Delete</th>
+                        </tr>
+                    {% for q in query %}
+                                    <tr class="small">
+                                    <td>{{ q.m_name }}</td>
+                                    <td>{{ q.m_contact }}</td>
+                                    <td>{{ q.m_doc|date:'d M,Y' }}</td>
+                                    <td>{{ q.m_message }}</td>
+                                    <td><a href="{% url 'query_delete' q.m_id %}" class=" nav-link p-0 m-0 ml-2"><i class="far fa-times-circle fa-lg text-danger"></i></a></td>
+                                    </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5"><div class="alert alert-danger h6 text-center p-5" role="alert">No room query availables!</div></td>
+                        </tr>
+                    {% endfor %}
+                    </table>
+                </div>
+            </div>
+    </div>
+{% endblock %}
