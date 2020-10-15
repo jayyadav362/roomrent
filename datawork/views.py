@@ -10,12 +10,42 @@ from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
+from datedelta import datedelta
+from datetime import timedelta,datetime
+from datawork.templatetags import template_tags
+import string
+import random
+from django.db.models import Sum
 # Create your views here.
 
-def home(r):
+def create_txn_code(digit):
+    return "".join(random.choices(string.digits,k=digit))
 
-    data = {}
-    return render(r,'home.html',data)
+def diff_month(d1, d2):
+    return (d1.year - d2.year) * 12 + d1.month - d2.month
+
+def home(r):
+    renter = RoomRenter.objects.all()
+    for rt in renter:
+        allot = RoomAllot.objects.filter(renter=rt.user_id, ra_status='1')
+        for x in range(allot.count()):
+            doj = allot[x].ra_doc
+            while diff_month(datetime.now().date(), doj) != 0:
+                cond = Q(pg_month=doj) & Q(pg_allot_id=allot[x].ra_id) & Q(user_id__username=allot[x].renter)
+                if PaymentGenerate.objects.filter(cond).exists() == True:
+                    p = PaymentGenerate.objects.get(Q(pg_month=datetime.now().month) & Q(pg_allot_id=allot[x].ra_id) & Q(user_id__username=allot[x].renter))
+                    p.pg_amount = allot[x].ra_room_id.r_rent / allot[x].ra_room_id.roomallot_set.filter(ra_status='1').count()
+                    p.save()
+                elif PaymentGenerate.objects.filter(cond).exists() == False:
+                    p = PaymentGenerate()
+                    p.pg_txn = create_txn_code(8)
+                    p.pg_month = doj
+                    p.pg_amount = allot[x].ra_room_id.r_rent / allot[x].ra_room_id.roomallot_set.filter(ra_status='1').count()
+                    p.pg_allot_id = RoomAllot(allot[x].ra_id)
+                    p.user_id = allot[x].renter
+                    p.save()
+                doj = doj + datedelta(months=1)
+    return render(r, 'home.html')
 
 def state_search(r):
     if 'term' in r.GET:
@@ -191,7 +221,7 @@ def request_delete(r,r_id):
 @login_required(login_url=logins)
 def password_change_renter(r):
     if r.method == 'POST':
-        form = PasswordChangeForm(r.user, r.POST)
+        form = PasswordChangeForm(r.user, r.POST or None)
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(r, user)  # Important!
@@ -208,6 +238,7 @@ def password_change_renter(r):
     }
     return render(r, 'roomrenter/rr_password_change.html', data)
 
+@login_required(login_url=logins)
 def renter_rooms(r):
     data = {
         "user": RoomRenter.objects.filter(user_id__username=r.user),
@@ -216,6 +247,16 @@ def renter_rooms(r):
         "rooms_p": RoomAllot.objects.filter(renter__username=r.user, ra_status='2'),
     }
     return render(r,'roomrenter/rr_rooms.html',data)
+
+@login_required(login_url=logins)
+def renter_payment(r):
+    room = RoomAllot.objects.filter(renter__username=r.user, ra_status='1')
+    data = {
+        "user": RoomRenter.objects.filter(user_id__username=r.user),
+        "userdata": User.objects.filter(username=r.user),
+        "room": room,
+    }
+    return render(r,'roomrenter/rr_payment.html',data)
 
 # room owner -------------------------------------------------
 def user_register_owner(r):
@@ -256,7 +297,7 @@ def owner_profile(r):
 @login_required(login_url=logins)
 def password_change_owner(r):
     if r.method == 'POST':
-        form = PasswordChangeForm(r.user, r.POST)
+        form = PasswordChangeForm(r.user, r.POST or None)
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(r, user)  # Important!
@@ -437,6 +478,7 @@ def query_delete(r,q_id):
     return redirect('owner_room_query')
 
 #--------------------------------------------------------------------------
+
 
 
 

@@ -1,0 +1,81 @@
+{% extends 'roomrenter/rr_base.html' %}
+{% load template_tags %}
+{% block content %}
+<div class="col-lg-9">
+{% for rm in room %}
+    <div class="card mt-2 mb-2">
+    <div class="card-header bg-dark small">
+        <div class="form-inline text-light">
+            Room no: <a href="{% url 'room_view' rm.ra_room_id.r_id %}" class="nav-link ml-2 m-0 p-0"> {{ rm.ra_room_id.r_title }} of {{ rm.ra_room_id.user_id|room_owner_house }}</a>
+            <span class="text-success ml-5">Rent:  ₹{{ rm.ra_room_id.r_rent }} / {{ rm.ra_room_id|room_allot_count }} Renter</span>
+            <span class="text-danger ml-auto">
+                {% if rm|cond %}
+                        Due:
+                {% else  %}
+                    Advance :
+                {% endif %}
+            {{ rm|subtract }}
+            </span>
+        </div>
+    </div>
+    <div class="card-body m-1 p-1">
+        <div class="row mb-2">
+    <div class="col-lg-6">
+        <div class="card border-0">
+                <div class="card-header small border-0">Payment Generate <span class="float-right text-danger">Total: ₹ {{ rm|sum_pg_amount }} </span></div>
+                <div class="card-body ">
+                    <table class="table table-hover ">
+                        <tr class="small">
+                            <th>Txno.</th>
+                            <th>Amount</th>
+                            <th>Month</th>
+                        </tr>
+                        {% for pg in rm.paymentgenerate_set.all %}
+
+                        <tr class="small">
+                            <td>{{ pg.pg_txn }}</td>
+                            <td>₹ {{ pg.pg_amount }}</td>
+                            <td>{{ pg.pg_month|date:'M' }}</td>
+                        </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="4"><div class="alert alert-danger h6 text-center p-5" role="alert">No Payment Generate availables!</div></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+    </div>
+     <div class="col-lg-6">
+        <div class="card border-0">
+                <div class="card-header small border-0">Payment Paid <span class="float-right text-primary"> Total: ₹ {{ rm|sum_pp_amount }}</span></div>
+                <div class="card-body ">
+                    <table class="table table-hover ">
+                        <tr class="small">
+                            <th>Txno.</th>
+                            <th>Amount</th>
+                            <th>Month</th>
+                        </tr>
+                        {% for pp in rm.paymentpaid_set.all %}
+                        <tr class="small">
+                            <td>{{ pp.pp_txn }}</td>
+                            <td>₹ {{ pp.pp_amount }}</td>
+                            <td>{{ pp.pp_month|date:'M' }}</td>
+                        </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="4"><div class="alert alert-danger h6 text-center p-5" role="alert">No Payment Paid availables!</div></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+    </div>
+</div>
+    </div>
+   </div>
+{% empty %}
+    <div class="alert alert-danger h6 text-center p-5" role="alert">No room availables!</div>
+{% endfor %}
+</div>
+{% endblock %}

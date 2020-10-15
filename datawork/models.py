@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
+from datetime import datetime
 # from django.contrib.gis.db import models
 
 class State(models.Model):
@@ -59,13 +60,13 @@ class Room(models.Model):
     r_id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(User,on_delete=models.CASCADE)
     r_title = models.CharField(max_length=100)
-    r_rent = models.CharField(max_length=100)
+    r_rent = models.IntegerField()
     r_type = models.ForeignKey(RoomType,on_delete=models.DO_NOTHING)
     r_desc = models.TextField(max_length=200)
     r_image = models.ImageField(upload_to="image")
     slug = models.SlugField()
     r_status = models.CharField(max_length=20, default='1',choices=(("0", "Pending"), ("1", "Active")))
-    r_doc = models.DateTimeField(auto_now_add=True)
+    r_doc = models.DateTimeField(default=datetime.now(), blank=True)
 
     def __str__(self):
         return self.r_title
@@ -87,46 +88,12 @@ class RoomRenter(models.Model):
     def __str__(self):
         return self.user_id.first_name
 
-class PaymentGenerate(models.Model):
-    pg_id = models.AutoField(primary_key=True)
-    pg_txn = models.CharField(max_length=100)
-    user_id = models.ForeignKey(User,on_delete=models.DO_NOTHING)
-    pg_amount = models.CharField(max_length=100)
-    pg_month = models.CharField(max_length=100)
-    pg_room_id = models.ForeignKey(Room,on_delete=models.DO_NOTHING)
-    pg_doc = models.DateTimeField(auto_now_add=True)
-    slug = models.SlugField()
-
-    def __str__(self):
-        return self.pg_txn
-
-    def save(self,*args,**kwargs):
-        self.slug = slugify(self.pg_txn)
-        super(PaymentGenerate, self).save(*args,**kwargs)
-
-class PaymentPaid(models.Model):
-    pp_id = models.AutoField(primary_key=True)
-    pp_txn = models.CharField(max_length=100)
-    user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    pp_amount = models.CharField(max_length=100)
-    pp_month = models.CharField(max_length=100)
-    pp_room_id = models.ForeignKey(Room, on_delete=models.DO_NOTHING)
-    pp_doc = models.DateTimeField(auto_now_add=True)
-    slug = models.SlugField()
-
-    def __str__(self):
-        return self.pp_txn
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.pp_txn)
-        super(PaymentPaid, self).save(*args, **kwargs)
-
 class RoomAllot(models.Model):
     ra_id = models.AutoField(primary_key=True)
     ra_room_id = models.ForeignKey(Room, on_delete=models.DO_NOTHING)
     user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING,related_name='user_id')
     renter = models.ForeignKey(User, on_delete=models.DO_NOTHING,related_name='renter')
-    ra_doc = models.DateTimeField(auto_now_add=True)
+    ra_doc = models.DateTimeField(default=datetime.now(), blank=True)
     ra_status = models.CharField(max_length=20, default='1',choices=(("0", "Request"), ("1", "Active"),("2","Pending")))
     slug = models.SlugField()
 
@@ -143,9 +110,45 @@ class RoomQuery(models.Model):
     m_name = models.CharField(max_length=100)
     m_contact = models.CharField(max_length=10)
     m_message = models.CharField(max_length=200)
-    m_doc = models.DateTimeField(auto_now_add=True)
+    m_doc = models.DateTimeField(default=datetime.now(), blank=True)
 
     def __str__(self):
         return self.user_id.username+'|'+self.m_name
+
+class PaymentGenerate(models.Model):
+    pg_id = models.AutoField(primary_key=True)
+    pg_txn = models.CharField(max_length=100)
+    user_id = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    pg_amount = models.IntegerField()
+    pg_month = models.DateTimeField()
+    pg_allot_id = models.ForeignKey(RoomAllot,on_delete=models.DO_NOTHING)
+    pg_doc = models.DateTimeField(default=datetime.now(), blank=True)
+    slug = models.SlugField()
+
+    def __str__(self):
+        return self.pg_txn+' | '+self.pg_allot_id.ra_room_id.r_title+' | '+self.user_id.username
+
+    def save(self,*args,**kwargs):
+        self.slug = slugify(self.pg_txn)
+        super(PaymentGenerate, self).save(*args,**kwargs)
+
+
+class PaymentPaid(models.Model):
+    pp_id = models.AutoField(primary_key=True)
+    pp_txn = models.CharField(max_length=100)
+    user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    pp_amount = models.IntegerField()
+    pp_month = models.DateTimeField()
+    pp_allot_id = models.ForeignKey(RoomAllot,on_delete=models.DO_NOTHING)
+    pp_doc = models.DateTimeField(default=datetime.now(), blank=True)
+    slug = models.SlugField()
+
+    def __str__(self):
+        return self.pp_txn+' | '+self.pp_allot_id.ra_room_id.r_title+' | '+self.user_id.username
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.pp_txn)
+        super(PaymentPaid, self).save(*args, **kwargs)
+
 
 

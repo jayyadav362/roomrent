@@ -22,6 +22,7 @@ urlpatterns = [
     path('register_renter/',views.register_renter,name="register_renter"),
     path('renter_profile/',views.renter_profile,name="renter_profile"),
     path('renter_rooms/',views.renter_rooms,name="renter_rooms"),
+    path('renter_payment/',views.renter_payment,name="renter_payment"),
     path('request_delete/<int:r_id>', views.request_delete,name="request_delete"),
     path('password_change_renter/',views.password_change_renter,name="password_change_renter"),
     # room owner------------------------------

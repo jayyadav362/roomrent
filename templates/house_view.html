@@ -27,14 +27,14 @@
                         <form action="" method="post">
                         {% csrf_token %}
                         {% for form in form %}
-                            <div class="form-group">
+                            <div class="form-group m-0 p-0">
                                 {{ form.label_tag }}
                                 {{ form }}
                                 <label for="" class="text-danger">{{ form.errors }}</label>
                             </div>
                         {% endfor %}
-                        <div class="form-group">
-                                <input type="submit" class="btn btn-primary btn-block">
+                        <div class="form-group m-0 p-0">
+                                <input type="submit" value="Send" class="btn btn-primary btn-block">
                         </div>
                     </form>
                 </div>
@@ -58,7 +58,10 @@
                                 {% if r|room_allot_count == 0 %}
                                     {% if request.user.is_authenticated %}
                                         {%  if request.session.name == 'renter' %}
-                                            <a href="{% url 'room_request' r.r_id %}" class="btn btn-dark float-right mt-2">Request for room</a>
+                                            <div class="form-inline">
+                                                <span class="badge badge-primary  mt-2 px-3 py-2">Empty Room Renter </span>
+                                                <a href="{% url 'room_request' r.r_id %}" class="btn btn-dark ml-auto mt-1">Request for room</a>
+                                            </div>
                                         {% elif request.session.name == 'owner' %}
                                             <span class="alert alert-danger">You can't request for room! You are a Owner</span>
                                         {% elif request.session.name == 'pending' %}
@@ -67,11 +70,17 @@
                                             <span class="alert alert-danger">You can't request for room! You are a Admin</span>
                                         {% endif %}
                                      {% else %}
-                                        <a href="{% url 'room_request' r.r_id %}" class="btn btn-dark float-right mt-2">Request for room</a>
+                                        <div class="form-inline">
+                                            <span class="badge badge-primary  mt-2 px-3 py-2">Empty Room Renter </span>
+                                            <a href="{% url 'room_request' r.r_id %}" class="btn btn-dark ml-auto mt-1">Request for room</a>
+                                        </div>
                                      {% endif %}
 
                                 {% else %}
-                                    <span class="badge badge-danger float-right mt-2 px-4 py-2">Booked</span>
+                                    <div class="form-inline">
+                                    <span class="badge badge-danger  mt-2 px-4 py-2">{{ r.r_id|room_allot_count }} Renter Booked</span>
+                                    <a href="{% url 'room_request' r.r_id %}" class="btn btn-dark ml-auto mt-1">Request for room</a>
+                                    </div>
                                 {% endif %}
 
                             </div>

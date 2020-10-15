@@ -20,19 +20,19 @@
     <div class="col-lg-8">
         <div class="card border-0">
                 <table class="table table-hover bg-light">
-                    <tr>
+                    <tr class="small">
                         <th>Name</th>
                         <td>{{ user_r.first_name }} {{ user_r.last_name }}</td>
                     </tr>
-                    <tr>
+                    <tr class="small">
                         <th>Email</th>
                         <td>{{ user_r.email }}</td>
                     </tr>
-                    <tr>
+                    <tr class="small">
                         <th>Contact</th>
                         <td>{{ renter_profile.rr_contact }}</td>
                     </tr>
-                    <tr>
+                    <tr class="small">
                         <th>Address</th>
                         <td>{{ renter_profile.rr_street }},{{ renter_profile.city.name }},{{ renter_profile.state.name }}</td>
                     </tr>
@@ -41,7 +41,7 @@
         <div class="card">
             <div class="card-body">
             <table class="table table-hover">
-                <tr>
+                <tr class="small">
                     <th>Room Name</th>
                     <th>Status</th>
                     <th>Date</th>
