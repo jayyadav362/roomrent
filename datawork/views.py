@@ -33,7 +33,7 @@ def home(r):
             while diff_month(datetime.now().date(), doj) != 0:
                 cond = Q(pg_month=doj) & Q(pg_allot_id=allot[x].ra_id) & Q(user_id__username=allot[x].renter)
                 if PaymentGenerate.objects.filter(cond).exists() == True:
-                    p = PaymentGenerate.objects.get(Q(pg_month=datetime.now().month) & Q(pg_allot_id=allot[x].ra_id) & Q(user_id__username=allot[x].renter))
+                    p = PaymentGenerate.objects.get(Q(pg_month=doj) & Q(pg_allot_id=allot[x].ra_id) & Q(user_id__username=allot[x].renter))
                     p.pg_amount = allot[x].ra_room_id.r_rent / allot[x].ra_room_id.roomallot_set.filter(ra_status='1').count()
                     p.save()
                 elif PaymentGenerate.objects.filter(cond).exists() == False:
@@ -250,11 +250,10 @@ def renter_rooms(r):
 
 @login_required(login_url=logins)
 def renter_payment(r):
-    room = RoomAllot.objects.filter(renter__username=r.user, ra_status='1')
     data = {
         "user": RoomRenter.objects.filter(user_id__username=r.user),
         "userdata": User.objects.filter(username=r.user),
-        "room": room,
+        "room": RoomAllot.objects.filter(renter__username=r.user, ra_status='1'),
     }
     return render(r,'roomrenter/rr_payment.html',data)
 
@@ -426,14 +425,25 @@ def allot_delete(r,d_id):
 
 @login_required(login_url=logins)
 def view_renter_profile(r,rnt_id):
+    pay = RoomAllot.objects.filter(ra_id=r.POST.get('ra_id'))
+    if r.method == "POST":
+        p = PaymentPaid()
+        p.pp_amount = r.POST.get('amount')
+        p.user_id = pay[0].renter
+        p.pp_allot_id = RoomAllot(pay[0].ra_id)
+        p.pp_txn = create_txn_code(8)
+        p.save()
+        return redirect("../view_renter_profile/" + str(pay[0].renter.id))
     data = {
         "renter_profile":RoomRenter.objects.get(user_id=rnt_id),
         "user_r": User.objects.get(roomrenter__user_id=rnt_id),
         "user": RoomOwner.objects.filter(user_id__username=r.user),
         "userdata": User.objects.filter(username=r.user),
-        "room_al": RoomAllot.objects.filter(renter__id=rnt_id).filter(user_id__username=r.user)
+        "room_al": RoomAllot.objects.filter(renter__id=rnt_id).filter(user_id__username=r.user),
+        "room": RoomAllot.objects.filter(renter__id=rnt_id, ra_status='1').filter(user_id__username=r.user),
     }
     return render(r,'roomowner/view_renter_profile.html',data)
+
 
 @login_required(login_url=logins)
 def owner_room_view(r,rm_id):

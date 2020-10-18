@@ -7,7 +7,7 @@
         <div class="card">
                 <div class="card-header">My Active Rooms</div>
                 <div class="card-body ">
-                    <table class="table table-hover ">
+                    <table class="table table-responsive-sm ">
                         <tr class="small">
                             <th>Name</th>
                             <th>Status</th>
@@ -23,7 +23,7 @@
                             </tr>
                         {% empty %}
                             <tr>
-                                <td colspan="3"><div class="alert alert-danger h6 text-center p-5" role="alert">No rooms availables!</div></td>
+                                <td colspan="3"><div class="alert alert-danger h6 text-center p-3" role="alert">No rooms availables!</div></td>
                             </tr>
                         {% endfor %}
                     </table>
@@ -34,7 +34,7 @@
         <div class="card">
                 <div class="card-header">My Pending Rooms</div>
                 <div class="card-body ">
-                    <table class="table table-hover ">
+                    <table class="table table-responsive-sm ">
                         <tr>
                             <th>Name</th>
                             <th>Status</th>
@@ -50,7 +50,7 @@
                             </tr>
                         {% empty %}
                             <tr>
-                                <td colspan="3"><div class="alert alert-danger h6 text-center p-5" role="alert">No rooms availables!</div></td>
+                                <td colspan="3"><div class="alert alert-danger h6 text-center p-3" role="alert">No rooms availables!</div></td>
                             </tr>
                         {% endfor %}
                     </table>

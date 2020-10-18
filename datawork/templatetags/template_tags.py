@@ -54,24 +54,24 @@ def room_renter_contact(context):
 
 @register.filter
 def sum_pg_amount(x):
-    total = x.paymentgenerate_set.aggregate(Sum('pg_amount'))['pg_amount__sum'] or 00.00
+    total = x.paymentgenerate_set.aggregate(Sum('pg_amount'))['pg_amount__sum']
     return total
 
 @register.filter
 def sum_pp_amount(x):
-    total = x.paymentpaid_set.aggregate(Sum('pp_amount'))['pp_amount__sum'] or 00.00
+    total = x.paymentpaid_set.aggregate(Sum('pp_amount'))['pp_amount__sum']
     return total
 
 @register.filter
 def subtract(x):
-    value = x.paymentgenerate_set.aggregate(Sum('pg_amount'))['pg_amount__sum'] or 00.00
-    arg = x.paymentpaid_set.aggregate(Sum('pp_amount'))['pp_amount__sum'] or 00.00
-    return value - arg
+    value = x.paymentgenerate_set.aggregate(Sum('pg_amount'))['pg_amount__sum']
+    arg = x.paymentpaid_set.aggregate(Sum('pp_amount'))['pp_amount__sum']
+    return round(abs(value - arg))
 
 @register.filter
 def cond(x):
-    value = x.paymentgenerate_set.aggregate(Sum('pg_amount'))['pg_amount__sum'] or 00.00
-    arg = x.paymentpaid_set.aggregate(Sum('pp_amount'))['pp_amount__sum'] or 00.00
+    value = x.paymentgenerate_set.aggregate(Sum('pg_amount'))['pg_amount__sum']
+    arg = x.paymentpaid_set.aggregate(Sum('pp_amount'))['pp_amount__sum']
     if(value - arg > 0):
         return True
     else:

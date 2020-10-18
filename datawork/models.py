@@ -138,7 +138,6 @@ class PaymentPaid(models.Model):
     pp_txn = models.CharField(max_length=100)
     user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     pp_amount = models.IntegerField()
-    pp_month = models.DateTimeField()
     pp_allot_id = models.ForeignKey(RoomAllot,on_delete=models.DO_NOTHING)
     pp_doc = models.DateTimeField(default=datetime.now(), blank=True)
     slug = models.SlugField()

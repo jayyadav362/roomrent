@@ -6,15 +6,14 @@
     <div class="card mt-2 mb-2">
     <div class="card-header bg-dark small">
         <div class="form-inline text-light">
-            Room no: <a href="{% url 'room_view' rm.ra_room_id.r_id %}" class="nav-link ml-2 m-0 p-0"> {{ rm.ra_room_id.r_title }} of {{ rm.ra_room_id.user_id|room_owner_house }}</a>
-            <span class="text-success ml-5">Rent:  ₹{{ rm.ra_room_id.r_rent }} / {{ rm.ra_room_id|room_allot_count }} Renter</span>
-            <span class="text-danger ml-auto">
+            Room no: <a href="{% url 'room_view' rm.ra_room_id.r_id %}" class="nav-link text-primary text-capitalize ml-2 m-0 p-0"> <span class="badge badge-primary p-1">{{ rm.ra_room_id.r_title }}</span> of {{ rm.ra_room_id.user_id|room_owner_house }}</a>
+            <span class="text-warning ml-auto">Rent:  ₹{{ rm.ra_room_id.r_rent }} / {{ rm.ra_room_id|room_allot_count }} Renter</span>
+            <span class=" ml-auto">
                 {% if rm|cond %}
-                        Due:
+                      <span class="text-danger">Due: ₹ {{ rm|subtract }}</span>
                 {% else  %}
-                    Advance :
+                    <span class="text-success">Advance : ₹ {{ rm|subtract }}</span>
                 {% endif %}
-            {{ rm|subtract }}
             </span>
         </div>
     </div>
@@ -24,7 +23,7 @@
         <div class="card border-0">
                 <div class="card-header small border-0">Payment Generate <span class="float-right text-danger">Total: ₹ {{ rm|sum_pg_amount }} </span></div>
                 <div class="card-body ">
-                    <table class="table table-hover ">
+                    <table class="table table-responsive-sm ">
                         <tr class="small">
                             <th>Txno.</th>
                             <th>Amount</th>
@@ -39,7 +38,7 @@
                         </tr>
                         {% empty %}
                             <tr>
-                                <td colspan="4"><div class="alert alert-danger h6 text-center p-5" role="alert">No Payment Generate availables!</div></td>
+                                <td colspan="4"><div class="alert alert-danger h6 text-center p-3" role="alert">No Payment Generate availables!</div></td>
                             </tr>
                         {% endfor %}
                     </table>
@@ -50,21 +49,21 @@
         <div class="card border-0">
                 <div class="card-header small border-0">Payment Paid <span class="float-right text-primary"> Total: ₹ {{ rm|sum_pp_amount }}</span></div>
                 <div class="card-body ">
-                    <table class="table table-hover ">
+                    <table class="table table-responsive-sm ">
                         <tr class="small">
                             <th>Txno.</th>
                             <th>Amount</th>
-                            <th>Month</th>
+                            <th>Date</th>
                         </tr>
                         {% for pp in rm.paymentpaid_set.all %}
                         <tr class="small">
                             <td>{{ pp.pp_txn }}</td>
                             <td>₹ {{ pp.pp_amount }}</td>
-                            <td>{{ pp.pp_month|date:'M' }}</td>
+                            <td>{{ pp.pp_doc|date:'d M,Y' }}</td>
                         </tr>
                         {% empty %}
                             <tr>
-                                <td colspan="4"><div class="alert alert-danger h6 text-center p-5" role="alert">No Payment Paid availables!</div></td>
+                                <td colspan="4"><div class="alert alert-danger h6 text-center p-3" role="alert">No Payment Paid availables!</div></td>
                             </tr>
                         {% endfor %}
                     </table>
@@ -75,7 +74,7 @@
     </div>
    </div>
 {% empty %}
-    <div class="alert alert-danger h6 text-center p-5" role="alert">No room availables!</div>
+    <div class="alert alert-danger h6 text-center p-3" role="alert">No room availables!</div>
 {% endfor %}
 </div>
 {% endblock %}

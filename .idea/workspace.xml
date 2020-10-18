@@ -2,29 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2c4061c7-7552-421d-8c4a-029c83d7b337" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/datawork/migrations/0009_paymentgenerate_pg_allot_id.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/datawork/migrations/0010_remove_paymentgenerate_pg_room_id.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/datawork/migrations/0011_auto_20201012_2011.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/datawork/migrations/0012_auto_20201012_2013.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/datawork/migrations/0013_auto_20201012_2314.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/datawork/migrations/0014_auto_20201014_0146.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/datawork/migrations/0015_auto_20201014_0202.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/datawork/migrations/0016_auto_20201014_0205.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/datawork/migrations/0017_auto_20201014_2335.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/datawork/migrations/0018_auto_20201014_2338.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/datawork/migrations/0019_auto_20201014_2340.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/datawork/migrations/0020_auto_20201014_2351.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/image/tv_KUVpSub.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/roomrenter/rr_payment.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/datawork/migrations/0021_auto_20201018_2252.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/datawork/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/datawork/forms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/datawork/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/datawork/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/datawork/templatetags/template_tags.py" beforeDir="false" afterPath="$PROJECT_DIR$/datawork/templatetags/template_tags.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/datawork/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/datawork/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/roomrent/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/roomrent/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/house_view.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/house_view.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/room_view.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/room_view.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_base.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_my_renter.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_my_renter.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_profile.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_room_query.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_room_query.html" afterDir="false" />
@@ -34,6 +21,7 @@
       <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_rooms.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_rooms.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/roomowner/view_renter_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/view_renter_profile.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/roomrenter/rr_base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomrenter/rr_base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomrenter/rr_payment.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomrenter/rr_payment.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/roomrenter/rr_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomrenter/rr_profile.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/roomrenter/rr_rooms.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomrenter/rr_rooms.html" afterDir="false" />
     </list>
@@ -159,7 +147,11 @@
       <workItem from="1602232832914" duration="1702000" />
       <workItem from="1602234669516" duration="22198000" />
       <workItem from="1602307830450" duration="72493000" />
-      <workItem from="1602749820601" duration="1083000" />
+      <workItem from="1602749820601" duration="1422000" />
+      <workItem from="1602772915376" duration="5986000" />
+      <workItem from="1602993168312" duration="154000" />
+      <workItem from="1602996129579" duration="624000" />
+      <workItem from="1603031406007" duration="12307000" />
     </task>
     <task id="LOCAL-00001" summary="exclude status">
       <created>1601454878233</created>

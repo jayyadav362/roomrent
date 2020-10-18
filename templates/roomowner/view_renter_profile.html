@@ -1,4 +1,5 @@
 {% extends 'roomowner/ro_base.html' %}
+{% load template_tags %}
 {% block content %}
 <div class="col-lg-9 bg-white mb-2">
     <div class="card-header  text-center bg-info text-light">Renter Profile</div>
@@ -19,7 +20,7 @@
     </div>
     <div class="col-lg-8">
         <div class="card border-0">
-                <table class="table table-hover bg-light">
+                <table class="table table-responsive-sm bg-light">
                     <tr class="small">
                         <th>Name</th>
                         <td>{{ user_r.first_name }} {{ user_r.last_name }}</td>
@@ -40,7 +41,7 @@
         </div>
         <div class="card">
             <div class="card-body">
-            <table class="table table-hover">
+            <table class="table table-responsive-sm">
                 <tr class="small">
                     <th>Room Name</th>
                     <th>Status</th>
@@ -48,7 +49,7 @@
                 </tr>
                 {% for rl in room_al %}
                     <tr class="small">
-                    <td><a href="{% url 'room_view' rl.ra_room_id.r_id %}" class="nav-link m-0 p-0">{{ rl.ra_room_id.r_title }}</a></td>
+                    <td><a href="{% url 'owner_room_view' rl.ra_room_id.r_id %}" class="nav-link m-0 p-0">{{ rl.ra_room_id.r_title }}</a></td>
                     <td>
                         {% if rl.ra_status == '1' %}
                             <span class="text-success">Active</span>
@@ -62,13 +63,115 @@
                     </tr>
                 {% empty %}
                         <tr>
-                            <td colspan="3"><div class="alert alert-danger h6 text-center p-5" role="alert">No room allot availables!</div></td>
+                            <td colspan="3"><div class="alert alert-danger h6 text-center p-3" role="alert">No room allot availables!</div></td>
                         </tr>
                 {% endfor %}
             </table>
             </div>
         </div>
     </div>
+    <div class="col-lg-12">
+{% for rm in room %}
+    <!---modal--->
+    <div class="modal fade" id="payRent{{ rm.ra_id }}" role="dialog">
+    <div class="modal-dialog">
+        <form  class="well contact-form" method="post" action="">
+            {% csrf_token %}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title text-primary small">Rent of room {{rm.ra_room_id.r_title }} of {{ rm.renter.first_name }} {{ rm.renter.last_name }}</h1>
+                    <input type="hidden" name="ra_id" value="{{ rm.ra_id }}">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="">Amount</label>
+                        <input type="text" class="form-control" name="amount" value="{{ rm|subtract }}">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button  type="submit" class="btn btn-success">PAY</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+    <!-----end-modal---->
+    <div class="card mt-2 mb-2">
+    <div class="card-header bg-dark small">
+        <div class="form-inline text-light">
+            Room no: <a href="{% url 'owner_room_view' rm.ra_room_id.r_id %}" class="nav-link text-primary text-capitalize ml-2 m-0 p-0"> <span class="badge badge-primary p-1">{{ rm.ra_room_id.r_title }}</span> of {{ rm.ra_room_id.user_id|room_owner_house }}</a>
+            <span class="text-warning ml-auto">Rent:  ₹{{ rm.ra_room_id.r_rent }} / {{ rm.ra_room_id|room_allot_count }} Renter</span>
+            <span class=" ml-auto">
+                {% if rm|cond %}
+                      <span class="text-danger">Due: ₹ {{ rm|subtract }}</span>
+                {% else  %}
+                    <span class="text-success">Advance : ₹ {{ rm|subtract }}</span>
+                {% endif %}
+            </span>
+            <button type="button" class="btn btn-success btn-sm ml-auto m-0 p-0 px-1 small text-white-50" data-toggle="modal" data-target="#payRent{{ rm.ra_id }}">PAY RENT</button>
+        </div>
+    </div>
+    <div class="card-body m-1 p-1">
+        <div class="row mb-2">
+    <div class="col-lg-6">
+        <div class="card border-0">
+                <div class="card-header small border-0">Payment Generate <span class="float-right text-danger">Total: ₹ {{ rm|sum_pg_amount }} </span></div>
+                <div class="card-body ">
+                    <table class="table table-responsive-sm ">
+                        <tr class="small">
+                            <th>Txno.</th>
+                            <th>Amount</th>
+                            <th>Month</th>
+                        </tr>
+                        {% for pg in rm.paymentgenerate_set.all %}
+
+                        <tr class="small">
+                            <td>{{ pg.pg_txn }}</td>
+                            <td>₹ {{ pg.pg_amount }}</td>
+                            <td>{{ pg.pg_month|date:'M' }}</td>
+                        </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="4"><div class="alert alert-danger h6 text-center p-3" role="alert">No Payment Generate availables!</div></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+    </div>
+     <div class="col-lg-6">
+        <div class="card border-0">
+                <div class="card-header small border-0">Payment Paid <span class="float-right text-primary"> Total: ₹ {{ rm|sum_pp_amount }}</span></div>
+                <div class="card-body ">
+                    <table class="table table-responsive-sm ">
+                        <tr class="small">
+                            <th>Txno.</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                        </tr>
+                        {% for pp in rm.paymentpaid_set.all %}
+                        <tr class="small">
+                            <td>{{ pp.pp_txn }}</td>
+                            <td>₹ {{ pp.pp_amount }}</td>
+                            <td>{{ pp.pp_doc|date:'d M,Y' }}</td>
+                        </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="4"><div class="alert alert-danger h6 text-center p-3" role="alert">No Payment Paid availables!</div></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+    </div>
+</div>
+    </div>
+   </div>
+{% empty %}
+    <div class="alert alert-danger h6 text-center p-3" role="alert">No room availables!</div>
+{% endfor %}
+</div>
 </div>
 </div>
 {% endblock %}

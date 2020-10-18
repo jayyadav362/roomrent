@@ -12,7 +12,7 @@
     </div>
     <div class="col-lg-8">
         <div class="card border-0">
-                <table class="table table-hover bg-light">
+                <table class="table table-responsive-sm bg-light">
                     <tr>
                         <th>Room Name</th>
                         <td>{{ room_view.r_title }} </td>
@@ -29,7 +29,7 @@
                         <th colspan="2">Description:</th>
                     </tr>
                     <tr>
-                        <td colspan="2"><span class="ml-5">{{ room_view.r_desc }}</span></td>
+                        <td colspan="2"><span class="ml-5 small">{{ room_view.r_desc }}</span></td>
                     </tr>
                 </table>
         </div>
@@ -39,7 +39,7 @@
         <div class="card">
             <div class="card-header">Request for rent</div>
             <div class="card-body">
-                <table class="table table-hover">
+                <table class="table table-responsive-sm">
                     <tr class="small">
                         <th>Name</th>
                         <th>Contact</th>
@@ -62,7 +62,7 @@
                                     </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="5"><div class="alert alert-danger h6 text-center p-5" role="alert">No renter request availables!</div></td>
+                            <td colspan="5"><div class="alert alert-danger h6 text-center p-3" role="alert">No renter request availables!</div></td>
                         </tr>
                     {% endfor %}
                 </table>
@@ -74,19 +74,25 @@
         <div class="card-header">Room Renter</div>
         {% load template_tags %}
             {% if room_view|room_allot_count == 0 %}
-                <div class="alert alert-danger p-5" role="alert">No renter availables!</div>
+                <div class="alert alert-danger p-3" role="alert">No renter availables!</div>
             {% else %}
                     <div class="card-body">
-                        <table class="table table-hover">
+                        <table class="table table-responsive-sm">
                             <tr class="small">
                                 <th>Renter Name</th>
+                                <th>Mobile</th>
                                 <th>View</th>
                             </tr>
                             {% for r in room_renter %}
                                     <tr class="small">
                                     <td>{{ r.renter.first_name }} {{ r.renter.last_name }}</td>
+                                    <td>{{ r.renter|room_renter_contact }}</td>
                                     <td><a href="{% url 'view_renter_profile' r.renter.id %}" class="nav-link p-0 m-0"><i class="fas fa-eye fa-lg text-primary"></i></a></td>
                                     </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="5"><div class="alert alert-danger h6 text-center p-3" role="alert">No renter availables!</div></td>
+                                </tr>
                             {% endfor %}
                         </table>
                     </div>
