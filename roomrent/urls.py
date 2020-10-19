@@ -31,6 +31,7 @@ urlpatterns = [
     path('owner_profile/',views.owner_profile,name="owner_profile"),
     path('owner_rooms/',views.owner_rooms,name="owner_rooms"),
     path('room_allot/',views.room_allot,name="room_allot"),
+    path('owner_payment/',views.owner_payment,name="owner_payment"),
     path('password_change_owner/',views.password_change_owner,name="password_change_owner"),
     path('my_renter/',views.my_renter,name="my_renter"),
     path('room_allot_request/',views.room_allot_request,name="room_allot_request"),

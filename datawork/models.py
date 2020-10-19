@@ -100,10 +100,6 @@ class RoomAllot(models.Model):
     def __str__(self):
         return self.ra_room_id.r_title
 
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.ra_room_id.r_title)
-        super(RoomAllot, self).save(*args, **kwargs)
-
 class RoomQuery(models.Model):
     m_id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -136,14 +132,15 @@ class PaymentGenerate(models.Model):
 class PaymentPaid(models.Model):
     pp_id = models.AutoField(primary_key=True)
     pp_txn = models.CharField(max_length=100)
-    user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    renter_id = models.ForeignKey(User, on_delete=models.DO_NOTHING,related_name='renter_id')
+    owner_id = models.ForeignKey(User, on_delete=models.DO_NOTHING,related_name='owner_id')
     pp_amount = models.IntegerField()
     pp_allot_id = models.ForeignKey(RoomAllot,on_delete=models.DO_NOTHING)
     pp_doc = models.DateTimeField(default=datetime.now(), blank=True)
     slug = models.SlugField()
 
     def __str__(self):
-        return self.pp_txn+' | '+self.pp_allot_id.ra_room_id.r_title+' | '+self.user_id.username
+        return self.pp_txn+' | '+self.pp_allot_id.ra_room_id.r_title+' | '+self.renter_id.username
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.pp_txn)

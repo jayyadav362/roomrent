@@ -6,16 +6,15 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.db.models import Q
-from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from datedelta import datedelta
 from datetime import timedelta,datetime
-from datawork.templatetags import template_tags
 import string
 import random
 from django.db.models import Sum
+from datawork.templatetags import template_tags
 # Create your views here.
 
 def create_txn_code(digit):
@@ -31,11 +30,14 @@ def home(r):
         for x in range(allot.count()):
             doj = allot[x].ra_doc
             while diff_month(datetime.now().date(), doj) != 0:
-                cond = Q(pg_month=doj) & Q(pg_allot_id=allot[x].ra_id) & Q(user_id__username=allot[x].renter)
+                cond = Q(pg_month__month=doj.month,pg_month__year=doj.year) & Q(pg_allot_id=allot[x].ra_id) & Q(user_id__username=allot[x].renter)
                 if PaymentGenerate.objects.filter(cond).exists() == True:
-                    p = PaymentGenerate.objects.get(Q(pg_month=doj) & Q(pg_allot_id=allot[x].ra_id) & Q(user_id__username=allot[x].renter))
-                    p.pg_amount = allot[x].ra_room_id.r_rent / allot[x].ra_room_id.roomallot_set.filter(ra_status='1').count()
-                    p.save()
+                    try:
+                        p = PaymentGenerate.objects.get(Q(pg_month__month=datetime.now().date().month,pg_month__year=datetime.now().date().year) & Q(pg_allot_id=allot[x].ra_id) & Q(user_id__username=allot[x].renter))
+                        p.pg_amount = allot[x].ra_room_id.r_rent / allot[x].ra_room_id.roomallot_set.filter(ra_status='1').count()
+                        p.save()
+                    except ObjectDoesNotExist:
+                        pass
                 elif PaymentGenerate.objects.filter(cond).exists() == False:
                     p = PaymentGenerate()
                     p.pg_txn = create_txn_code(8)
@@ -62,7 +64,7 @@ def city_search(r):
         for city in qs:
             titles.append(city.name)
         return JsonResponse(titles, safe=False)
-    
+
 def search_room(r):
     if r.method == 'GET':
         data = {
@@ -70,7 +72,7 @@ def search_room(r):
         }
     else:
         data = {"house":RoomOwner.objects.all()}
-        
+
     return render(r,'search.html',data)
 
 def house_view(r,h_id):
@@ -151,8 +153,7 @@ def logins(r):
 @login_required(login_url=logins)
 def room_request(r,rq_id):
     request = RoomAllot()
-    user = User.objects.get(username=r.user)
-    request.renter = user
+    request.renter = r.user
     room = Room.objects.get(r_id=rq_id)
     request.ra_room_id = Room(room.r_id)
     request.user_id = User(room.user_id_id)
@@ -195,8 +196,7 @@ def register_renter(r):
     if r.method == "POST":
         if a.is_valid():
             d = a.save(commit=False)
-            user = User.objects.get(username=r.user)
-            d.user_id = user
+            d.user_id = r.user
             d.save()
             return redirect('renter_profile')
     data = {"form": a,}
@@ -276,8 +276,7 @@ def register_owner(r):
     if r.method == "POST":
         if a.is_valid():
             d = a.save(commit=False)
-            user = User.objects.get(username=r.user)
-            d.user_id = user
+            d.user_id = r.user
             d.save()
             return redirect('owner_profile')
     data = {
@@ -319,8 +318,7 @@ def owner_rooms(r):
     if r.method == "POST":
         if rm.is_valid():
             d = rm.save(commit=False)
-            user = User.objects.get(username=r.user)
-            d.user_id = user
+            d.user_id = r.user
             d.slug = r.POST.get('r_title')
             d.save()
             return redirect('owner_rooms')
@@ -350,8 +348,7 @@ def room_allot(r):
                 return redirect('room_allot')
         except ObjectDoesNotExist:
             d = RoomAllot()
-            user = User.objects.get(username=r.user)
-            d.user_id = user
+            d.user_id = r.user
             d.renter = User(r.POST.get('renter'))
             d.ra_room_id = Room(r.POST.get('ra_room_id'))
             d.slug = r.POST.get('ra_room_id')
@@ -429,7 +426,8 @@ def view_renter_profile(r,rnt_id):
     if r.method == "POST":
         p = PaymentPaid()
         p.pp_amount = r.POST.get('amount')
-        p.user_id = pay[0].renter
+        p.renter_id = pay[0].renter
+        p.owner_id = r.user
         p.pp_allot_id = RoomAllot(pay[0].ra_id)
         p.pp_txn = create_txn_code(8)
         p.save()
@@ -486,6 +484,16 @@ def query_delete(r,q_id):
     query = RoomQuery.objects.get(m_id=q_id)
     query.delete()
     return redirect('owner_room_query')
+
+def owner_payment(r):
+    pay = PaymentPaid.objects.filter(pp_doc__month=datetime.now().date().month,pp_doc__year=datetime.now().date().year).filter(owner_id=r.user)
+    data = {
+        "total": pay.aggregate(Sum('pp_amount'))['pp_amount__sum'] or 00.00,
+        "payment":pay,
+        "user": RoomOwner.objects.filter(user_id__username=r.user),
+        "userdata": User.objects.filter(username=r.user),
+    }
+    return render(r,'roomowner/owner_payment.html',data)
 
 #--------------------------------------------------------------------------
 

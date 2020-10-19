@@ -6,6 +6,7 @@
     <title>Room Rent</title>
 {% load static %}
     <link rel="stylesheet" href="{% static 'bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 </head>
@@ -29,7 +30,7 @@
                 </div>
                 <ul class="list-group mt-1 ">
                           <li class="list-group-item bg-light"><a href="{% url 'owner_profile' %}" class="nav-link small p-0 m-0 ml-5">Dashboard</a></li>
-                          <li class="list-group-item bg-light"><a href="" class="nav-link small p-0 m-0 ml-5">Payment</a></li>
+                          <li class="list-group-item bg-light"><a href="{% url 'owner_payment' %}" class="nav-link small p-0 m-0 ml-5">Payment</a></li>
                           <li class="list-group-item bg-light"><a href="{% url 'owner_rooms' %}" class="nav-link small p-0 m-0 ml-5">My Rooms</a></li>
                           <li class="list-group-item bg-light"><a href="{% url 'my_renter' %}" class="nav-link small p-0 m-0 ml-5">My Renter</a></li>
                           <li class="list-group-item bg-light"><a href="{% url 'room_allot_pending' %}" class="nav-link small p-0 m-0 ml-5">Renter Pending</a></li>
@@ -85,7 +86,13 @@
             var selected = $(this).select2('data')[0];
             location.href = 'http://127.0.0.1:8000/view_renter_profile/' + selected.id;
         });
+        const monthControl = document.querySelector('input[type="month"]');
+        const date= new Date()
+        const month=("0" + (date.getMonth() + 1)).slice(-2)
+        const year=date.getFullYear()
+        monthControl.value = `${year}-${month}`;
     });
+
 </script>
 </body>
 </html>
