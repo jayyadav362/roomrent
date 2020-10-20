@@ -61,7 +61,7 @@
                                     <tr class="small">
                                         <td class="">{{ rq.ra_room_id.r_title }}</td>
                                         <td>{{ rq.user_id|room_owner_house }}</td>
-                                        <td><a href="{% url 'house_view' rq.user_id|room_owner_id %}" class="nav-link p-0 m-0">{{ rq.user_id.first_name }} {{ rq.user_id.last_name }}</a></td>
+                                        <td><a href="{% url 'house_view' rq.user_id|room_owner_username %}" class="nav-link p-0 m-0">{{ rq.user_id.first_name }} {{ rq.user_id.last_name }}</a></td>
 
                                         <td>{{ rq.user_id|room_owner_contact }}</td>
 

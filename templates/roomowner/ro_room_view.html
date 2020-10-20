@@ -87,7 +87,7 @@
                                     <tr class="small">
                                     <td>{{ r.renter.first_name }} {{ r.renter.last_name }}</td>
                                     <td>{{ r.renter|room_renter_contact }}</td>
-                                    <td><a href="{% url 'view_renter_profile' r.renter.id %}" class="nav-link p-0 m-0"><i class="fas fa-eye fa-lg text-primary"></i></a></td>
+                                    <td><a href="{% url 'view_renter_profile' r.renter.username %}" class="nav-link p-0 m-0"><i class="fas fa-eye fa-lg text-primary"></i></a></td>
                                     </tr>
                             {% empty %}
                                 <tr>

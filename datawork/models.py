@@ -98,7 +98,7 @@ class RoomAllot(models.Model):
     slug = models.SlugField()
 
     def __str__(self):
-        return self.ra_room_id.r_title
+        return self.ra_room_id.r_title+' | '+self.renter.username
 
 class RoomQuery(models.Model):
     m_id = models.AutoField(primary_key=True)

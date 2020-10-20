@@ -37,8 +37,8 @@ def room_owner_house(context):
         return 0
 
 @register.filter
-def room_owner_id(context):
-    qs = RoomOwner.objects.get(user_id=context)
+def room_owner_username(context):
+    qs = RoomOwner.objects.get(user_id__username=context)
     if qs:
         return qs.ro_id
     else:

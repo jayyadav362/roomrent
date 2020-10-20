@@ -10,7 +10,7 @@ from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from datedelta import datedelta
-from datetime import timedelta,datetime
+from datetime import datetime
 import string
 import random
 from django.db.models import Sum
@@ -29,6 +29,7 @@ def home(r):
         allot = RoomAllot.objects.filter(renter=rt.user_id, ra_status='1')
         for x in range(allot.count()):
             doj = allot[x].ra_doc
+            doj = datetime(doj.year, doj.month, 1)
             while diff_month(datetime.now().date(), doj) != 0:
                 cond = Q(pg_month__month=doj.month,pg_month__year=doj.year) & Q(pg_allot_id=allot[x].ra_id) & Q(user_id__username=allot[x].renter)
                 if PaymentGenerate.objects.filter(cond).exists() == True:
@@ -46,7 +47,7 @@ def home(r):
                     p.pg_allot_id = RoomAllot(allot[x].ra_id)
                     p.user_id = allot[x].renter
                     p.save()
-                doj = doj + datedelta(months=1)
+                doj = datetime(doj.year, doj.month, 1) + datedelta(months=1)
     return render(r, 'home.html')
 
 def state_search(r):
@@ -76,7 +77,7 @@ def search_room(r):
     return render(r,'search.html',data)
 
 def house_view(r,h_id):
-    owner = RoomOwner.objects.get(ro_id=h_id)
+    owner = RoomOwner.objects.get(user_id__username=h_id)
     room_query = RoomQueryForm(r.POST or None)
     if r.method == 'POST':
         if room_query.is_valid:
@@ -84,7 +85,7 @@ def house_view(r,h_id):
             s.user_id = User(owner.user_id_id)
             s.save()
             messages.success(r, "Room Query send successfully!")
-            return redirect("../house_view/" + str(owner.ro_id))
+            return redirect("../house_view/" + str(owner.user_id.username))
     data = {
         "form":room_query,
         "house":owner,
@@ -253,7 +254,7 @@ def renter_payment(r):
     data = {
         "user": RoomRenter.objects.filter(user_id__username=r.user),
         "userdata": User.objects.filter(username=r.user),
-        "room": RoomAllot.objects.filter(renter__username=r.user, ra_status='1'),
+        "room": RoomAllot.objects.filter(Q(renter__username=r.user, ra_status='1') | Q(renter__username=r.user, ra_status='2')),
     }
     return render(r,'roomrenter/rr_payment.html',data)
 
@@ -341,17 +342,25 @@ def room_allot(r):
 
     if r.method == "POST":
         try:
-            # check renter room-----------
-            check = RoomAllot.objects.get(Q(ra_room_id=r.POST.get('ra_room_id')) & Q(renter=r.POST.get('renter')),ra_status='1')
-            if check is not None:
-                messages.error(r,"this renter is already in this room!")
-                return redirect('room_allot')
+            try:
+                # check renter room active-----------
+                check = RoomAllot.objects.get(Q(ra_room_id=r.POST.get('ra_room_id')) & Q(renter=r.POST.get('renter')),ra_status='1')
+                if check is not None:
+                    messages.error(r,"this renter is already in this room!")
+                    return redirect('room_allot')
+            except ObjectDoesNotExist:
+                # check renter room pending-----------
+                check = RoomAllot.objects.get(Q(ra_room_id=r.POST.get('ra_room_id')) & Q(renter=r.POST.get('renter')),ra_status='2')
+                if check is not None:
+                    messages.error(r, "this renter is pending in this room!")
+                    return redirect('room_allot')
         except ObjectDoesNotExist:
             d = RoomAllot()
             d.user_id = r.user
             d.renter = User(r.POST.get('renter'))
             d.ra_room_id = Room(r.POST.get('ra_room_id'))
-            d.slug = r.POST.get('ra_room_id')
+            rm = Room.objects.filter(r_id=r.POST.get('ra_room_id'))
+            d.slug = rm[0].r_title
             d.save()
             messages.success(r, "room alloting successfully!")
             return redirect('room_allot')
@@ -395,9 +404,9 @@ def room_allot_pending(r):
 def allot_active(r,a_id):
     active = RoomAllot.objects.get(ra_id=a_id, ra_room_id__r_status='1')
     try:
-        check = RoomAllot.objects.get(Q(ra_room_id=active.ra_room_id) & Q(renter=active.renter),ra_status=1)
+        check = RoomAllot.objects.get(Q(ra_room_id=active.ra_room_id) & Q(renter=active.renter),ra_status='1')
         if check is not None:
-            messages.error(r, "this renter is already allot in this room!")
+            messages.error(r, "this renter is already pending in this room!")
             return redirect('my_renter')
     except ObjectDoesNotExist:
         active.ra_status = '1'
@@ -433,12 +442,12 @@ def view_renter_profile(r,rnt_id):
         p.save()
         return redirect("../view_renter_profile/" + str(pay[0].renter.id))
     data = {
-        "renter_profile":RoomRenter.objects.get(user_id=rnt_id),
-        "user_r": User.objects.get(roomrenter__user_id=rnt_id),
+        "renter_profile":RoomRenter.objects.get(user_id__username=rnt_id),
+        "user_r": User.objects.get(roomrenter__user_id__username=rnt_id),
         "user": RoomOwner.objects.filter(user_id__username=r.user),
         "userdata": User.objects.filter(username=r.user),
-        "room_al": RoomAllot.objects.filter(renter__id=rnt_id).filter(user_id__username=r.user),
-        "room": RoomAllot.objects.filter(renter__id=rnt_id, ra_status='1').filter(user_id__username=r.user),
+        "room_al": RoomAllot.objects.filter(renter__username=rnt_id).filter(user_id__username=r.user),
+        "room": RoomAllot.objects.filter(Q(renter__username=rnt_id, ra_status='1') | Q(renter__username=rnt_id, ra_status='2')).filter(user_id__username=r.user),
     }
     return render(r,'roomowner/view_renter_profile.html',data)
 
