@@ -15,6 +15,16 @@
                     <span class="text-success">Advance : ₹ {{ rm|subtract }}</span>
                 {% endif %}
             </span>
+            <span class="mx-auto text-info">
+                Status :
+                {% if rm.ra_status == '1' %}
+                    <span class="text-success">Active</span>
+                {% elif rm.ra_status == '2' %}
+                    <span class="text-danger">Pending</span>
+                {% else %}
+                    <span class="text-danger">Request</span>
+                {% endif %}
+            </span>
         </div>
     </div>
     <div class="card-body m-1 p-1">

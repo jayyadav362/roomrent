@@ -1,4 +1,5 @@
 {% extends 'roomowner/ro_base.html' %}
+{% load template_tags %}
 {% block content %}
     <div class="col-lg-9">
     <div class="row">
@@ -34,7 +35,6 @@
                             <th>View</th>
                             <th>Edit</th>
                         </tr>
-                    {% load template_tags %}
                         {% for r in rooms %}
                             <tr class="small">
                             <td>{{ r.r_title }}</td>

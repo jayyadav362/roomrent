@@ -86,11 +86,6 @@
             var selected = $(this).select2('data')[0];
             location.href = 'http://127.0.0.1:8000/view_renter_profile/' + selected.id;
         });
-        const monthControl = document.querySelector('input[type="month"]');
-        const date= new Date()
-        const month=("0" + (date.getMonth() + 1)).slice(-2)
-        const year=date.getFullYear()
-        monthControl.value = `${year}-${month}`;
     });
 
 </script>

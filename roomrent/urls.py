@@ -35,6 +35,7 @@ urlpatterns = [
     path('password_change_owner/',views.password_change_owner,name="password_change_owner"),
     path('my_renter/',views.my_renter,name="my_renter"),
     path('room_allot_request/',views.room_allot_request,name="room_allot_request"),
+    path('room_request_active/',views.room_request_active,name="room_request_active"),
     path('room_allot_pending/',views.room_allot_pending,name="room_allot_pending"),
     path('roomallot/active/<int:a_id>', views.allot_active,name="allot_active"),
     path('roomallot/pending/<int:p_id>', views.allot_pending,name="allot_pending"),

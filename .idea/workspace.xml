@@ -2,16 +2,29 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2c4061c7-7552-421d-8c4a-029c83d7b337" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/datawork/migrations/0022_auto_20201020_0220.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/roomowner/owner_payment.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/datawork/migrations/0023_auto_20201022_2117.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/image/laptop.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/image/matt_P1QFNFQ.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/image/sofa_O3WNr29.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/roomowner/room_view.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/datawork/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/datawork/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/datawork/templatetags/template_tags.py" beforeDir="false" afterPath="$PROJECT_DIR$/datawork/templatetags/template_tags.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/datawork/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/datawork/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/roomrent/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/roomrent/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/pending.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/pending.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/room_view.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/room_view.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomowner/owner_payment.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/owner_payment.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_base.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_my_renter.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_my_renter.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_room_view.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_room_view.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_roomallot_pending.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_roomallot_pending.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_roomallot_request.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_roomallot_request.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomowner/view_renter_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/view_renter_profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomrenter/rr_payment.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomrenter/rr_payment.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomrenter/rr_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomrenter/rr_profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/search.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/search.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +61,7 @@
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/coaching/coaching" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/djangoecom-master/djangoecom-master" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
@@ -140,6 +153,9 @@
       <workItem from="1602993168312" duration="154000" />
       <workItem from="1602996129579" duration="624000" />
       <workItem from="1603031406007" duration="12307000" />
+      <workItem from="1603172870498" duration="5668000" />
+      <workItem from="1603196896200" duration="7482000" />
+      <workItem from="1603287886648" duration="30190000" />
     </task>
     <task id="LOCAL-00001" summary="exclude status">
       <created>1601454878233</created>
@@ -176,10 +192,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="92" y="92" width="1182" height="544" key="DiffContextDialog/0.0.1366.728@0.0.1366.728" timestamp="1603140535123" />
-    <state x="463" y="119" key="FileChooserDialogImpl" timestamp="1602699598798">
+    <state x="463" y="119" key="FileChooserDialogImpl" timestamp="1603377292254">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="463" y="119" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1602699598798" />
+    <state x="463" y="119" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1603377292254" />
     <state width="1323" height="223" key="GridCell.Tab.0.bottom" timestamp="1602017214611">
       <screen x="0" y="0" width="1366" height="728" />
     </state>

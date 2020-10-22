@@ -52,7 +52,7 @@
                                       {% else %}
                                         <div class="badge badge-primary p-1">{{ h.user_id|room_count }} Rooms</div>
                                       {% endif %}
-                                      <a href="{% url 'house_view' h.ro_id %}" class="btn btn-success ml-auto">View Rooms</a>
+                                      <a href="{% url 'house_view' h.user_id.username %}" class="btn btn-success ml-auto">View Rooms</a>
                                     </div>
                                 </div>
                             </div>

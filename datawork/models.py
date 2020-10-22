@@ -71,10 +71,6 @@ class Room(models.Model):
     def __str__(self):
         return self.r_title
 
-    def save(self,*args,**kwargs):
-        self.slug = slugify(self.r_title)
-        super(Room, self).save(*args,**kwargs)
-
 class RoomRenter(models.Model):
     rr_id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(User,on_delete=models.CASCADE)
@@ -98,7 +94,7 @@ class RoomAllot(models.Model):
     slug = models.SlugField()
 
     def __str__(self):
-        return self.ra_room_id.r_title
+        return self.ra_room_id.r_title+' | '+self.renter.username
 
 class RoomQuery(models.Model):
     m_id = models.AutoField(primary_key=True)
@@ -114,7 +110,8 @@ class RoomQuery(models.Model):
 class PaymentGenerate(models.Model):
     pg_id = models.AutoField(primary_key=True)
     pg_txn = models.CharField(max_length=100)
-    user_id = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    user_id = models.ForeignKey(User,on_delete=models.DO_NOTHING, related_name='user_renter')
+    owner = models.ForeignKey(User,on_delete=models.DO_NOTHING, related_name='user_owner')
     pg_amount = models.IntegerField()
     pg_month = models.DateTimeField()
     pg_allot_id = models.ForeignKey(RoomAllot,on_delete=models.DO_NOTHING)

@@ -1,4 +1,5 @@
 {% extends 'roomowner/ro_base.html' %}
+{% load template_tags %}
 {% block content %}
     <div class="col-lg-9">
     <div class="row">
@@ -9,14 +10,19 @@
                             <option selected disabled="true">search renter by number......</option>
                         </select>
                     </div>
-                <div class="card-header small p-1 m-0">
+                <div class="card-header small p-1">
                     <div class="form-inline">
-                        Payments
-                        <span class="mx-auto text-success">Total Payment: {{ total }}</span>
-                        <input type="month" class="form-control small">
+                        <span class="text-center mx-auto">Monthly Payments</span>
+                        <span class="mx-auto text-success">Paid: ₹ {{ paid }}</span>
+                        <span class="mx-auto text-danger">Generate: ₹ {{ gen }}</span>
+                        <form action="" method="post" class="mx-auto">
+                            {% csrf_token %}
+                            <input type="month" class="form-control mx-auto small" name="month" value="{{ date }}" onchange="this.form.submit();">
+                        </form>
                     </div>
                 </div>
                 <div class="card-body">
+
                     <table class="table table-responsive-sm">
                         <tr class="small">
                             <th>Renter Name</th>
@@ -26,7 +32,7 @@
                         </tr>
                         {% for p in payment %}
                             <tr class="small">
-                            <td><a href="{% url 'view_renter_profile' p.renter_id.id %}" class="nav-link p-0 m-0">{{ p.renter_id.first_name }} {{ p.renter_id.last_name }}</a></td>
+                            <td><a href="{% url 'view_renter_profile' p.renter_id.username %}" class="nav-link p-0 m-0">{{ p.renter_id.first_name }} {{ p.renter_id.last_name }}</a></td>
                             <td><a href="{% url 'owner_room_view' p.pp_allot_id.ra_room_id.r_id %}" class="nav-link p-0 m-0">{{ p.pp_allot_id.ra_room_id.r_title }}</a></td>
                             <td class="text-success">{{ p.pp_amount }}</td>
                             <td>{{ p.pp_doc|date:'d M,Y' }}</td>
