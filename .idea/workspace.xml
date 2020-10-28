@@ -2,15 +2,31 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2c4061c7-7552-421d-8c4a-029c83d7b337" name="Default Changelist" comment="">
+<<<<<<< HEAD
       <change afterPath="$PROJECT_DIR$/templates/roomowner/add_room.html" afterDir="false" />
+=======
+>>>>>>> fee32f223b8071d1b6c686b8f3a35dbd726b0346
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/datawork/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/datawork/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/roomrent/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/roomrent/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_base.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_room_view.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_room_view.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_rooms.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_rooms.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/roomowner/room_view.html" beforeDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/templates/room_view.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/room_view.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomowner/owner_payment.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/owner_payment.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_my_renter.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_my_renter.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_room_view.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_room_view.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_roomallot_pending.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_roomallot_pending.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_roomallot_request.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_roomallot_request.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomowner/view_renter_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/view_renter_profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomrenter/rr_payment.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomrenter/rr_payment.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomrenter/rr_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomrenter/rr_profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/search.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/search.html" afterDir="false" />
+>>>>>>> fee32f223b8071d1b6c686b8f3a35dbd726b0346
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,8 +157,11 @@
       <workItem from="1603031406007" duration="12307000" />
       <workItem from="1603172870498" duration="5668000" />
       <workItem from="1603196896200" duration="7482000" />
+<<<<<<< HEAD
       <workItem from="1603287886648" duration="31010000" />
       <workItem from="1603901536012" duration="7050000" />
+=======
+>>>>>>> fee32f223b8071d1b6c686b8f3a35dbd726b0346
     </task>
     <task id="LOCAL-00001" summary="exclude status">
       <created>1601454878233</created>
