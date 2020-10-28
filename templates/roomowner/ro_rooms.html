@@ -3,29 +3,9 @@
 {% block content %}
     <div class="col-lg-9">
     <div class="row">
-        <div class="col-lg-5">
+        <div class="col-lg-6">
             <div class="card">
-                <div class="card-header">Add room</div>
-                <div class="card-body">
-                    <form action="{% url 'owner_rooms' %}" method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                            {% for form in form %}
-                                <div class="form-group">
-                                {{ form.label_tag }}
-                                {{ form }}
-                                    <label for="" class="text-danger">{{ form.errors }}</label>
-                                </div>
-                            {% endfor %}
-                        <div class="form-group">
-                            <input type="submit" class="btn btn-block btn-success">
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-7">
-            <div class="card">
-                <div class="card-header">My Rooms</div>
+                <div class="card-header">My Active Rooms</div>
                 <div class="card-body ">
                     <table class="table table-responsive-sm ">
                         <tr class="small">
@@ -33,9 +13,8 @@
                             <th>Allot</th>
                             <th>Status</th>
                             <th>View</th>
-                            <th>Edit</th>
                         </tr>
-                        {% for r in rooms %}
+                        {% for r in rooms_a %}
                             <tr class="small">
                             <td>{{ r.r_title }}</td>
 
@@ -55,12 +34,51 @@
                                 {% endif %}
                             </td>
                             <td><a href="{% url 'owner_room_view' r.r_id %}" class="m-0 p-0"><i class="fas fa-eye fa-lg text-info"></i></a></td>
-
-                            <td><a href="{% url 'owner_room_edit' r.r_id %}" class="m-0 p-0"><i class="fas fa-edit fa-lg text-primary"></i></a></td>
                             </tr>
                         {% empty %}
                             <tr>
                                 <td colspan="4"><div class="alert alert-danger h6 text-center p-3" role="alert">No room availables!</div></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">My Pending Rooms</div>
+                <div class="card-body ">
+                    <table class="table table-responsive-sm ">
+                        <tr class="small">
+                            <th>Name</th>
+                            <th>Allot</th>
+                            <th>Status</th>
+                            <th>View</th>
+                        </tr>
+                        {% for r in rooms_p %}
+                            <tr class="small">
+                            <td>{{ r.r_title }}</td>
+
+                            <td>
+                                {% if r|room_allot_count == 0 %}
+                                    <span class=" badge badge-danger rounded-circle p-1 ">!Empty Renter</span>
+                                {% else %}
+                                    <span class=" badge badge-success rounded-circle p-1 ">{{ r|room_allot_count }} Renter</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if r.r_status == '1' %}
+                                    <span class="text-success">Active</span>
+                                {% else %}
+                                    <span class="text-danger">Pending</span>
+                                {% endif %}
+                            </td>
+                            <td><a href="{% url 'owner_room_view' r.r_id %}" class="m-0 p-0"><i class="fas fa-eye fa-lg text-info"></i></a></td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="4"><div class="alert alert-danger h6 text-center p-3" role="alert">No pending room availables!</div></td>
                             </tr>
                         {% endfor %}
                     </table>

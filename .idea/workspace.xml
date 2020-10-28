@@ -2,29 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2c4061c7-7552-421d-8c4a-029c83d7b337" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/datawork/migrations/0023_auto_20201022_2117.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/image/laptop.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/image/matt_P1QFNFQ.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/image/sofa_O3WNr29.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/roomowner/room_view.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/roomowner/add_room.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/datawork/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/datawork/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/datawork/templatetags/template_tags.py" beforeDir="false" afterPath="$PROJECT_DIR$/datawork/templatetags/template_tags.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/datawork/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/datawork/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/roomrent/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/roomrent/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/pending.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/pending.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/room_view.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/room_view.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/roomowner/owner_payment.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/owner_payment.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_my_renter.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_my_renter.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_room_view.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_room_view.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_roomallot_pending.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_roomallot_pending.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_roomallot_request.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_roomallot_request.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/roomowner/view_renter_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/view_renter_profile.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/roomrenter/rr_payment.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomrenter/rr_payment.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/roomrenter/rr_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomrenter/rr_profile.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/search.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/search.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomowner/ro_rooms.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/roomowner/ro_rooms.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/roomowner/room_view.html" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -155,7 +141,8 @@
       <workItem from="1603031406007" duration="12307000" />
       <workItem from="1603172870498" duration="5668000" />
       <workItem from="1603196896200" duration="7482000" />
-      <workItem from="1603287886648" duration="30190000" />
+      <workItem from="1603287886648" duration="31010000" />
+      <workItem from="1603901536012" duration="7050000" />
     </task>
     <task id="LOCAL-00001" summary="exclude status">
       <created>1601454878233</created>
