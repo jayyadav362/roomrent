@@ -14,6 +14,7 @@ from datetime import datetime,timedelta
 import string
 import random
 from django.db.models import Sum
+#import matplotlib.pyplot as plt
 from datawork.templatetags import template_tags
 # Create your views here.
 
@@ -24,31 +25,6 @@ def diff_month(d1, d2):
     return (d1.year - d2.year) * 12 + d1.month - d2.month
 
 def home(r):
-    renter = RoomRenter.objects.all()
-    for rt in renter:
-        allot = RoomAllot.objects.filter(renter=rt.user_id, ra_status='1').filter(ra_room_id__r_status='1')
-        for x in allot:
-            doj = x.ra_doc
-            doj = datetime(doj.year, doj.month, 1)
-            while diff_month(datetime.now().date(), doj) >= 0:
-                cond = Q(pg_month__month=doj.month,pg_month__year=doj.year) & Q(pg_allot_id=x.ra_id) & Q(user_id__username=x.renter)
-                if PaymentGenerate.objects.filter(cond).exists() == False:
-                    p = PaymentGenerate()
-                    p.pg_txn = create_txn_code(8)
-                    p.pg_month = doj
-                    p.pg_amount = x.ra_room_id.r_rent / x.ra_room_id.roomallot_set.filter(ra_status='1').count()
-                    p.pg_allot_id = RoomAllot(x.ra_id)
-                    p.user_id = x.renter
-                    p.owner = x.user_id
-                    p.save()
-                else:
-                    try:
-                        p = PaymentGenerate.objects.get(Q(pg_month__month=datetime.now().date().month,pg_month__year=datetime.now().date().year) & Q(pg_allot_id=x.ra_id) & Q(user_id__username=x.renter))
-                        p.pg_amount = x.ra_room_id.r_rent / x.ra_room_id.roomallot_set.filter(ra_status='1').count()
-                        p.save()
-                    except ObjectDoesNotExist:
-                        pass
-                doj = datetime(doj.year, doj.month, 1) + datedelta(months=1)
     return render(r, 'home.html')
 
 def state_search(r):
@@ -288,6 +264,32 @@ def register_owner(r):
 
 @login_required(login_url=logins)
 def owner_profile(r):
+    allot = RoomAllot.objects.filter(user_id__username=r.user, ra_status='1').filter(ra_room_id__r_status='1')
+    for x in allot:
+        doj = x.ra_doc
+        doj = datetime(doj.year, doj.month, 1)
+        while diff_month(datetime.now().date(), doj) >= 0:
+            cond = Q(pg_month__month=doj.month, pg_month__year=doj.year) & Q(pg_allot_id=x.ra_id) & Q(
+                user_id__username=x.renter)
+            if PaymentGenerate.objects.filter(cond).exists() == False:
+                p = PaymentGenerate()
+                p.pg_txn = create_txn_code(8)
+                p.pg_month = doj
+                p.pg_amount = x.ra_room_id.r_rent / x.ra_room_id.roomallot_set.filter(ra_status='1').count()
+                p.pg_allot_id = RoomAllot(x.ra_id)
+                p.user_id = x.renter
+                p.owner = x.user_id
+                p.save()
+            else:
+                try:
+                    p = PaymentGenerate.objects.get(
+                        Q(pg_month__month=datetime.now().date().month, pg_month__year=datetime.now().date().year) & Q(
+                            pg_allot_id=x.ra_id) & Q(user_id__username=x.renter))
+                    p.pg_amount = x.ra_room_id.r_rent / x.ra_room_id.roomallot_set.filter(ra_status='1').count()
+                    p.save()
+                except ObjectDoesNotExist:
+                    pass
+            doj = datetime(doj.year, doj.month, 1) + datedelta(months=1)
     data = {
         "user": RoomOwner.objects.filter(user_id__username=r.user),
         "userdata": User.objects.filter(username=r.user),
@@ -334,6 +336,7 @@ def add_room(r):
             d.user_id = r.user
             d.slug = str(r.user) + '-' + r.POST.get('r_title')
             d.save()
+            messages.success(r, 'Room add was successfully!')
             return redirect('add_room')
     data = {
         "form": rm,
@@ -555,6 +558,19 @@ def query_delete(r,q_id):
 
 @login_required(login_url=logins)
 def owner_payment(r):
+    total_paid = PaymentPaid.objects.filter(owner_id=r.user)
+    total_gen = PaymentGenerate.objects.filter(owner=r.user)
+    data = {
+        "renter": RoomAllot.objects.filter(Q(user_id__username=r.user, ra_status='1') | Q(user_id__username=r.user, ra_status='2')),
+        "total_paid":total_paid.aggregate(Sum('pp_amount'))['pp_amount__sum'] or 00.00,
+        "total_gen":total_gen.aggregate(Sum('pg_amount'))['pg_amount__sum'] or 00.00,
+        "user": RoomOwner.objects.filter(user_id__username=r.user),
+        "userdata": User.objects.filter(username=r.user),
+    }
+    return render(r,'roomowner/owner_payment.html',data)
+
+@login_required(login_url=logins)
+def owner_payment_paid(r):
     if r.method == 'POST':
         date = r.POST.get('month')
         m = datetime.strptime(date, '%Y-%m').date()
@@ -576,7 +592,50 @@ def owner_payment(r):
         "user": RoomOwner.objects.filter(user_id__username=r.user),
         "userdata": User.objects.filter(username=r.user),
     }
-    return render(r,'roomowner/owner_payment.html',data)
+    return render(r,'roomowner/owner_payment_paid.html',data)
+
+@login_required(login_url=logins)
+def owner_payment_gen(r):
+    if r.method == 'POST':
+        date = r.POST.get('month')
+        m = datetime.strptime(date, '%Y-%m').date()
+        c_month = m.month
+        c_year = m.year
+    else:
+        c_month = datetime.now().date().month
+        c_year = datetime.now().date().year
+        c_date = datetime.now().date()
+        date = c_date.strftime('%Y-%m')
+
+    pay = PaymentPaid.objects.filter(pp_doc__month=c_month,pp_doc__year=c_year).filter(owner_id=r.user)
+    gen = PaymentGenerate.objects.filter(pg_doc__month=c_month,pg_doc__year=c_year).filter(owner=r.user)
+    data = {
+        "paid": pay.aggregate(Sum('pp_amount'))['pp_amount__sum'] or 00.00,
+        "gen": gen.aggregate(Sum('pg_amount'))['pg_amount__sum'] or 00.00,
+        "payment": gen,
+        "date": date,
+        "user": RoomOwner.objects.filter(user_id__username=r.user),
+        "userdata": User.objects.filter(username=r.user),
+    }
+    return render(r, 'roomowner/owner_payment_gen.html', data)
+
+@login_required(login_url=logins)
+def owner_payment_due(r):
+    data = {
+    "renter": RoomAllot.objects.filter(Q(user_id__username=r.user, ra_status='1') | Q(user_id__username=r.user, ra_status='2')),
+    "user": RoomOwner.objects.filter(user_id__username=r.user),
+    "userdata": User.objects.filter(username=r.user),
+    }
+    return render(r,'roomowner/owner_payment_due.html',data)
+
+@login_required(login_url=logins)
+def owner_payment_advance(r):
+    data = {
+    "renter": RoomAllot.objects.filter(Q(user_id__username=r.user, ra_status='1') | Q(user_id__username=r.user, ra_status='2')),
+    "user": RoomOwner.objects.filter(user_id__username=r.user),
+    "userdata": User.objects.filter(username=r.user),
+    }
+    return render(r,'roomowner/owner_payment_advance.html',data)
 
 #--------------------------------------------------------------------------
 

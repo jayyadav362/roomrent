@@ -6,6 +6,14 @@
         <div class="col-lg-6 mx-auto">
             <div class="card">
                 <div class="card-header">Add room</div>
+                {% for foo in messages %}
+                                <div class="alert {{ foo.tags }}  alert-dismissible fade show " role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    {{ foo }}
+                                </div>
+                        {% endfor %}
                 <div class="card-body">
                     <form action="{% url 'add_room' %}" method="post" enctype="multipart/form-data">
                         {% csrf_token %}

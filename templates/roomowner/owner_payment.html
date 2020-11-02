@@ -2,50 +2,79 @@
 {% load template_tags %}
 {% block content %}
     <div class="col-lg-9">
-    <div class="row">
-        <div class="col-lg-9 mx-auto">
-            <div class="card">
-                    <div class="p-2">
-                        <select  id="renter_search" class="form-control ">
-                            <option selected disabled="true">search renter by number......</option>
-                        </select>
+        <div class="row ">
+            <div class="col-lg-12">
+                <div class="row no-gutters">
+                    <div class="col-lg-3 mt-2">
+                        <a href="{% url 'owner_payment_paid' %}" class="nav-link">
+                        <div class="card bg-primary p-3">
+                            <div class="card-body text-center">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <i class="fas fa-sort-amount-up text-light fa-3x"></i>
+                                    </div>
+                                    <div class="col-9">
+                                        <h6 class="text-light small">Total Paids</h6>
+                                        <h5 class="text-light">₹ {{ total_paid }}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </a>
                     </div>
-                <div class="card-header small p-1">
-                    <div class="form-inline">
-                        <span class="text-center mx-auto">Monthly Payments</span>
-                        <span class="mx-auto text-success">Paid: ₹ {{ paid }}</span>
-                        <span class="mx-auto text-danger">Generate: ₹ {{ gen }}</span>
-                        <form action="" method="post" class="mx-auto">
-                            {% csrf_token %}
-                            <input type="month" class="form-control mx-auto small" name="month" value="{{ date }}" onchange="this.form.submit();">
-                        </form>
-                    </div>
+                    <div class="col-lg-3 mt-2">
+                    <a href="{% url 'owner_payment_gen' %}" class="nav-link">
+                        <div class="card bg-warning p-3">
+                            <div class="card-body text-center">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <i class="fas fa-sort-amount-down text-light fa-3x"></i>
+                                    </div>
+                                    <div class="col-9">
+                                        <h6 class="text-light small">Total Generate</h6>
+                                        <h5 class="text-light">₹ {{ total_gen }}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
                 </div>
-                <div class="card-body">
-
-                    <table class="table table-responsive-sm">
-                        <tr class="small">
-                            <th>Renter Name</th>
-                            <th>Room</th>
-                            <th>Amount</th>
-                            <th>Date</th>
-                        </tr>
-                        {% for p in payment %}
-                            <tr class="small">
-                            <td><a href="{% url 'view_renter_profile' p.renter_id.username %}" class="nav-link p-0 m-0">{{ p.renter_id.first_name }} {{ p.renter_id.last_name }}</a></td>
-                            <td><a href="{% url 'owner_room_view' p.pp_allot_id.ra_room_id.r_id %}" class="nav-link p-0 m-0">{{ p.pp_allot_id.ra_room_id.r_title }}</a></td>
-                            <td class="text-success">{{ p.pp_amount }}</td>
-                            <td>{{ p.pp_doc|date:'d M,Y' }}</td>
-                            </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="5"><div class="alert alert-danger h6 text-center p-3" role="alert">No payments availables!</div></td>
-                        </tr>
-                        {% endfor %}
-                    </table>
+                    <div class="col-lg-3 mt-2">
+                    <a href="{% url 'owner_payment_due' %}" class="nav-link">
+                        <div class="card bg-danger p-3">
+                            <div class="card-body text-center">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <i class="fas fa-hourglass-half text-light fa-3x"></i>
+                                    </div>
+                                    <div class="col-9">
+                                        <h6 class="text-light small">Total Dues</h6>
+                                        <h5 class="text-light">₹ {{ renter|sum_due }}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                    <div class="col-lg-3 mt-2">
+                    <a href="{% url 'owner_payment_advance' %}" class="nav-link">
+                        <div class="card bg-success p-3">
+                            <div class="card-body text-center">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <i class="fas fa-hourglass text-light fa-3x"></i>
+                                    </div>
+                                    <div class="col-9">
+                                        <h6 class="text-light small">Total Advance</h6>
+                                        <h5 class="text-light">₹ {{ renter|sum_advance }}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 {% endblock %}

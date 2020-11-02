@@ -1,0 +1,60 @@
+{% extends 'roomowner/ro_base.html' %}
+{% load template_tags %}
+{% block content %}
+    <div class="col-lg-9">
+    <div class="row">
+        <div class="col-lg-12 mt-2">
+            <div class="card">
+                    <div class="p-2">
+                        <select  id="renter_search" class="form-control ">
+                            <option selected disabled="true">search renter by number......</option>
+                        </select>
+                    </div>
+                <div class="card-header small ">
+                    Dues Amounts:
+                    <span class="text-danger">₹ {{ renter|sum_due }}</span>
+                </div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm">
+                        <tr class="small">
+                            <th>Room</th>
+                            <th>Renter Name</th>
+                            <th>Status</th>
+                            <th>Amounts</th>
+                        </tr>
+                        {% for p in renter %}
+                            {% if p|cond %}
+                            <tr class="small">
+                            <td><a href="{% url 'owner_room_view' p.ra_room_id.r_id %}" class="nav-link p-0 m-0">{{ p.ra_room_id.r_title }}</a></td>
+                                <td><a href="{% url 'view_renter_profile' p.renter.username %}" class="nav-link p-0 m-0">{{ p.renter.first_name }} {{ p.renter.last_name }}</a></td>
+
+                                <td>
+                                    {% if p.ra_status == '1' %}
+                                    <span class="text-success">Activate</span>
+                                    {% elif p.ra_status == '2' %}
+                                        <span class="text-danger">Deactivate</span>
+                                    {% else %}
+                                        <span class="text-danger">Request</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-danger">₹
+                                    {% if p|cond %}
+                                          {{ p|subtract }}
+                                    {% else  %}
+                                        <span>0</span>
+                                    {% endif %}
+                                </td>
+                            {% else %}
+                            {% endif %}
+                        {% empty %}
+                        <tr>
+                            <td colspan="5"><div class="alert alert-danger h6 text-center p-3" role="alert">No payments availables!</div></td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}

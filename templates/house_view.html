@@ -24,7 +24,7 @@
                                 {{ foo }}
                             </div>
                         {% endfor %}
-                        <form action="" method="post">
+                        <form action="" class="small" method="post">
                         {% csrf_token %}
                         {% for form in form %}
                             <div class="form-group m-0 p-0">
@@ -51,7 +51,7 @@
                                     <p class="text-muted text-center text-capitalize mt-2 m-0 p-0 bg-light">{{ r.r_title }}</p>
                                 </a>
                             </div>
-                            <div class="col-lg-7">
+                            <div class="col-lg-7 small">
                                 <p class="mt-3 text-success">Type:<span class="text-muted"> {{ r.r_type }}</span> <span class="float-right text-success mr-3">₹ {{ r.r_rent }}</span></p>
                                 <div class="alert alert-success small text-muted " role="alert">{{ r.r_desc }}</div>
 
@@ -63,7 +63,7 @@
                                                 <a href="{% url 'room_request' r.r_id %}" class="btn btn-dark ml-auto mt-1">Request for room</a>
                                             </div>
                                         {% elif request.session.name == 'owner' %}
-                                            <span class="alert alert-danger">You can't request for room! You are a Owner</span>
+                                            <span class="alert alert-danger small">You can't request for room! You are a Owner</span>
                                         {% elif request.session.name == 'pending' %}
                                             <a href="{% url 'register_pending' %}" class="btn btn-outline-warning">Please complete the Register!</a>
                                         {% else %}
@@ -72,14 +72,20 @@
                                      {% else %}
                                         <div class="form-inline">
                                             <span class="badge badge-primary  mt-2 px-3 py-2">Empty Room Renter </span>
-                                            <a href="{% url 'room_request' r.r_id %}" class="btn btn-dark ml-auto mt-1">Request for room</a>
+                                            <a href="{% url 'room_request' r.r_id %}" class="btn btn-dark ml-auto mt-1 ">Request for room</a>
                                         </div>
                                      {% endif %}
 
                                 {% else %}
                                     <div class="form-inline">
-                                    <span class="badge badge-danger  mt-2 px-4 py-2">{{ r.r_id|room_allot_count }} Renter Booked</span>
-                                    <a href="{% url 'room_request' r.r_id %}" class="btn btn-dark ml-auto mt-1">Request for room</a>
+                                    <span class="badge badge-danger  mt-2 px-3 py-2">{{ r.r_id|room_allot_count }} Renter Booked</span>
+                                        {% if request.session.name == 'owner' %}
+                                            <span class="alert alert-danger small">You can't request for room! You are a Owner</span>
+                                        {% elif request.session.name == 'pending' %}
+                                            <a href="{% url 'register_pending' %}" class="btn btn-outline-warning small">Please complete the Register!</a>
+                                        {% else %}
+                                        <a href="{% url 'room_request' r.r_id %}" class="btn btn-dark ml-auto mt-1">Request for room</a>
+                                         {% endif %}
                                     </div>
                                 {% endif %}
 

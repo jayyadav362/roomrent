@@ -78,11 +78,38 @@ def cond(x):
         return False
 
 @register.filter
-def month_due(pg, pp):
+def total_due(pg, pp):
     return round(abs(pg - pp))
 
-# def due_cond(pg,pp):
-#     if (pg - pp > 0):
-#         return True
-#     else:
-#         return False
+@register.filter
+def total_add(pg, pp):
+    return round(abs(pg + pp))
+
+@register.filter
+def due_cond(pg,pp):
+    if (pg - pp > 0):
+        return True
+    else:
+        return False
+
+@register.filter
+def sum_due(l):
+    sum = 0
+    for x in l:
+        if cond(x):
+            data = subtract(x)
+            sum += data
+        else:
+            pass
+    return sum
+
+@register.filter
+def sum_advance(l):
+    sum = 0
+    for x in l:
+        if cond(x):
+            pass
+        else:
+            data = subtract(x)
+            sum += data
+    return sum
