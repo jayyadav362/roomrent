@@ -65,7 +65,7 @@
 
                                         <td>{{ rq.user_id|room_owner_contact }}</td>
 
-                                        <td><a href="{% url 'room_view' rq.ra_room_id.r_id %}" class="nav-link p-0 m-0"><i class="fas fa-eye fa-lg text-primary"></i></a></td>
+                                        <td><a href="{% url 'room_view' rq.ra_room_id.slug %}" class="nav-link p-0 m-0"><i class="fas fa-eye fa-lg text-primary"></i></a></td>
                                         <td>{{ rq.ra_doc|date:'d M,Y' }}</td>
                                         <td>
                                             <div class="form-inline">
@@ -75,7 +75,7 @@
                                     </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="4"><div class="alert alert-danger h6 text-center p-3" role="alert">No renter request availables!</div></td>
+                            <td colspan="8"><div class="alert alert-danger h6 text-center p-3" role="alert">No renter request availables!</div></td>
                         </tr>
                     {% endfor %}
                 </table>

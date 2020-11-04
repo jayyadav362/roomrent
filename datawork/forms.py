@@ -15,11 +15,25 @@ class RegisterForm(UserCreationForm):
 class RegisterRenterForm(ModelForm):
     class Meta:
         model= RoomRenter
+        labels = {
+            "rr_contact": 'Contact',
+            "rr_image": 'Image',
+            "rr_street": 'Street/Road/Village',
+            "rr_id_proof": 'Id Proof Image',
+        }
         exclude = ['rr_id','user_id']
 
 class RegisterOwnerForm(ModelForm):
     class Meta:
         model= RoomOwner
+        labels = {
+            "ro_contact": 'Contact',
+            "ro_image": 'Image',
+            "ro_street": 'Street/Road/Village',
+            "ro_id_proof": 'Id Proof Image',
+            "ro_house": 'House Name',
+            "ro_house_image": 'House Image'
+        }
         fields = ['ro_contact','ro_image','ro_id_proof','state','city','ro_street','ro_house','ro_house_image']
 
     def __init__(self, *args, **kwargs):
@@ -43,14 +57,32 @@ class LoginForm(ModelForm):
 class AddRoomForm(ModelForm):
     class Meta:
         model = Room
+        labels = {
+            "r_title": 'Title',
+            "r_type": 'Room Type',
+            "r_rent": 'Rent Price',
+            "r_image": 'Room Image',
+            "r_desc": 'Description'
+        }
         fields = ['r_title','r_type','r_rent','r_image','r_desc']
 
 class EditRoomForm(ModelForm):
     class Meta:
         model = Room
+        labels = {
+            "r_title": 'Title',
+            "r_type": 'Room Type',
+            "r_rent": 'Rent Price',
+            "r_desc": 'Description'
+        }
         fields = ['r_title','r_type','r_rent','r_desc']
 
-class RoomQueryForm(ModelForm):
+class RoomQueryForm(forms.ModelForm):
     class Meta:
         model = RoomQuery
+        labels = {
+            "m_name": 'Name',
+            "m_contact": 'Contact',
+            "m_message": 'Message'
+        }
         exclude = ['m_id','user_id','m_doc']

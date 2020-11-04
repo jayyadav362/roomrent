@@ -71,7 +71,7 @@ def house_view(r,h_id):
     return render(r,'house_view.html',data)
 
 def room_view(r,r_id):
-    room = Room.objects.get(r_id=r_id)
+    room = Room.objects.get(slug=r_id)
     data = {
         "room_view": room,
         "room_owner": RoomOwner.objects.get(user_id__username=room.user_id),
@@ -348,9 +348,9 @@ def add_room(r):
 @login_required(login_url=logins)
 def owner_room_view(r,rm_id):
     data = {
-        "room_view": Room.objects.get(r_id=rm_id),
-        "room_renter": RoomAllot.objects.filter(ra_room_id=rm_id,ra_status='1'),
-        "room_renter_request": RoomAllot.objects.filter(ra_room_id=rm_id,ra_status='0'),
+        "room_view": Room.objects.get(slug=rm_id),
+        "room_renter": RoomAllot.objects.filter(ra_room_id__slug=rm_id,ra_status='1'),
+        "room_renter_request": RoomAllot.objects.filter(ra_room_id__slug=rm_id,ra_status='0'),
         "user": RoomOwner.objects.filter(user_id__username=r.user),
         "userdata": User.objects.filter(username=r.user),
     }
@@ -358,12 +358,12 @@ def owner_room_view(r,rm_id):
 
 @login_required(login_url=logins)
 def owner_room_edit(r,et_id):
-    room = Room.objects.get(r_id=et_id)
+    room = Room.objects.get(slug=et_id)
     re = EditRoomForm(r.POST or None,instance=room)
     if r.method == "POST":
         if re.is_valid():
             re.save()
-            return redirect("../owner_room_view/"+str(room.r_id))
+            return redirect("../owner_room_view/"+str(room.slug))
     else:
         re = EditRoomForm(instance=room)
 
@@ -530,7 +530,7 @@ def view_renter_profile(r,rnt_id):
         p.pp_allot_id = RoomAllot(pay[0].ra_id)
         p.pp_txn = create_txn_code(8)
         p.save()
-        return redirect("../view_renter_profile/" + str(pay[0].renter.id))
+        return redirect("../view_renter_profile/" + str(pay[0].renter.username))
     data = {
         "renter_profile":RoomRenter.objects.get(user_id__username=rnt_id),
         "user_r": User.objects.get(roomrenter__user_id__username=rnt_id),

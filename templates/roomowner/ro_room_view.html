@@ -10,7 +10,7 @@
             {% else %}
                 <a href="{% url 'room_active' room_view.r_id %}" class="m-0 p-0 mx-auto btn btn-sm btn-success text-light pl-1 pr-1"> Activate</a>
             {% endif %}
-            <a href="{% url 'owner_room_edit' room_view.r_id %}" class="m-0 p-0 ml-auto"><i class="fas fa-edit fa-lg text-primary"></i></a>
+            <a href="{% url 'owner_room_edit' room_view.slug %}" class="m-0 p-0 ml-auto"><i class="fas fa-edit fa-lg text-primary"></i></a>
         </div>
     </div>
 

@@ -19,7 +19,7 @@
                             <td>
                                 <span class="text-success">Active</span>
                             </td>
-                            <td><a href="{% url 'room_view' r.ra_room_id.r_id %}" class="m-0 p-0"><i class="fas fa-eye fa-lg text-info"></i></a></td>
+                            <td><a href="{% url 'room_view' r.ra_room_id.slug %}" class="m-0 p-0"><i class="fas fa-eye fa-lg text-info"></i></a></td>
                             </tr>
                         {% empty %}
                             <tr>
@@ -46,7 +46,7 @@
                             <td>
                                 <span class="text-danger">Pending</span>
                             </td>
-                            <td><a href="{% url 'room_view' r.ra_room_id.r_id %}" class="m-0 p-0"><i class="fas fa-eye fa-lg text-info"></i></a></td>
+                            <td><a href="{% url 'room_view' r.ra_room_id.slug %}" class="m-0 p-0"><i class="fas fa-eye fa-lg text-info"></i></a></td>
                             </tr>
                         {% empty %}
                             <tr>

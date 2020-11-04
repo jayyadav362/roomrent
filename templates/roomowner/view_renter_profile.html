@@ -49,7 +49,7 @@
                 </tr>
                 {% for rl in room_al %}
                     <tr class="small">
-                    <td><a href="{% url 'owner_room_view' rl.ra_room_id.r_id %}" class="nav-link m-0 p-0">{{ rl.ra_room_id.r_title }}</a></td>
+                    <td><a href="{% url 'owner_room_view' rl.ra_room_id.slug %}" class="nav-link m-0 p-0">{{ rl.ra_room_id.r_title }}</a></td>
                     <td>
                         {% if rl.ra_status == '1' %}
                             <span class="text-success">Active</span>
@@ -100,7 +100,7 @@
     <div class="card mt-2 mb-2">
     <div class="card-header bg-dark small">
         <div class="form-inline text-light">
-            Room no: <a href="{% url 'owner_room_view' rm.ra_room_id.r_id %}" class="nav-link text-primary text-capitalize ml-2 m-0 p-0"> <span class="badge badge-primary p-1">{{ rm.ra_room_id.r_title }}</span> of {{ rm.ra_room_id.user_id|room_owner_house }}</a>
+            Room no: <a href="{% url 'owner_room_view' rm.ra_room_id.slug %}" class="nav-link text-primary text-capitalize ml-2 m-0 p-0"> <span class="badge badge-primary p-1">{{ rm.ra_room_id.r_title }}</span> of {{ rm.ra_room_id.user_id|room_owner_house }}</a>
             <span class="text-warning ml-auto">Rent:  ₹{{ rm.ra_room_id.r_rent }} / {{ rm.ra_room_id|room_allot_count }} Renter</span>
             <span class="mx-auto text-info">
                 Status :
@@ -179,7 +179,7 @@
     </div>
    </div>
 {% empty %}
-    <div class="alert alert-danger h6 text-center p-3" role="alert">No room availables!</div>
+    <div class="alert alert-danger h6 text-center p-3 mt-2" role="alert">No payment availables!</div>
 {% endfor %}
 </div>
 </div>

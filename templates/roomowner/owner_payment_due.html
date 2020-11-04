@@ -25,7 +25,7 @@
                         {% for p in renter %}
                             {% if p|cond %}
                             <tr class="small">
-                            <td><a href="{% url 'owner_room_view' p.ra_room_id.r_id %}" class="nav-link p-0 m-0">{{ p.ra_room_id.r_title }}</a></td>
+                            <td><a href="{% url 'owner_room_view' p.ra_room_id.slug %}" class="nav-link p-0 m-0">{{ p.ra_room_id.r_title }}</a></td>
                                 <td><a href="{% url 'view_renter_profile' p.renter.username %}" class="nav-link p-0 m-0">{{ p.renter.first_name }} {{ p.renter.last_name }}</a></td>
 
                                 <td>

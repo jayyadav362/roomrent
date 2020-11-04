@@ -31,7 +31,7 @@
                         </tr>
                         {% for p in payment %}
                             <tr class="small">
-                                <td><a href="{% url 'owner_room_view' p.pp_allot_id.ra_room_id.r_id %}" class="nav-link p-0 m-0">{{ p.pp_allot_id.ra_room_id.r_title }}</a></td>
+                                <td><a href="{% url 'owner_room_view' p.pp_allot_id.ra_room_id.slug %}" class="nav-link p-0 m-0">{{ p.pp_allot_id.ra_room_id.r_title }}</a></td>
                                 <td><a href="{% url 'view_renter_profile' p.renter_id.username %}" class="nav-link p-0 m-0">{{ p.renter_id.first_name }} {{ p.renter_id.last_name }}</a></td>
                                 <td class="text-success">₹ {{ p.pp_amount }}</td>
                                 <td>{{ p.pp_doc|date:'d M,Y' }}</td>
