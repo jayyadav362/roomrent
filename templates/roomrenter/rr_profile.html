@@ -4,12 +4,25 @@
 <div class="col-lg-9">
 <div class="row">
     <div class="col-lg-4">
-        <div class="card">
             <img src="{{ user.0.rr_id_proof.url }}" alt="" class="" width="100%" height="250px">
-        </div>
+            <form action="{% url 'renter_update_id_proof' %}" method="post" enctype="multipart/form-data" >
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="edit_image">
+                        <input type="file" hidden class="form-control" name="id_proof" onchange="this.form.submit()">
+                            UPDATE ID Proof <i class="fas fa-image fa-lg "></i>
+                        </label>
+                    </div>
+                </form>
     </div>
     <div class="col-lg-8">
         <div class="card">
+            <div class="card-header">
+                 <div class="form-inline">
+            <span class="">Profile Details</span>
+            <a href="{% url 'renter_update_profile' %}" class="m-0 p-0 ml-auto"><i class="fas fa-edit fa-lg text-primary"></i></a>
+        </div>
+            </div>
             <div class="card-body">
                 <table class="table table-responsive-sm">
                     <tr>

@@ -1,16 +1,16 @@
 from django.shortcuts import *
 from .forms import *
 from django.contrib.auth import authenticate,login,logout
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User,Group
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.forms import PasswordChangeForm,PasswordResetForm
 from datedelta import datedelta
-from datetime import datetime,timedelta
+from datetime import datetime
 import string
 import random
 from django.db.models import Sum
@@ -45,8 +45,11 @@ def city_search(r):
 
 def search_room(r):
     if r.method == 'GET':
+        house =RoomOwner.objects.filter(Q(state__name=r.GET.get('state')) & Q(city__name=r.GET.get('city')))
         data = {
-            "house":RoomOwner.objects.filter(Q(state__name=r.GET.get('state')) & Q(city__name=r.GET.get('city')))
+            "house": house,
+            "type":RoomType.objects.all(),
+            "room_type":Room.objects.filter(user_id__username=house[0].user_id.username,r_status='1')
         }
     else:
         data = {"house":RoomOwner.objects.all()}
@@ -84,49 +87,26 @@ def logins(r):
         if form.is_valid:
             email = r.POST['email']
             password = r.POST['password']
-            status = 0
             try:
                 username = User.objects.get(email=email.lower()).username
-                try:
-                    try:
-                        profile = RoomRenter.objects.get(user_id__username=username)
-                        status = 1
-                        r.session['name'] = 'renter'
-                    except ObjectDoesNotExist:
-                        profile = RoomOwner.objects.get(user_id__username=username)
-                        status = 2
-                        r.session['name'] = 'owner'
+                user = authenticate(username=username,password=password)
+                if user is not None:
+                    login(r, user)
+                else:
+                    messages.error(r,"Your password is incorrect!")
+                    return redirect('logins')
 
-                    u = profile.user_id.username
-                    user = authenticate(username=u,password=password)
-                    if user is not None:
-                        login(r, user)
-                    else:
-                        messages.error(r,"Your password is incorrect!")
-                        return redirect('logins')
-
-
-                    if status == 1:
-                        return redirect('renter_profile')
-                    elif status == 2:
-                        return redirect('owner_profile')
-
-                except ObjectDoesNotExist:
-                    user = authenticate(username=username, password=password)
-                    r.session['name'] = 'pending'
-                    if user is not None:
-                        login(r, user)
-                        return render(r, 'pending.html')
-                    else:
-                        messages.error(r, "Your password is incorrect!")
-                        return redirect('logins')
+                if user.groups.filter(name='renter').exists():
+                    return redirect('renter_profile')
+                elif user.groups.filter(name='owner').exists():
+                    return redirect('owner_profile')
 
             except User.DoesNotExist:
                 messages.error(r,"The email address or password is incorrect. Please retry...")
                 return redirect('logins')
 
     data = {"form": form}
-    return render(r, 'logins.html', data)
+    return render(r, 'registration/logins.html', data)
 
 @login_required(login_url=logins)
 def room_request(r,rq_id):
@@ -144,10 +124,6 @@ def logouts(r):
     logout(r)
     return redirect('logins')
 
-@login_required(login_url=logins)
-def register_pending(r):
-    return render(r,'pending.html')
-
 # AJAX
 @login_required(login_url=logins)
 def load_cities(request):
@@ -160,13 +136,14 @@ def user_register_renter(r):
     u = RegisterForm(r.POST or None)
     if r.method == "POST":
         if u.is_valid():
-            u.save()
-            r.session['name'] = 'renter'
+            c = u.save()
+            group = Group.objects.get(name='renter')
+            c.groups.add(group)
             a = authenticate(username=u.cleaned_data['username'], password=u.cleaned_data['password1'])
             login(r, a)
             return redirect('register_renter')
     data = {"form":u}
-    return render(r, 'user_register_renter.html', data)
+    return render(r, 'registration/user_register_renter.html', data)
 
 @login_required(login_url=logins)
 def register_renter(r):
@@ -178,16 +155,97 @@ def register_renter(r):
             d.save()
             return redirect('renter_profile')
     data = {"form": a,}
-    return render(r, 'register_renter.html', data)
+    return render(r, 'registration/register_renter.html', data)
 
 @login_required(login_url=logins)
 def renter_profile(r):
+    check = RoomRenter.objects.filter(user_id__username=r.user).count()
+    if check == 0:
+        return redirect('register_renter')
+
+    allot = RoomAllot.objects.filter(renter__username=r.user, ra_status='1').filter(ra_room_id__r_status='1')
+    for x in allot:
+        doj = x.ra_doc
+        doj = datetime(doj.year, doj.month, 1)
+        while diff_month(datetime.now().date(), doj) >= 0:
+            cond = Q(pg_month__month=doj.month, pg_month__year=doj.year) & Q(pg_allot_id=x.ra_id) & Q(
+                user_id__username=x.renter)
+            if PaymentGenerate.objects.filter(cond).exists() == False:
+                p = PaymentGenerate()
+                p.pg_txn = create_txn_code(8)
+                p.pg_month = doj
+                p.pg_amount = x.ra_room_id.r_rent / x.ra_room_id.roomallot_set.filter(ra_status='1').count()
+                p.pg_allot_id = RoomAllot(x.ra_id)
+                p.user_id = x.renter
+                p.owner = x.user_id
+                p.save()
+            else:
+                try:
+                    p = PaymentGenerate.objects.get(
+                        Q(pg_month__month=datetime.now().date().month, pg_month__year=datetime.now().date().year) & Q(
+                            pg_allot_id=x.ra_id) & Q(user_id__username=x.renter))
+                    p.pg_amount = x.ra_room_id.r_rent / x.ra_room_id.roomallot_set.filter(ra_status='1').count()
+                    p.save()
+                except ObjectDoesNotExist:
+                    pass
+            doj = datetime(doj.year, doj.month, 1) + datedelta(months=1)
+
     data = {
         "room_request": RoomAllot.objects.filter(renter__username=r.user, ra_status='0'),
         "user": RoomRenter.objects.filter(user_id__username=r.user),
         "userdata": User.objects.filter(username=r.user),
     }
     return render(r,'roomrenter/rr_profile.html',data)
+
+@login_required(login_url=logins)
+def renter_update_image(r):
+    room = RoomRenter.objects.get(user_id__username=r.user)
+    if r.method == "POST":
+        image = room
+        image.rr_image = r.FILES['rr_image']
+        image.save()
+        return redirect("renter_profile")
+    data = {
+        "user": RoomRenter.objects.filter(user_id__username=r.user),
+        "userdata": User.objects.filter(username=r.user),
+    }
+    return render(r, 'roomowner/ro_profile.html', data)
+
+@login_required(login_url=logins)
+def renter_update_profile(r):
+    renter = RoomRenter.objects.get(user_id__username=r.user)
+    profile = UpdateRenterForm(r.POST or None, instance=renter)
+    up = UpdateProfile(r.POST or None,instance=r.user)
+    if r.method == "POST":
+        if up.is_valid():
+            user = up.save(commit=False)
+            profile.save()
+            user.save()
+            return redirect('renter_profile')
+    else:
+        up = UpdateProfile(instance=r.user)
+        profile = UpdateRenterForm(instance=renter)
+    data = {
+        "form":up,
+        "profile":profile,
+        "user": RoomRenter.objects.filter(user_id__username=r.user),
+        "userdata": User.objects.filter(username=r.user),
+    }
+    return render(r,'roomrenter/renter_update_profile.html',data)
+
+@login_required(login_url=logins)
+def renter_update_id_proof(r):
+    room = RoomRenter.objects.get(user_id__username=r.user)
+    if r.method == "POST":
+        image = room
+        image.rr_id_proof = r.FILES['id_proof']
+        image.save()
+        return redirect("renter_profile")
+    data = {
+        "user": RoomRenter.objects.filter(user_id__username=r.user),
+        "userdata": User.objects.filter(username=r.user),
+    }
+    return render(r, 'roomrenter/rr_profile.html', data)
 
 @login_required(login_url=logins)
 def request_delete(r,r_id):
@@ -240,13 +298,14 @@ def user_register_owner(r):
     u = RegisterForm(r.POST or None)
     if r.method == "POST":
         if u.is_valid():
-            u.save()
-            r.session['name'] = 'owner'
+            c = u.save()
+            group = Group.objects.get(name='owner')
+            c.groups.add(group)
             a = authenticate(username=r.POST.get('username'), password=r.POST.get('password1'))
             login(r, a)
             return redirect('register_owner')
     data = {"form":u}
-    return render(r, 'user_register_owner.html', data)
+    return render(r, 'registration/user_register_owner.html', data)
 
 @login_required(login_url=logins)
 def register_owner(r):
@@ -260,10 +319,14 @@ def register_owner(r):
     data = {
         "form": a,
     }
-    return render(r, 'register_owner.html', data)
+    return render(r, 'registration/register_owner.html', data)
 
 @login_required(login_url=logins)
 def owner_profile(r):
+    check = RoomOwner.objects.filter(user_id__username=r.user).count()
+    if check == 0:
+        return redirect('register_owner')
+
     allot = RoomAllot.objects.filter(user_id__username=r.user, ra_status='1').filter(ra_room_id__r_status='1')
     for x in allot:
         doj = x.ra_doc
@@ -290,11 +353,68 @@ def owner_profile(r):
                 except ObjectDoesNotExist:
                     pass
             doj = datetime(doj.year, doj.month, 1) + datedelta(months=1)
+
+    room = RoomOwner.objects.get(user_id__username=r.user)
+    if r.method == "POST":
+        house = room
+        house.ro_house_image = r.FILES['house_image']
+        house.save()
+        return redirect("owner_profile")
     data = {
         "user": RoomOwner.objects.filter(user_id__username=r.user),
         "userdata": User.objects.filter(username=r.user),
     }
     return render(r,'roomowner/ro_profile.html',data)
+
+@login_required(login_url=logins)
+def owner_update_image(r):
+    room = RoomOwner.objects.get(user_id__username=r.user)
+    if r.method == "POST":
+        image = room
+        image.ro_image = r.FILES['ro_image']
+        image.save()
+        return redirect("owner_profile")
+    data = {
+        "user": RoomOwner.objects.filter(user_id__username=r.user),
+        "userdata": User.objects.filter(username=r.user),
+    }
+    return render(r, 'roomowner/ro_profile.html', data)
+
+@login_required(login_url=logins)
+def owner_update_id_proof(r):
+    room = RoomOwner.objects.get(user_id__username=r.user)
+    if r.method == "POST":
+        image = room
+        image.ro_id_proof = r.FILES['id_proof']
+        image.save()
+        return redirect("owner_profile")
+    data = {
+        "user": RoomOwner.objects.filter(user_id__username=r.user),
+        "userdata": User.objects.filter(username=r.user),
+    }
+    return render(r, 'roomowner/ro_profile.html', data)
+
+@login_required(login_url=logins)
+def owner_update_profile(r):
+    owner = RoomOwner.objects.get(user_id__username=r.user)
+    profile = UpdateOwnerForm(r.POST or None, instance=owner)
+    up = UpdateProfile(r.POST or None,instance=r.user)
+    if r.method == "POST":
+        if up.is_valid():
+            user = up.save(commit=False)
+            profile.save()
+            user.save()
+            return redirect('owner_profile')
+    else:
+        up = UpdateProfile(instance=r.user)
+        profile = UpdateOwnerForm(instance=owner)
+    data = {
+        "form":up,
+        "profile":profile,
+        "user": RoomOwner.objects.filter(user_id__username=r.user),
+        "userdata": User.objects.filter(username=r.user),
+    }
+    return render(r,'roomowner/owner_update_profile.html',data)
 
 @login_required(login_url=logins)
 def password_change_owner(r):
@@ -347,6 +467,11 @@ def add_room(r):
 
 @login_required(login_url=logins)
 def owner_room_view(r,rm_id):
+    if r.method == "POST":
+        room = Room.objects.get(slug=rm_id)
+        room.r_image = r.FILES['r_image']
+        room.save()
+        return redirect("../owner_room_view/" + str(room.slug))
     data = {
         "room_view": Room.objects.get(slug=rm_id),
         "room_renter": RoomAllot.objects.filter(ra_room_id__slug=rm_id,ra_status='1'),
@@ -638,6 +763,7 @@ def owner_payment_advance(r):
     return render(r,'roomowner/owner_payment_advance.html',data)
 
 #--------------------------------------------------------------------------
+
 
 
 

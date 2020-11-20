@@ -6,6 +6,7 @@
     <title>Room Rent</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 
 </head>
@@ -23,6 +24,13 @@
                 <div class="card border-0 bg-light">
                     <center>
                     <img src="{{ user.0.rr_image.url }}" class="shadow-sm mt-2" width="50%" height="150px" alt="logo">
+                    <form action="{% url 'renter_update_image' %}" method="post" enctype="multipart/form-data" >
+                    {% csrf_token %}
+                        <label class="update_image">
+                        <input type="file" hidden class="form-control" name="rr_image" onchange="this.form.submit()">
+                            <i class="fas fa-edit fa-lg "></i>
+                        </label>
+                    </form>
                     <div class="card-body">
                         <h1 class="text-truncate h6 p-0 m-0  text-center text-uppercase text-muted">{{ userdata.0.first_name }} {{ userdata.0.last_name }}</h1>
                     </div>

@@ -7,10 +7,10 @@
             <div class="card-body">
                 <div class="container">
                     <form action="{% url 'search_room' %}" method="get">
-                        <div class="row p-3">
-                            <div class="col-lg-5"><input type="text"  id="state"  name="state" placeholder="Select state" class="form-control"></div>
-                            <div class="col-lg-5"><input type="text" id="city" name="city" placeholder="Select city" class="form-control"></div>
-                            <div class="col-lg-2"><input type="submit" value="search" class="btn btn-outline-success btn-block"></div>
+                        <div class="row  ">
+                            <div class="col-lg-5 col-6 mt-1 mb-1"><input type="text"  id="state"  name="state" placeholder="State" class="form-control" required></div>
+                            <div class="col-lg-5 col-6 mt-1 mb-1"><input type="text" id="city" name="city" placeholder="City" class="form-control" required></div>
+                            <div class="col-lg-2 col-6 mt-1 mb-1 mx-auto"><input type="submit" value="search" class="btn btn-outline-success btn-block"></div>
                         </div>
                     </form>
                 </div>

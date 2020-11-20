@@ -57,17 +57,15 @@
 
                                 {% if r|room_allot_count == 0 %}
                                     {% if request.user.is_authenticated %}
-                                        {%  if request.session.name == 'renter' %}
+                                        {%  if request.user|has_group:"renter" %}
                                             <div class="form-inline">
                                                 <span class="badge badge-primary  mt-2 px-3 py-2">Empty Room Renter </span>
                                                 <a href="{% url 'room_request' r.r_id %}" class="btn btn-dark ml-auto mt-1">Request for room</a>
                                             </div>
-                                        {% elif request.session.name == 'owner' %}
+                                        {% elif request.user|has_group:"owner" %}
                                             <span class="alert alert-danger small">You can't request for room! You are a Owner</span>
-                                        {% elif request.session.name == 'pending' %}
-                                            <a href="{% url 'register_pending' %}" class="btn btn-outline-warning">Please complete the Register!</a>
                                         {% else %}
-                                            <span class="alert alert-danger">You can't request for room! You are a Admin</span>
+                                            <span class="alert alert-danger small">You can't request for room! You are a Admin</span>
                                         {% endif %}
                                      {% else %}
                                         <div class="form-inline">
@@ -79,10 +77,8 @@
                                 {% else %}
                                     <div class="form-inline">
                                     <span class="badge badge-danger  mt-2 px-3 py-2">{{ r.r_id|room_allot_count }} Renter Booked</span>
-                                        {% if request.session.name == 'owner' %}
-                                            <span class="alert alert-danger small">You can't request for room! You are a Owner</span>
-                                        {% elif request.session.name == 'pending' %}
-                                            <a href="{% url 'register_pending' %}" class="btn btn-outline-warning small">Please complete the Register!</a>
+                                        {% if request.user|has_group:"owner" %}
+                                            <span class="alert alert-danger small mt-4 px-3 py-2 ml-2">You can't request for room! You are a Owner</span>
                                         {% else %}
                                         <a href="{% url 'room_request' r.r_id %}" class="btn btn-dark ml-auto mt-1">Request for room</a>
                                          {% endif %}

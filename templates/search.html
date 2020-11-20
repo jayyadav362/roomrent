@@ -8,10 +8,10 @@
             <div class="card-body">
                 <div class="container">
                     <form action="{% url 'search_room' %}" method="get">
-                        <div class="row p-3">
-                            <div class="col-lg-5"><input type="text"  id="state"  name="state" placeholder="Select state" class="form-control"></div>
-                            <div class="col-lg-5"><input type="text" id="city" name="city" placeholder="Select city" class="form-control"></div>
-                            <div class="col-lg-2"><input type="submit" value="search" class="btn btn-outline-success btn-block"></div>
+                        <div class="row  ">
+                            <div class="col-lg-5 col-6 mt-1 mb-1"><input type="text"  id="state"  name="state" placeholder="State" class="form-control" required></div>
+                            <div class="col-lg-5 col-6 mt-1 mb-1"><input type="text" id="city" name="city" placeholder="City" class="form-control" required></div>
+                            <div class="col-lg-2 col-6 mt-1 mb-1 mx-auto"><input type="submit" value="search" class="btn btn-outline-success btn-block"></div>
                         </div>
                     </form>
                 </div>
@@ -22,20 +22,27 @@
         <div class="row">
             <div class="col-lg-3">
                 <div class="card">
-                    <div class="card-header">Filter</div>
-                    <div class="card-body"></div>
+                    <div class="card-header">Room Types</div>
+                       <div class="list-group small">
+                           <a href="" class="list-group-item list-group-item-action rounded-0">All Rooms</a>
+                           {% for t in type %}
+                           <a href="" class="list-group-item list-group-item-action rounded-0">{{ t.rt_title }}</a>
+                           {% empty %}
+                               <span class="disabled">Empty</span>
+                           {% endfor %}
+                       </div>
                 </div>
             </div>
             <div class="col-lg-9">
             {% if house.count == 0 %}
                 <h6 class="text-danger ml-3 mb-3">No any rooms found in your area!</h6>
             {% else %}
-                <h6 class="text-success ml-3 mb-3">({{ house.count }}) rooms found in your area.</h6>
+                <h6 class="text-success ml-3 mb-3">({{ house.count }}) house found in your area.</h6>
             {% endif %}
                 {% for h in house %}
 
-                    <div class="card">
-                        <div class="card-body">
+                    <div class="card mt-2">
+                        <div class="card-body small">
                             <div class="row">
                                 <div class="col-lg-5">
                                     <img src="{{ h.ro_house_image.url }}" alt="" class=" w-100" height="200px">
@@ -57,6 +64,15 @@
                                 </div>
                             </div>
                         </div>
+                    <div class="card-footer">
+                        <div class="row no-gutters">
+                            {% for t in room_type %}
+                                <div class="col-lg-2">
+                                    <div class="alert alert-primary small m-1 p-1 text-center text-muted" role="alert">{{ t.r_type }}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
                     </div>
                 {% endfor %}
             </div>

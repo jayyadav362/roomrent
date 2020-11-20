@@ -21,6 +21,14 @@ def room_count(context):
         return 0
 
 @register.filter
+def room_type(context):
+    qs = Room.objects.get(user_id__username=context, r_status='1')
+    if qs.exists():
+        return qs
+    else:
+        return 0
+
+@register.filter
 def room_owner_contact(context):
     qs = RoomOwner.objects.get(user_id=context)
     if qs:
@@ -113,3 +121,7 @@ def sum_advance(l):
             data = subtract(x)
             sum += data
     return sum
+
+@register.filter
+def has_group(user,group_name):
+    return user.groups.filter(name=group_name).exists()

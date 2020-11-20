@@ -2,10 +2,11 @@ from django.forms import ModelForm
 from .models import *
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django.core.validators import EmailValidator
 from django import forms
 
 class RegisterForm(UserCreationForm):
-    email = forms.EmailField(label="Email")
+    email = forms.EmailField(label="Email",validators=[EmailValidator],error_messages={'invalid': 'This is invalid email address!'})
     first_name = forms.CharField(label="Fist name")
     last_name = forms.CharField(label="Last name")
     class Meta:
@@ -86,3 +87,31 @@ class RoomQueryForm(forms.ModelForm):
             "m_message": 'Message'
         }
         exclude = ['m_id','user_id','m_doc']
+
+class UpdateProfile(forms.ModelForm):
+    email = forms.EmailField(label="Email")
+    first_name = forms.CharField(label="Fist name")
+    last_name = forms.CharField(label="Last name")
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email',]
+
+class UpdateOwnerForm(ModelForm):
+    class Meta:
+        model = RoomOwner
+        labels = {
+            "ro_contact": 'Contact',
+            "ro_street": 'Street/Road/Village',
+        }
+        fields = ['ro_contact','ro_street']
+
+class UpdateRenterForm(ModelForm):
+    class Meta:
+        model = RoomRenter
+        labels = {
+            "rr_contact": 'Contact',
+            "rr_street": 'Street/Road/Village',
+        }
+        fields = ['rr_contact','rr_street']
+
