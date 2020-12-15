@@ -6,7 +6,7 @@
         <div class="col-lg-4">
             <div class="card">
                 <img src="{{ house.ro_house_image.url }}" alt="" class="w-100" height="300px">
-                <div class="card-body">
+                <div class="card-body small">
                     <h6 class="text-center text-uppercase">{{ house.ro_house }}</h6>
                     <p class="text-center">{{ house.user_id.first_name }} {{ house.user_id.last_name }} | {{ house.ro_street }} ,{{ house.city }} ,{{ house.state }}</p>
                     <p class=""><i class="fa fa-phone"></i>- {{ house.ro_contact }}</p>
@@ -60,7 +60,7 @@
                                         {%  if request.user|has_group:"renter" %}
                                             <div class="form-inline">
                                                 <span class="badge badge-primary  mt-2 px-3 py-2">Empty Room Renter </span>
-                                                <a href="{% url 'room_request' r.r_id %}" class="btn btn-dark ml-auto mt-1">Request for room</a>
+                                                <a href="{% url 'room_request' r.slug %}" class="btn btn-dark ml-auto mt-1">Request for room</a>
                                             </div>
                                         {% elif request.user|has_group:"owner" %}
                                             <span class="alert alert-danger small">You can't request for room! You are a Owner</span>
@@ -70,7 +70,7 @@
                                      {% else %}
                                         <div class="form-inline">
                                             <span class="badge badge-primary  mt-2 px-3 py-2">Empty Room Renter </span>
-                                            <a href="{% url 'room_request' r.r_id %}" class="btn btn-dark ml-auto mt-1 ">Request for room</a>
+                                            <a href="{% url 'room_request' r.slug %}" class="btn btn-dark ml-auto mt-1 ">Request for room</a>
                                         </div>
                                      {% endif %}
 
@@ -80,7 +80,7 @@
                                         {% if request.user|has_group:"owner" %}
                                             <span class="alert alert-danger small mt-4 px-3 py-2 ml-2">You can't request for room! You are a Owner</span>
                                         {% else %}
-                                        <a href="{% url 'room_request' r.r_id %}" class="btn btn-dark ml-auto mt-1">Request for room</a>
+                                        <a href="{% url 'room_request' r.slug %}" class="btn btn-dark ml-auto mt-1">Request for room</a>
                                          {% endif %}
                                     </div>
                                 {% endif %}

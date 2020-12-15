@@ -22,11 +22,12 @@ def room_count(context):
 
 @register.filter
 def room_type(context):
-    qs = Room.objects.get(user_id__username=context, r_status='1')
-    if qs.exists():
-        return qs
-    else:
-        return 0
+    qs = Room.objects.filter(user_id__username=context, r_status='1')
+    emptylist = []
+    for q in qs:
+        emptylist.append(q.r_type.rt_title)
+    emptylist = set(emptylist)
+    return emptylist
 
 @register.filter
 def room_owner_contact(context):

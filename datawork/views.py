@@ -8,13 +8,12 @@ from django.http import JsonResponse
 from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.forms import PasswordChangeForm,PasswordResetForm
+from django.contrib.auth.forms import PasswordChangeForm
 from datedelta import datedelta
 from datetime import datetime
 import string
 import random
 from django.db.models import Sum
-#import matplotlib.pyplot as plt
 from datawork.templatetags import template_tags
 # Create your views here.
 
@@ -27,34 +26,36 @@ def diff_month(d1, d2):
 def home(r):
     return render(r, 'home.html')
 
-def state_search(r):
-    if 'term' in r.GET:
-        qs = State.objects.filter(name__icontains=r.GET.get('term'))[:5]
-        titles = list()
-        for state in qs:
-            titles.append(state.name)
-        return JsonResponse(titles, safe=False)
-
 def city_search(r):
-    if 'term' in r.GET:
-        qs = City.objects.filter(name__icontains=r.GET.get('term'))[:5]
-        titles = list()
-        for city in qs:
-            titles.append(city.name)
-        return JsonResponse(titles, safe=False)
+    if r.is_ajax():
+        term = r.GET.get('term')
+        city = City.objects.filter(name__icontains=term)[:5]
+        response_content = list(city.values())
+        return JsonResponse(response_content, safe=False)
+
+    # if 'term' in r.GET:
+    #     qs = City.objects.filter(name__icontains=r.GET.get('term'))[:5]
+    #     titles = list()
+    #     for city in qs:
+    #         titles.append(city.name)
+    #     return JsonResponse(titles, safe=False)
 
 def search_room(r):
     if r.method == 'GET':
-        house =RoomOwner.objects.filter(Q(state__name=r.GET.get('state')) & Q(city__name=r.GET.get('city')))
+        house = RoomOwner.objects.filter(city__name=r.GET.get('city'))
         data = {
             "house": house,
             "type":RoomType.objects.all(),
-            "room_type":Room.objects.filter(user_id__username=house[0].user_id.username,r_status='1')
         }
-    else:
-        data = {"house":RoomOwner.objects.all()}
+        return render(r,'search.html',data)
 
-    return render(r,'search.html',data)
+def room_type(r,rt_id):
+    house = RoomOwner.objects.filter(Q(city__name=r.GET.get('city')) & Q(user_id__room__r_type__slug=rt_id) & Q(user_id__room__r_status='1'))
+    data = {
+        "house": house,
+        "type": RoomType.objects.all(),
+    }
+    return render(r, 'search.html', data)
 
 def house_view(r,h_id):
     owner = RoomOwner.objects.get(user_id__username=h_id)
@@ -112,7 +113,7 @@ def logins(r):
 def room_request(r,rq_id):
     request = RoomAllot()
     request.renter = r.user
-    room = Room.objects.get(r_id=rq_id)
+    room = Room.objects.get(slug=rq_id)
     request.ra_room_id = Room(room.r_id)
     request.user_id = User(room.user_id_id)
     request.ra_status = '0'
@@ -166,7 +167,7 @@ def renter_profile(r):
     allot = RoomAllot.objects.filter(renter__username=r.user, ra_status='1').filter(ra_room_id__r_status='1')
     for x in allot:
         doj = x.ra_doc
-        doj = datetime(doj.year, doj.month, 1)
+        doj = datetime(doj.year, doj.month, 2)
         while diff_month(datetime.now().date(), doj) >= 0:
             cond = Q(pg_month__month=doj.month, pg_month__year=doj.year) & Q(pg_allot_id=x.ra_id) & Q(
                 user_id__username=x.renter)
@@ -188,7 +189,7 @@ def renter_profile(r):
                     p.save()
                 except ObjectDoesNotExist:
                     pass
-            doj = datetime(doj.year, doj.month, 1) + datedelta(months=1)
+            doj = datetime(doj.year, doj.month, 2) + datedelta(months=1)
 
     data = {
         "room_request": RoomAllot.objects.filter(renter__username=r.user, ra_status='0'),
@@ -249,7 +250,7 @@ def renter_update_id_proof(r):
 
 @login_required(login_url=logins)
 def request_delete(r,r_id):
-    delete = RoomAllot.objects.get(ra_id=r_id)
+    delete = RoomAllot.objects.get(slug=r_id)
     delete.delete()
     messages.error(r, "room request delete successfully!")
     return redirect('renter_profile')
@@ -330,7 +331,7 @@ def owner_profile(r):
     allot = RoomAllot.objects.filter(user_id__username=r.user, ra_status='1').filter(ra_room_id__r_status='1')
     for x in allot:
         doj = x.ra_doc
-        doj = datetime(doj.year, doj.month, 1)
+        doj = datetime(doj.year, doj.month, 2)
         while diff_month(datetime.now().date(), doj) >= 0:
             cond = Q(pg_month__month=doj.month, pg_month__year=doj.year) & Q(pg_allot_id=x.ra_id) & Q(
                 user_id__username=x.renter)
@@ -352,7 +353,7 @@ def owner_profile(r):
                     p.save()
                 except ObjectDoesNotExist:
                     pass
-            doj = datetime(doj.year, doj.month, 1) + datedelta(months=1)
+            doj = datetime(doj.year, doj.month, 2) + datedelta(months=1)
 
     room = RoomOwner.objects.get(user_id__username=r.user)
     if r.method == "POST":
@@ -501,14 +502,14 @@ def owner_room_edit(r,et_id):
 
 @login_required(login_url=logins)
 def room_active(r,a_id):
-    room = Room.objects.get(r_id=a_id)
+    room = Room.objects.get(slug=a_id)
     room.r_status = '1'
     room.save()
     return redirect('owner_rooms')
 
 @login_required(login_url=logins)
 def room_pending(r,p_id):
-    room = Room.objects.get(r_id=p_id)
+    room = Room.objects.get(slug=p_id)
     room.r_status = '2'
     room.save()
     return redirect('owner_rooms')
@@ -575,7 +576,7 @@ def room_allot_request(r):
 
 @login_required(login_url=logins)
 def room_request_active(r,al_id):
-    active = RoomAllot.objects.get(ra_id=al_id, ra_room_id__r_status='1')
+    active = RoomAllot.objects.get(slug=al_id, ra_room_id__r_status='1')
     try:
         # check room active-----------
         if active is not None:
@@ -611,7 +612,7 @@ def room_allot_pending(r):
 
 @login_required(login_url=logins)
 def allot_active(r,a_id):
-    active = RoomAllot.objects.get(ra_id=a_id, ra_room_id__r_status='1')
+    active = RoomAllot.objects.get(slug=a_id, ra_room_id__r_status='1')
     try:
         try:
             # check room active-----------
@@ -632,7 +633,7 @@ def allot_active(r,a_id):
 
 @login_required(login_url=logins)
 def allot_pending(r,p_id):
-    pending = RoomAllot.objects.get(ra_id=p_id)
+    pending = RoomAllot.objects.get(slug=p_id)
     pending.ra_status = '2'
     pending.ra_doc = datetime.now()
     pending.save()
@@ -640,13 +641,13 @@ def allot_pending(r,p_id):
 
 @login_required(login_url=logins)
 def allot_delete(r,d_id):
-    delete = RoomAllot.objects.get(ra_id=d_id)
+    delete = RoomAllot.objects.get(slug=d_id)
     delete.delete()
     return redirect('room_allot_request')
 
 @login_required(login_url=logins)
 def view_renter_profile(r,rnt_id):
-    pay = RoomAllot.objects.filter(ra_id=r.POST.get('ra_id'))
+    pay = RoomAllot.objects.filter(slug=r.POST.get('slug'))
     if r.method == "POST":
         p = PaymentPaid()
         p.pp_amount = r.POST.get('amount')

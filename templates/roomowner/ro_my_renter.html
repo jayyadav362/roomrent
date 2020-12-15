@@ -38,7 +38,7 @@
                             <td><a href="{% url 'owner_room_view' r.ra_room_id.slug %}" class="nav-link p-0 m-0">{{ r.ra_room_id.r_title }}</a></td>
                             <td class="text-success">Active</td>
                             <td>{{ r.ra_doc|date:'d M,Y' }}</td>
-                            <td><a href="{% url 'allot_pending' r.ra_id %}" class=" nav-link p-0 m-0"><i class="fas fa-pause-circle fa-lg text-warning"></i></a></td>
+                            <td><a href="{% url 'allot_pending' r.slug %}" class=" nav-link p-0 m-0"><i class="fas fa-pause-circle fa-lg text-warning"></i></a></td>
                             </tr>
                         {% empty %}
                         <tr>

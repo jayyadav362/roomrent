@@ -30,8 +30,8 @@
                                     <td>{{ rq.ra_doc|date:'d M,Y' }}</td>
                                     <td>
                                         <div class="form-inline">
-                                                <a href="{% url 'allot_active' rq.ra_id %}" class=" nav-link p-0 m-0"><i class="fas fa-check-circle fa-lg text-success"></i></a>
-                                                <a href="{% url 'allot_delete' rq.ra_id %}" class=" nav-link p-0 m-0 ml-2"><i class="far fa-times-circle fa-lg text-danger"></i></a>
+                                                <a href="{% url 'allot_active' rq.slug %}" class=" nav-link p-0 m-0"><i class="fas fa-check-circle fa-lg text-success"></i></a>
+                                                <a href="{% url 'allot_delete' rq.slug %}" class=" nav-link p-0 m-0 ml-2"><i class="far fa-times-circle fa-lg text-danger"></i></a>
                                         </div>
                                     </td>
                                     </tr>

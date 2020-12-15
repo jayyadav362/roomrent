@@ -23,7 +23,7 @@
             <a href="{% url 'renter_update_profile' %}" class="m-0 p-0 ml-auto"><i class="fas fa-edit fa-lg text-primary"></i></a>
         </div>
             </div>
-            <div class="card-body">
+            <div class="card-body small">
                 <table class="table table-responsive-sm">
                     <tr>
                         <th>Name</th>
@@ -82,7 +82,7 @@
                                         <td>{{ rq.ra_doc|date:'d M,Y' }}</td>
                                         <td>
                                             <div class="form-inline">
-                                                <a href="{% url 'request_delete' rq.ra_id %}" class=" nav-link p-0 m-0 ml-2"><i class="far fa-times-circle fa-lg text-danger"></i></a>
+                                                <a href="{% url 'request_delete' rq.slug %}" class=" nav-link p-0 m-0 ml-2"><i class="far fa-times-circle fa-lg text-danger"></i></a>
                                             </div>
                                         </td>
                                     </tr>

@@ -69,7 +69,7 @@ class Room(models.Model):
     r_doc = models.DateTimeField(default=datetime.now(), blank=True)
 
     def __str__(self):
-        return self.r_title
+        return self.r_title+' | '+self.r_type.rt_title
 
 class RoomRenter(models.Model):
     rr_id = models.AutoField(primary_key=True)

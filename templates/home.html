@@ -8,9 +8,12 @@
                 <div class="container">
                     <form action="{% url 'search_room' %}" method="get">
                         <div class="row  ">
-                            <div class="col-lg-5 col-6 mt-1 mb-1"><input type="text"  id="state"  name="state" placeholder="State" class="form-control" required></div>
-                            <div class="col-lg-5 col-6 mt-1 mb-1"><input type="text" id="city" name="city" placeholder="City" class="form-control" required></div>
-                            <div class="col-lg-2 col-6 mt-1 mb-1 mx-auto"><input type="submit" value="search" class="btn btn-outline-success btn-block"></div>
+                            <div class="col-lg-9 col-6 mt-2 mb-1 px-1">
+                                    <select name="city" id="city" class="form-control " >
+                                        <option selected disabled="true">Search city</option>
+                                    </select>
+                            </div>
+                            <div class="col-lg-2 col-6 mt-1 mb-1 mx-auto"><input type="submit" value="search" class="btn btn-outline-success btn-block p-1"></div>
                         </div>
                     </form>
                 </div>
