@@ -61,14 +61,14 @@
                 });
 
             });
-             $('#city').select2({
+             $('#city_search').select2({
             ajax: {
                 url: '{% url 'city_search' %}',
                 dataType: 'json',
-                processResults: function (data) {
+                processResults: function (response_content) {
                     return {
-                        results: $.map(data, function (item) {
-                            return {id: item.name, text: item.name+","+item.slug};
+                        results: $.map(response_content, function (item) {
+                            return {id: item.name, text: item.name};
                         })
                     };
                 }

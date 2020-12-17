@@ -9,14 +9,12 @@
                 <div class="container">
                     <form action="{% url 'search_room' %}" method="get">
                         <div class="row  ">
-                            <div class="col-lg-9 col-6 mt-1 mb-1 px-1">
-                                <div class="form-group">
-                                    <select name="city" id="city" class="form-control" >
+                            <div class="col-lg-9 col-6 mt-2 mb-1 px-1">
+                                    <select name="city_search" id="city_search" class="form-control " >
                                         <option selected disabled="true">Search city</option>
                                     </select>
-                                </div>
                             </div>
-                            <div class="col-lg-2 col-6 mt-1 mb-1 mx-auto"><input type="submit" value="search" name="search" class="btn btn-outline-success btn-block"></div>
+                            <div class="col-lg-2 col-6 mt-1 mb-1 mx-auto"><input type="submit" value="search" class="btn btn-outline-success btn-block p-1"></div>
                         </div>
                     </form>
                 </div>
@@ -31,7 +29,7 @@
                        <div class="list-group small bg-transparent border-0">
                            <a href="" class="list-group-item list-group-item-action rounded-0  bg-transparent border-0 text-info">All Rooms</a>
                            {% for t in type %}
-                           <a href="{% url 'room_type' t.slug %}?city={{ request.GET.city}}" class="list-group-item list-group-item-action rounded-0 bg-transparent border-0 text-info">{{ t.rt_title }}</a>
+                           <a href="{% url 'room_type' t.slug %}?city_search={{ request.GET.city_search}}" class="list-group-item list-group-item-action rounded-0 bg-transparent border-0 text-info">{{ t.rt_title }}</a>
                            {% empty %}
                                <span class="disabled">Empty</span>
                            {% endfor %}
@@ -39,10 +37,10 @@
                 </div>
             </div>
             <div class="col-lg-10">
-            {% if house.count == 0 %}
+            {% if count == 0 %}
                 <h6 class="text-danger ml-3 mb-3">No any rooms found in your area!</h6>
             {% else %}
-                <h6 class="text-success ml-3 mb-3">({{ house.count }}) house found in your area.</h6>
+                <h6 class="text-success ml-3 mb-3">({{ count }}) house found in your area.</h6>
             {% endif %}
                 {% for h in house %}
 

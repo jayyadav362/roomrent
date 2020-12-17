@@ -14,6 +14,7 @@ from datetime import datetime
 import string
 import random
 from django.db.models import Sum
+import json
 from datawork.templatetags import template_tags
 # Create your views here.
 
@@ -42,17 +43,24 @@ def city_search(r):
 
 def search_room(r):
     if r.method == 'GET':
-        house = RoomOwner.objects.filter(city__name=r.GET.get('city'))
+        house = RoomOwner.objects.filter(city__name=r.GET.get('city_search'))
         data = {
             "house": house,
+            "count":house.count(),
             "type":RoomType.objects.all(),
         }
         return render(r,'search.html',data)
 
 def room_type(r,rt_id):
-    house = RoomOwner.objects.filter(Q(city__name=r.GET.get('city')) & Q(user_id__room__r_type__slug=rt_id) & Q(user_id__room__r_status='1'))
+    house = RoomOwner.objects.filter(Q(city__name=r.GET.get('city_search')) & Q(user_id__room__r_type__slug=rt_id) & Q(user_id__room__r_status='1'))
+    d_house = []
+    for q in house:
+        d_house.append(q)
+    d_house = set(d_house)
+    count = len(d_house)
     data = {
-        "house": house,
+        "house": d_house,
+        "count": count,
         "type": RoomType.objects.all(),
     }
     return render(r, 'search.html', data)
