@@ -1,18 +1,15 @@
-{% extends 'roomowner/ro_base.html' %}
+{% extends 'roomowner/house_base.html' %}
 {% block content %}
 <div class="col-lg-9 bg-white mb-2">
 <div class="row">
     <div class="col-lg-6 mx-auto">
         <div class="card">
-            <div class="card-header  text-center bg-info text-light">Update Profile</div>
+            <div class="card-header  text-center bg-info text-light">Update House</div>
             <div class="card-body">
-                <form action="{% url 'owner_update_profile' %}" method="post" enctype="multipart/form-data">
+                <form action="" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="form-group">
                         {{ form.label }}
-                        {{ form }}
-                    </div>
-                    <div class="form-group">
                         {{ profile }}
                     </div>
                     <div class="form-group">

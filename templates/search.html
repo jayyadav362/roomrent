@@ -27,7 +27,7 @@
                 <div class="card bg-transparent border-0">
                     <div class="card-header bg-transparent text-warning">Room Types</div>
                        <div class="list-group small bg-transparent border-0">
-                           <a href="" class="list-group-item list-group-item-action rounded-0  bg-transparent border-0 text-info">All Rooms</a>
+                           <a href="{% url 'search_room' %}?city_search={{ request.GET.city_search}}" class="list-group-item list-group-item-action rounded-0  bg-transparent border-0 text-info">All Rooms</a>
                            {% for t in type %}
                            <a href="{% url 'room_type' t.slug %}?city_search={{ request.GET.city_search}}" class="list-group-item list-group-item-action rounded-0 bg-transparent border-0 text-info">{{ t.rt_title }}</a>
                            {% empty %}
@@ -60,16 +60,16 @@
                                       {% if h.user_id|room_count == 0 %}
                                           <div class="badge badge-danger p-1">No any Rooms</div>
                                       {% else %}
-                                        <div class="badge badge-primary p-1">{{ h.user_id|room_count }} Rooms</div>
+                                        <div class="badge badge-primary p-1">{{ h.ro_id|room_count }} Rooms</div>
                                       {% endif %}
-                                      <a href="{% url 'house_view' h.user_id.username %}" class="btn btn-success ml-auto">View Rooms</a>
+                                      <a href="{% url 'house_view' h.slug %}" class="btn btn-success ml-auto">View Rooms</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     <div class="card-footer">
                         <div class="row no-gutters">
-                            {% for t in h.user_id|room_type %}
+                            {% for t in h.ro_id|room_type %}
                                 <div class="col-lg-2 col-6">
                                     <div class="alert alert-primary small m-1 p-1 text-center text-muted" role="alert">{{ t }}</div>
                                 </div>

@@ -101,10 +101,11 @@ class UpdateOwnerForm(ModelForm):
     class Meta:
         model = RoomOwner
         labels = {
+            "ro_house":'House Name',
             "ro_contact": 'Contact',
             "ro_street": 'Street/Road/Village',
         }
-        fields = ['ro_contact','ro_street']
+        fields = ['ro_house','ro_contact','ro_street','state','city']
 
 class UpdateRenterForm(ModelForm):
     class Meta:

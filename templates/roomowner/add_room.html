@@ -1,4 +1,4 @@
-{% extends 'roomowner/ro_base.html' %}
+{% extends 'roomowner/house_base.html' %}
 {% load template_tags %}
 {% block content %}
     <div class="col-lg-9">
@@ -15,7 +15,7 @@
                                 </div>
                         {% endfor %}
                 <div class="card-body">
-                    <form action="{% url 'add_room' %}" method="post" enctype="multipart/form-data">
+                    <form action="" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                             {% for form in form %}
                                 <div class="form-group">

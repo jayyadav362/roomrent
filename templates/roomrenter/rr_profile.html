@@ -73,16 +73,16 @@
                     {% for rq in room_request %}
                                     <tr class="small">
                                         <td class="">{{ rq.ra_room_id.r_title }}</td>
-                                        <td>{{ rq.user_id|room_owner_house }}</td>
-                                        <td><a href="{% url 'house_view' rq.user_id|room_owner_username %}" class="nav-link p-0 m-0">{{ rq.user_id.first_name }} {{ rq.user_id.last_name }}</a></td>
+                                        <td>{{ rq.house_id.ro_id|room_owner_house }}</td>
+                                        <td><a href="{% url 'house_view' rq.house_id.ro_id|room_owner_slug %}" class="nav-link p-0 m-0">{{ rq.user_id.first_name }} {{ rq.user_id.last_name }}</a></td>
 
-                                        <td>{{ rq.user_id|room_owner_contact }}</td>
+                                        <td>{{ rq.house_id.ro_id|room_owner_contact }}</td>
 
                                         <td><a href="{% url 'room_view' rq.ra_room_id.slug %}" class="nav-link p-0 m-0"><i class="fas fa-eye fa-lg text-primary"></i></a></td>
                                         <td>{{ rq.ra_doc|date:'d M,Y' }}</td>
                                         <td>
                                             <div class="form-inline">
-                                                <a href="{% url 'request_delete' rq.slug %}" class=" nav-link p-0 m-0 ml-2"><i class="far fa-times-circle fa-lg text-danger"></i></a>
+                                                <a href="{% url 'request_delete' rq.ra_id %}" class=" nav-link p-0 m-0 ml-2"><i class="far fa-times-circle fa-lg text-danger"></i></a>
                                             </div>
                                         </td>
                                     </tr>

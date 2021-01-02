@@ -1,4 +1,4 @@
-{% extends 'roomowner/ro_base.html' %}
+{% extends 'roomowner/house_base.html' %}
 {% block content %}
     <div class="col-lg-9">
     <div class="row mt-5">
@@ -24,7 +24,7 @@
             <div class="card">
                 <div class="card-header text-center">Room Allot</div>
                 <div class="card-body">
-                    <form action="{% url 'room_allot' %}" method="post" enctype="multipart/form-data">
+                    <form action="" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                                 {% for foo in messages %}
                                 <div class="alert {{ foo.tags }}  alert-dismissible fade show " role="alert">

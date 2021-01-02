@@ -1,4 +1,4 @@
-{% extends 'roomowner/ro_base.html' %}
+{% extends 'roomowner/house_base.html' %}
 {% load template_tags %}
 {% block content %}
 <div class="col-lg-9 bg-white mb-2">
@@ -73,7 +73,7 @@
     <div class="col-lg-12">
 {% for rm in room %}
     <!---modal--->
-    <div class="modal fade" id="payRent{{ rm.ra_id }}" role="dialog">
+    <div class="modal fade" id="payRent{{ rm.slug }}" role="dialog">
     <div class="modal-dialog">
         <form  class="well contact-form" method="post" action="">
             {% csrf_token %}
@@ -100,7 +100,7 @@
     <div class="card mt-2 mb-2">
     <div class="card-header bg-dark small">
         <div class="form-inline text-light">
-            Room no: <a href="{% url 'owner_room_view' rm.ra_room_id.slug %}" class="nav-link text-primary text-capitalize ml-2 m-0 p-0"> <span class="badge badge-primary p-1">{{ rm.ra_room_id.r_title }}</span> of {{ rm.ra_room_id.user_id|room_owner_house }}</a>
+            Room no: <a href="{% url 'owner_room_view' rm.ra_room_id.slug %}" class="nav-link text-primary text-capitalize ml-2 m-0 p-0"> <span class="badge badge-primary p-1">{{ rm.ra_room_id.r_title }}</span> of {{ rm.ra_room_id.house_id.ro_id|room_owner_house }}</a>
             <span class="text-warning ml-auto">Rent:  ₹{{ rm.ra_room_id.r_rent }} / {{ rm.ra_room_id|room_allot_count }} Renter</span>
             <span class="mx-auto text-info">
                 Status :

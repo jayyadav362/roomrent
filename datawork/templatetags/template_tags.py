@@ -14,7 +14,7 @@ def room_allot_count(context):
 
 @register.filter
 def room_count(context):
-    qs = Room.objects.filter(user_id=context, r_status='1')
+    qs = Room.objects.filter(house_id=context, r_status='1')
     if qs.exists():
         return qs.count()
     else:
@@ -22,7 +22,7 @@ def room_count(context):
 
 @register.filter
 def room_type(context):
-    qs = Room.objects.filter(user_id__username=context, r_status='1')
+    qs = Room.objects.filter(house_id=context, r_status='1')
     emptylist = []
     for q in qs:
         emptylist.append(q.r_type.rt_title)
@@ -31,7 +31,7 @@ def room_type(context):
 
 @register.filter
 def room_owner_contact(context):
-    qs = RoomOwner.objects.get(user_id=context)
+    qs = RoomOwner.objects.get(ro_id=context)
     if qs:
         return qs.ro_contact
     else:
@@ -39,17 +39,17 @@ def room_owner_contact(context):
 
 @register.filter
 def room_owner_house(context):
-    qs = RoomOwner.objects.get(user_id=context)
+    qs = RoomOwner.objects.get(ro_id=context)
     if qs:
         return qs.ro_house
     else:
         return 0
 
 @register.filter
-def room_owner_username(context):
-    qs = RoomOwner.objects.get(user_id__username=context)
+def room_owner_slug(context):
+    qs = RoomOwner.objects.get(ro_id=context)
     if qs:
-        return qs.ro_id
+        return qs.slug
     else:
         return 0
 

@@ -38,10 +38,15 @@ class RoomOwner(models.Model):
     ro_house_image = models.ImageField(upload_to="image")
     state = models.ForeignKey(State,on_delete=models.CASCADE)
     city = models.ForeignKey(City,on_delete=models.CASCADE)
+    slug = models.SlugField()
     #location = models.PointField()
 
     def __str__(self):
         return self.user_id.first_name
+
+    def save(self,*args,**kwargs):
+        self.slug = slugify(self.ro_house)
+        super(RoomOwner, self).save(*args,**kwargs)
 
 class RoomType(models.Model):
     rt_id = models.AutoField(primary_key=True)
@@ -59,6 +64,7 @@ class RoomType(models.Model):
 class Room(models.Model):
     r_id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(User,on_delete=models.CASCADE)
+    house_id = models.ForeignKey(RoomOwner,on_delete=models.CASCADE)
     r_title = models.CharField(max_length=100)
     r_rent = models.IntegerField()
     r_type = models.ForeignKey(RoomType,on_delete=models.DO_NOTHING)
@@ -87,6 +93,7 @@ class RoomRenter(models.Model):
 class RoomAllot(models.Model):
     ra_id = models.AutoField(primary_key=True)
     ra_room_id = models.ForeignKey(Room, on_delete=models.DO_NOTHING)
+    house_id = models.ForeignKey(RoomOwner, on_delete=models.CASCADE)
     user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING,related_name='user_id')
     renter = models.ForeignKey(User, on_delete=models.DO_NOTHING,related_name='renter')
     ra_doc = models.DateTimeField(default=datetime.now(), blank=True)

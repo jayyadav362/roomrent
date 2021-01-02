@@ -1,61 +1,17 @@
-{% extends 'roomowner/ro_base.html' %}
+{% extends 'roomowner/owner_base.html' %}
 {% block content %}
 <div class="col-lg-9">
-<div class="row">
-    <div class="col-lg-4">
-            <img src="{{ user.0.ro_id_proof.url }}" alt="" class="" width="100%" height="250px">
-            <form action="{% url 'owner_update_id_proof' %}" method="post" enctype="multipart/form-data" >
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label class="edit_image">
-                        <input type="file" hidden class="form-control" name="id_proof" onchange="this.form.submit()">
-                            UPDATE ID Proof <i class="fas fa-image fa-lg "></i>
-                        </label>
+                <div class="row">
+                    {% for house in user %}
+                    <div class="col-lg-3">
+                        <div class="card">
+                                <a href="{% url 'owner_house' house.slug %}" class="nav-link">
+                                    <img src="{{ house.ro_house_image.url }}" alt="" width="100%" height="200px">
+                                    <p class="small text-muted text-center">{{ house.ro_house }}</p>
+                                </a>
+                        </div>
                     </div>
-                </form>
-    </div>
-    <div class="col-lg-8">
-        <div class="card">
-            <div class="card-header">
-                 <div class="form-inline">
-            <span class="">Profile Details</span>
-            <a href="{% url 'owner_update_profile' %}" class="m-0 p-0 ml-auto"><i class="fas fa-edit fa-lg text-primary"></i></a>
-        </div>
-            </div>
-            <div class="card-body">
-                <table class="table table-responsive-sm">
-                    <tr class="small">
-                        <th>Name</th>
-                        <td>{{ userdata.0.first_name }} {{ userdata.0.last_name }}</td>
-                    </tr>
-                    <tr class="small">
-                        <th>Email</th>
-                        <td>{{ userdata.0.email }}</td>
-                    </tr>
-                    <tr class="small">
-                        <th>Contact</th>
-                        <td>{{ user.0.ro_contact }}</td>
-                    </tr>
-                    <tr class="small">
-                        <th>Address</th>
-                        <td>{{ user.0.ro_street }},{{ user.0.city }},{{ user.0.state }}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-5">
-            <img src="{{ user.0.ro_house_image.url }}" alt="" class="" width="100%" height="250px">
-            <form action="" method="post" enctype="multipart/form-data" >
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label class="edit_image">
-                        <input type="file" hidden class="form-control" name="house_image" onchange="this.form.submit()">
-                            UPDATE HOUSE <i class="fas fa-image fa-lg "></i>
-                        </label>
-                    </div>
-                </form>
-    </div>
-</div>
+                    {% endfor %}
+                </div>
 </div>
 {% endblock %}
