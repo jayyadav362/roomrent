@@ -4,6 +4,7 @@ from datawork.models import *
 admin.site.register(State)
 admin.site.register(City)
 admin.site.register(RoomOwner)
+admin.site.register(OwnerHouse)
 admin.site.register(Room)
 admin.site.register(RoomType)
 admin.site.register(RoomAllot)

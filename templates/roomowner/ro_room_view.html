@@ -2,15 +2,23 @@
 {% load template_tags %}
 {% block content %}
 <div class="col-lg-9 bg-white mb-2">
+    {% for foo in messages %}
+                                <div class="alert {{ foo.tags }}  alert-dismissible fade show " role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    {{ foo }}
+                                </div>
+                        {% endfor %}
     <div class="card-header mt-1">
         <div class="form-inline">
             <span class="">Room Details</span>
             {% if room_view.r_status == '1' %}
-                <a href="{% url 'room_pending' room_view.slug %}" class="m-0 p-0 mx-auto btn btn-sm btn-warning text-light pl-1 pr-1"> Deactivate</a>
+                <a href="{% url 'room_pending' room_view.r_id %}" class="m-0 p-0 mx-auto btn btn-sm btn-warning text-light pl-1 pr-1"> Deactivate</a>
             {% else %}
-                <a href="{% url 'room_active' room_view.slug %}" class="m-0 p-0 mx-auto btn btn-sm btn-success text-light pl-1 pr-1"> Activate</a>
+                <a href="{% url 'room_active' room_view.r_id %}" class="m-0 p-0 mx-auto btn btn-sm btn-success text-light pl-1 pr-1"> Activate</a>
             {% endif %}
-            <a href="{% url 'owner_room_edit' room_view.slug %}" class="m-0 p-0 ml-auto"><i class="fas fa-edit fa-lg text-primary"></i></a>
+            <a href="{% url 'owner_room_edit' room_view.r_id %}" class="m-0 p-0 ml-auto"><i class="fas fa-edit fa-lg text-primary"></i></a>
         </div>
     </div>
 
@@ -74,8 +82,8 @@
                                     <td class="text-light">{{ rq.ra_doc|date:'d M,Y' }}</td>
                                     <td>
                                         <div class="form-inline">
-                                                <a href="{% url 'room_request_active' rq.slug %}" class=" nav-link p-0 m-0"><i class="fas fa-check-circle fa-lg text-success"></i></a>
-                                                <a href="{% url 'allot_delete' rq.slug %}" class=" nav-link p-0 m-0 ml-2"><i class="far fa-times-circle fa-lg text-danger"></i></a>
+                                                <a href="{% url 'room_request_active' rq.ra_id %}" class=" nav-link p-0 m-0"><i class="fas fa-check-circle fa-lg text-success"></i></a>
+                                                <a href="{% url 'allot_delete' rq.ra_id %}" class=" nav-link p-0 m-0 ml-2"><i class="far fa-times-circle fa-lg text-danger"></i></a>
                                         </div>
                                     </td>
                                     </tr>

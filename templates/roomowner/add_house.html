@@ -1,0 +1,23 @@
+{% extends 'roomowner/owner_base.html' %}
+{% block content %}
+    <div class="col-lg-6 mx-auto">
+                <div class="card">
+                <div class="card-header ">Add House </div>
+                    <div class="card-body">
+                        <form action="" id="add_house" data-cities-url="{% url 'ajax_load_cities' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                            {% for form in form %}
+                                <div class="form-group">
+                                {{ form.label_tag }}
+                                {{ form }}
+                                    <label for="" class="text-danger">{{ form.errors }}</label>
+                                </div>
+                            {% endfor %}
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-block btn-success">
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+{% endblock %}

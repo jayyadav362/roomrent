@@ -48,19 +48,19 @@
                         <div class="card-body small">
                             <div class="row">
                                 <div class="col-lg-5">
-                                    <img src="{{ h.ro_house_image.url }}" alt="" class=" w-100" height="200px">
+                                    <img src="{{ h.house_image.url }}" alt="" class=" w-100" height="200px">
                                 </div>
                                 <div class="col-lg-7">
-                                    <h6 class="text-center text-uppercase">{{ h.ro_house }}</h6>
-                                    <p class="text-center">{{ h.ro_street }} ,{{ h.city }} ,{{ h.state }}</p>
+                                    <h6 class="text-center text-uppercase">{{ h.house_name }}</h6>
+                                    <p class="text-center">{{ h.ho_street }} ,{{ h.city }} ,{{ h.state }}</p>
                                     <p class="text-success">Owner: {{ h.user_id.first_name }} {{ h.user_id.last_name }}</p>
-                                    <p class="text-success">Contact: {{ h.ro_contact }}</p>
+                                    <p class="text-success">Contact: {{ h.ho_contact }}</p>
                                     <p class="text-success">Email: {{ h.user_id.email }}</p>
                                     <div class="form-inline">
-                                      {% if h.user_id|room_count == 0 %}
+                                      {% if h.ho_id|room_count == 0 %}
                                           <div class="badge badge-danger p-1">No any Rooms</div>
                                       {% else %}
-                                        <div class="badge badge-primary p-1">{{ h.ro_id|room_count }} Rooms</div>
+                                        <div class="badge badge-primary p-1">{{ h.ho_id|room_count }} Rooms</div>
                                       {% endif %}
                                       <a href="{% url 'house_view' h.slug %}" class="btn btn-success ml-auto">View Rooms</a>
                                     </div>
@@ -69,7 +69,7 @@
                         </div>
                     <div class="card-footer">
                         <div class="row no-gutters">
-                            {% for t in h.ro_id|room_type %}
+                            {% for t in h.ho_id|room_type %}
                                 <div class="col-lg-2 col-6">
                                     <div class="alert alert-primary small m-1 p-1 text-center text-muted" role="alert">{{ t }}</div>
                                 </div>

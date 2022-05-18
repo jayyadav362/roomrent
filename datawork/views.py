@@ -43,7 +43,7 @@ def city_search(r):
 
 def search_room(r):
     if r.method == 'GET':
-        house = RoomOwner.objects.filter(city__name=r.GET.get('city_search'))
+        house = OwnerHouse.objects.filter(city__name=r.GET.get('city_search'))
         data = {
             "house": house,
             "count":house.count(),
@@ -52,7 +52,7 @@ def search_room(r):
         return render(r,'search.html',data)
 
 def room_type(r,rt_id):
-    house = RoomOwner.objects.filter(Q(city__name=r.GET.get('city_search')) & Q(room__r_type__slug=rt_id) & Q(room__r_status='1'))
+    house = OwnerHouse.objects.filter(Q(city__name=r.GET.get('city_search')) & Q(room__r_type__slug=rt_id) & Q(room__r_status='1'))
     d_house = []
     for q in house:
         d_house.append(q)
@@ -66,31 +66,38 @@ def room_type(r,rt_id):
     return render(r, 'search.html', data)
 
 def house_view(r,h_id):
-    owner = RoomOwner.objects.get(slug=h_id)
+    house = OwnerHouse.objects.get(slug=h_id)
     room_query = RoomQueryForm(r.POST or None)
     if r.method == 'POST':
         if room_query.is_valid:
             s = room_query.save(commit=False)
-            s.user_id = User(owner.user_id_id)
+            s.user_id = User(house.user_id_id)
             s.save()
             messages.success(r, "Room Query send successfully!")
-            return redirect("../house_view/" + str(owner.slug))
+            return redirect("../house_view/" + str(house.slug))
     data = {
         "form":room_query,
-        "house":owner,
-        "room":Room.objects.filter(house_id__slug=owner.slug,r_status='1')
+        "house":house,
+        "room":Room.objects.filter(house_id__slug=house.slug,r_status='1')
     }
     return render(r,'house_view.html',data)
 
 def room_view(r,r_id):
-    room = Room.objects.get(slug=r_id)
+    room = Room.objects.get(r_id=r_id)
     data = {
         "room_view": room,
-        "room_owner": RoomOwner.objects.get(ro_id=room.house_id.ro_id),
+        "house": OwnerHouse.objects.get(ho_id=room.house_id.ho_id),
     }
     return render(r,'room_view.html',data)
 
 def logins(r):
+    if r.user.is_authenticated:
+        if r.user.is_superuser:
+            return redirect('admin:index')
+        elif r.user.groups.filter(name='renter').exists():
+            return redirect('renter_profile')
+        elif r.user.groups.filter(name='owner').exists():
+            return redirect('owner_profile')
     form = LoginForm(r.POST or None)
     if r.method == 'POST':
         if form.is_valid:
@@ -104,7 +111,8 @@ def logins(r):
                 else:
                     messages.error(r,"Your password is incorrect!")
                     return redirect('logins')
-
+                if user.is_superuser:
+                    return redirect('admin:index')
                 if user.groups.filter(name='renter').exists():
                     return redirect('renter_profile')
                 elif user.groups.filter(name='owner').exists():
@@ -121,9 +129,9 @@ def logins(r):
 def room_request(r,rq_id):
     request = RoomAllot()
     request.renter = r.user
-    room = Room.objects.get(slug=rq_id)
+    room = Room.objects.get(r_id=rq_id)
     request.ra_room_id = Room(room.r_id)
-    request.house_id = RoomOwner(room.house_id.ro_id)
+    request.house_id = OwnerHouse(room.house_id.ho_id)
     request.user_id = User(room.user_id_id)
     request.slug = room.r_title + '-' + room.user_id.username + '-' + room.house_id.user_id.username
     request.ra_status = '0'
@@ -366,70 +374,103 @@ def owner_profile(r):
             doj = datetime(doj.year, doj.month, 2) + datedelta(months=1)
 
     data = {
-        "user": RoomOwner.objects.filter(user_id__username=r.user),
-        "userdata": User.objects.filter(username=r.user),
+        "owner": RoomOwner.objects.get(user_id__username=r.user),
+        "house": OwnerHouse.objects.filter(user_id__username=r.user),
     }
     return render(r,'roomowner/ro_profile.html',data)
 
+
+@login_required(login_url=logins)
+def owner_update_profile(r):
+    owner = RoomOwner.objects.get(user_id__username=r.user)
+    profile = UpdateOwnerForm(r.POST or None, instance=owner)
+    up = UpdateProfile(r.POST or None,instance=r.user)
+    if r.method == "POST":
+        if up.is_valid():
+            user = up.save(commit=False)
+            profile.save()
+            user.save()
+            return redirect('renter_profile')
+    else:
+        up = UpdateProfile(instance=r.user)
+        profile = UpdateOwnerForm(instance=owner)
+    data = {
+        "form":up,
+        "profile":profile,
+        "owner": owner,
+
+    }
+    return render(r,'roomowner/owner_update_profile.html',data)
+
+
+
+@login_required(login_url=logins)
+def add_house(r):
+    a = AddHouseForm(r.POST or None, r.FILES or None)
+    if r.method == "POST":
+        if a.is_valid():
+            d = a.save(commit=False)
+            d.user_id = r.user
+            d.save()
+            return redirect('owner_profile')
+    data = {
+        "form": a,
+        "owner": RoomOwner.objects.get(user_id__username=r.user),
+
+    }
+    return render(r, 'roomowner/add_house.html', data)
+
 @login_required(login_url=logins)
 def owner_house(r,ho_id):
-    room = RoomOwner.objects.get(slug=ho_id)
+    house = OwnerHouse.objects.get(slug=ho_id)
     if r.method == "POST":
-        house = room
-        house.ro_house_image = r.FILES['house_image']
+        house.house_image = r.FILES['house_image']
         house.save()
-        return redirect("owner_profile")
+        return redirect("../owner_house/" + str(house.slug))
     data = {
-        "user": RoomOwner.objects.filter(slug=ho_id),
-        "userdata": User.objects.filter(username=r.user),
+        "owner": RoomOwner.objects.get(user_id__username=r.user),
+        "house": house,
     }
     return render(r, 'roomowner/owner_house.html', data)
 
 
 @login_required(login_url=logins)
 def owner_update_image(r):
-    room = RoomOwner.objects.get(user_id__username=r.user)
+    owner = RoomOwner.objects.get(user_id__username=r.user)
     if r.method == "POST":
-        image = room
-        image.ro_image = r.FILES['ro_image']
-        image.save()
+        owner.ro_image = r.FILES['ro_image']
+        owner.save()
         return redirect("owner_profile")
     data = {
-        "user": RoomOwner.objects.filter(user_id__username=r.user),
-        "userdata": User.objects.filter(username=r.user),
+        "owner": owner,
+        "house": OwnerHouse.objects.filter(user_id__username=r.user),
     }
     return render(r, 'roomowner/ro_profile.html', data)
 
 @login_required(login_url=logins)
 def owner_update_id_proof(r):
-    room = RoomOwner.objects.get(user_id__username=r.user)
+    owner = RoomOwner.objects.get(user_id__username=r.user)
+    house = OwnerHouse.objects.get(user_id__username=r.user)
     if r.method == "POST":
-        image = room
-        image.ro_id_proof = r.FILES['id_proof']
-        image.save()
-        return redirect("owner_profile")
-    data = {
-        "user": RoomOwner.objects.filter(user_id__username=r.user),
-        "userdata": User.objects.filter(username=r.user),
-    }
-    return render(r, 'roomowner/ro_profile.html', data)
+        owner.ro_id_proof = r.FILES['id_proof']
+        owner.save()
+        return redirect("../owner_house/" + str(house.slug))
 
 @login_required(login_url=logins)
 def owner_update_house(r,h_id):
-    owner = RoomOwner.objects.get(slug=h_id)
-    profile = UpdateOwnerForm(r.POST or None, instance=owner)
+    house = OwnerHouse.objects.get(slug=h_id)
+    form = UpdateHouseForm(r.POST or None, instance=house)
     if r.method == "POST":
-        if profile.is_valid():
-            profile.save()
+        if form.is_valid():
+            form.save()
             return redirect('owner_profile')
     else:
-        profile = UpdateOwnerForm(instance=owner)
+        form = UpdateHouseForm(instance=house)
     data = {
-        "profile":profile,
-        "user": RoomOwner.objects.filter(slug=h_id),
-        "userdata": User.objects.filter(username=r.user),
+        "form":form,
+        "owner": RoomOwner.objects.get(user_id__username=r.user),
     }
-    return render(r,'roomowner/owner_update_profile.html',data)
+    return render(r,'roomowner/update_house.html',data)
 
 @login_required(login_url=logins)
 def password_change_owner(r):
@@ -446,8 +487,7 @@ def password_change_owner(r):
         form = PasswordChangeForm(r.user)
     data = {
         "form":form,
-        "user": RoomOwner.objects.filter(user_id__username=r.user),
-        "userdata": User.objects.filter(username=r.user),
+        "owner": RoomOwner.objects.get(user_id__username=r.user),
     }
     return render(r, 'roomowner/ro_password_change.html', data)
 
@@ -456,52 +496,52 @@ def owner_rooms(r,r_id):
     data = {
         "rooms_a": Room.objects.filter(house_id__slug=r_id,r_status='1'),
         "rooms_p": Room.objects.filter(house_id__slug=r_id,r_status='2'),
-        "user": RoomOwner.objects.filter(slug=r_id),
-        "userdata": User.objects.filter(username=r.user),
+        "owner": RoomOwner.objects.get(user_id__username=r.user),
+        "house":OwnerHouse.objects.get(slug=r_id)
     }
     return render(r, 'roomowner/ro_rooms.html', data)
 
 
 @login_required(login_url=logins)
 def add_room(r,r_id):
-    owner = RoomOwner.objects.get(slug=r_id)
+    house = OwnerHouse.objects.get(slug=r_id)
     rm = AddRoomForm(r.POST or None, r.FILES or None)
     if r.method == "POST":
         if rm.is_valid():
             d = rm.save(commit=False)
             d.user_id = r.user
-            d.house_id = RoomOwner(owner.ro_id)
+            d.house_id = OwnerHouse(house.ho_id)
             d.slug = str(r.user) + '-' + r.POST.get('r_title')
             d.save()
             messages.success(r, 'Room add was successfully!')
             return redirect('owner_profile')
     data = {
         "form": rm,
-        "user": RoomOwner.objects.filter(slug=r_id),
-        "userdata": User.objects.filter(username=r.user),
+        "owner": RoomOwner.objects.get(user_id__username=r.user),
+        "house": house
     }
     return render(r, 'roomowner/add_room.html', data)
 
 @login_required(login_url=logins)
 def owner_room_view(r,rm_id):
-    room = Room.objects.get(slug=rm_id)
+    room = Room.objects.get(r_id=rm_id)
     if r.method == "POST":
-
         room.r_image = r.FILES['r_image']
         room.save()
-        return redirect("../owner_room_view/" + str(room.slug))
+        return redirect("../owner_room_view/" + str(rm_id))
     data = {
-        "room_view": Room.objects.get(slug=rm_id),
-        "room_renter": RoomAllot.objects.filter(ra_room_id__slug=rm_id,ra_status='1'),
-        "room_renter_request": RoomAllot.objects.filter(ra_room_id__slug=rm_id,ra_status='0'),
-        "user": RoomOwner.objects.filter(slug=room.house_id.slug),
-        "userdata": User.objects.filter(username=r.user),
+        "room_view": room,
+        "room_renter": RoomAllot.objects.filter(ra_room_id__r_id=rm_id,ra_status='1'),
+        "room_renter_request": RoomAllot.objects.filter(ra_room_id__r_id=rm_id,ra_status='0'),
+        "owner": RoomOwner.objects.get(user_id__username=r.user),
+        "house": OwnerHouse.objects.get(slug=room.house_id.slug)
+
     }
     return render(r, 'roomowner/ro_room_view.html', data)
 
 @login_required(login_url=logins)
 def owner_room_edit(r,et_id):
-    room = Room.objects.get(slug=et_id)
+    room = Room.objects.get(r_id=et_id)
     re = EditRoomForm(r.POST or None,instance=room)
     if r.method == "POST":
         if re.is_valid():
@@ -512,28 +552,27 @@ def owner_room_edit(r,et_id):
 
     data = {
         "form":re,
-        "user": RoomOwner.objects.filter(user_id__username=r.user),
-        "userdata": User.objects.filter(username=r.user),
+        "owner": RoomOwner.objects.get(user_id__username=r.user),
+        "house": OwnerHouse.objects.get(slug=room.house_id.slug)
     }
     return render(r, 'roomowner/ro_room_edit.html', data)
 
 @login_required(login_url=logins)
 def room_active(r,a_id):
-    room = Room.objects.get(slug=a_id)
+    room = Room.objects.get(r_id=a_id)
     room.r_status = '1'
     room.save()
-    return redirect('owner_rooms')
+    return redirect("../owner_room_view/" + str(a_id))
 
 @login_required(login_url=logins)
 def room_pending(r,p_id):
-    room = Room.objects.get(slug=p_id)
+    room = Room.objects.get(r_id=p_id)
     room.r_status = '2'
     room.save()
-    return redirect('owner_rooms')
-
+    return redirect("../owner_room_view/" + str(p_id))
 @login_required(login_url=logins)
 def room_allot(r,alt_id):
-    owner = RoomOwner.objects.get(slug=alt_id)
+    house = OwnerHouse.objects.get(slug=alt_id)
     if r.is_ajax():
         term = r.GET.get('term')
         renter = User.objects.filter(roomrenter__rr_contact__exact=term)
@@ -557,21 +596,21 @@ def room_allot(r,alt_id):
         except ObjectDoesNotExist:
             d = RoomAllot()
             d.user_id = r.user
-            d.house_id = RoomOwner(owner.ro_id)
+            d.house_id = OwnerHouse(house.ho_id)
             d.renter = User(r.POST.get('renter'))
             d.ra_room_id = Room(r.POST.get('ra_room_id'))
             rm = Room.objects.filter(r_id=r.POST.get('ra_room_id'))
             rt = RoomRenter.objects.filter(user_id=r.POST.get('renter'))
-            d.slug = rm[0].r_title+'-'+rt[0].user_id.username+'-'+owner.user_id.username
+            d.slug = rm[0].r_title+'-'+rt[0].user_id.username+'-'+house.user_id.username
             d.save()
             messages.success(r, "room alloting successfully!")
             return redirect('owner_profile')
 
     data = {
-        "user": RoomOwner.objects.filter(slug=alt_id),
-        "userdata": User.objects.filter(username=r.user),
+        "owner": RoomOwner.objects.get(user_id__username=r.user),
         "renter": User.objects.all(),
         "room": Room.objects.filter(house_id__slug=alt_id,r_status='1'),
+        "house": house
     }
     return render(r, 'roomowner/ro_room_allot.html', data)
 
@@ -579,8 +618,8 @@ def room_allot(r,alt_id):
 def my_renter(r,rt_id):
     data = {
         "renters": RoomAllot.objects.filter(house_id__slug=rt_id, ra_status='1'),
-        "user": RoomOwner.objects.filter(slug=rt_id),
-        "userdata": User.objects.filter(username=r.user),
+        "owner": RoomOwner.objects.get(user_id__username=r.user),
+        "house": OwnerHouse.objects.get(slug=rt_id)
     }
     return render(r,'roomowner/ro_my_renter.html',data)
 
@@ -588,71 +627,66 @@ def my_renter(r,rt_id):
 def room_allot_request(r):
     data = {
         "roomallot_request": RoomAllot.objects.filter(user_id__username=r.user,ra_status='0'),
-        "user": RoomOwner.objects.filter(user_id__username=r.user),
-        "userdata": User.objects.filter(username=r.user),
+        "owner": RoomOwner.objects.get(user_id__username=r.user),
+
     }
     return render(r, 'roomowner/ro_roomallot_request.html', data)
 
 @login_required(login_url=logins)
 def room_request_active(r,al_id):
-    active = RoomAllot.objects.get(slug=al_id, ra_room_id__r_status='1')
-    try:
-        # check room active-----------
-        if active is not None:
-            messages.error(r, "this room is in pending condition! please active first")
-            return redirect('room_allot_request')
-        try:
-            # check renter room active-----------
-            check = RoomAllot.objects.get(Q(ra_room_id=active.ra_room_id) & Q(renter=active.renter),ra_status='1')
-            if check is not None:
-                messages.error(r, "this renter is already in this room!")
-                return redirect('room_allot_request')
-        except ObjectDoesNotExist:
-            # check renter room pending-----------
-            check = RoomAllot.objects.get(Q(ra_room_id=active.ra_room_id) & Q(renter=active.renter),ra_status='2')
-            if check is not None:
-                messages.error(r, "this renter is pending in this room!")
-                return redirect('room_allot_request')
-    except ObjectDoesNotExist:
-        active.ra_status = '1'
-        active.ra_doc = datetime.now()
-        active.save()
-        messages.success(r, "room alloting active successfully!")
-        return redirect('owner_profile')
+    room_allot = RoomAllot.objects.get(ra_id=al_id)
+    # check room active-----------
+    if room_allot.ra_room_id.r_status == '0':
+        messages.error(r, "this room is in pending condition! please active first")
+        return redirect('../owner_rooms/' + str(room_allot.house_id.slug))
+    #if renter exist
+    check = RoomAllot.objects.get(Q(ra_room_id=room_allot.ra_room_id) & Q(renter=room_allot.renter))
+    if check.ra_status == '1':
+        messages.error(r, "this renter is already active in this room!")
+        return redirect('../owner_room_view/' + str(room_allot.ra_room_id.r_id))
+    elif check.ra_status == '2':
+        messages.error(r, "this renter is already pending in this room!")
+        return redirect('room_allot_pending')
+
+    room_allot.ra_status = '1'
+    room_allot.ra_doc = datetime.now()
+    room_allot.save()
+    messages.success(r, "room allot active successfully!")
+    return redirect('../owner_room_view/' + str(room_allot.ra_room_id.r_id))
+
+
 
 @login_required(login_url=logins)
 def room_allot_pending(r):
     data = {
         "roomallot_pending": RoomAllot.objects.filter(user_id__username=r.user,ra_status='2'),
-        "user": RoomOwner.objects.filter(user_id__username=r.user),
-        "userdata": User.objects.filter(username=r.user),
+        "owner": RoomOwner.objects.get(user_id__username=r.user),
+
     }
     return render(r, 'roomowner/ro_roomallot_pending.html', data)
 
 @login_required(login_url=logins)
 def allot_active(r,a_id):
-    active = RoomAllot.objects.get(slug=a_id, ra_room_id__r_status='1')
-    try:
-        try:
-            # check room active-----------
-            if active is not None:
-                messages.error(r, "this room is in pending condition! please active first")
-                return redirect('room_allot_pending')
-        except ObjectDoesNotExist:
-            check = RoomAllot.objects.get(Q(ra_room_id=active.ra_room_id) & Q(renter=active.renter),ra_status='1')
-            if check is not None:
-                messages.error(r, "this renter is already pending in this room!")
-                return redirect('room_allot_pending')
-    except ObjectDoesNotExist:
-        active.ra_status = '1'
-        active.ra_doc = datetime.now()
-        active.save()
-        messages.success(r, "room alloting active successfully!")
-        return redirect('owner_profile')
+    room_allot = RoomAllot.objects.get(ra_id=a_id)
+    # check room active-----------
+    if room_allot.ra_room_id.r_status == '0':
+        messages.error(r, "this room is in pending condition! please active first")
+        return redirect('../owner_rooms/' + str(room_allot.house_id.slug))
+    #if renter exist
+    check = RoomAllot.objects.get(Q(ra_room_id=room_allot.ra_room_id) & Q(renter=room_allot.renter))
+    if check.ra_status == '1':
+        messages.error(r, "this renter is already active in this room!")
+        return redirect('../owner_room_view/' + str(room_allot.ra_room_id.r_id))
+
+    room_allot.ra_status = '1'
+    room_allot.ra_doc = datetime.now()
+    room_allot.save()
+    messages.success(r, "room allot active successfully!")
+    return redirect('../../owner_room_view/' + str(room_allot.ra_room_id.r_id))
 
 @login_required(login_url=logins)
 def allot_pending(r,p_id):
-    pending = RoomAllot.objects.get(slug=p_id)
+    pending = RoomAllot.objects.get(ra_id=p_id)
     pending.ra_status = '2'
     pending.ra_doc = datetime.now()
     pending.save()
@@ -660,7 +694,7 @@ def allot_pending(r,p_id):
 
 @login_required(login_url=logins)
 def allot_delete(r,d_id):
-    delete = RoomAllot.objects.get(slug=d_id)
+    delete = RoomAllot.objects.get(ra_id=d_id)
     delete.delete()
     return redirect('room_allot_request')
 
@@ -680,8 +714,7 @@ def view_renter_profile(r,rnt_id):
     data = {
         "renter_profile":RoomRenter.objects.get(user_id__username=rnt_id),
         "user_r": User.objects.get(roomrenter__user_id__username=rnt_id),
-        "user": RoomOwner.objects.filter(user_id__username=r.user),
-        "userdata": User.objects.filter(username=r.user),
+        "owner": RoomOwner.objects.get(user_id__username=r.user),
         "room_al": RoomAllot.objects.filter(renter__username=rnt_id).filter(user_id__username=r.user),
         "room": RoomAllot.objects.filter(Q(renter__username=rnt_id, ra_status='1') | Q(renter__username=rnt_id, ra_status='2')).filter(user_id__username=r.user),
     }
@@ -691,8 +724,7 @@ def view_renter_profile(r,rnt_id):
 def owner_room_query(r):
     data = {
         "query": RoomQuery.objects.filter(user_id__username=r.user),
-        "user": RoomOwner.objects.filter(user_id__username=r.user),
-        "userdata": User.objects.filter(username=r.user),
+        "owner": RoomOwner.objects.get(user_id__username=r.user),
     }
     return render(r,'roomowner/ro_room_query.html',data)
 
@@ -710,8 +742,8 @@ def owner_payment(r):
         "renter": RoomAllot.objects.filter(Q(user_id__username=r.user, ra_status='1') | Q(user_id__username=r.user, ra_status='2')),
         "total_paid":total_paid.aggregate(Sum('pp_amount'))['pp_amount__sum'] or 00.00,
         "total_gen":total_gen.aggregate(Sum('pg_amount'))['pg_amount__sum'] or 00.00,
-        "user": RoomOwner.objects.filter(user_id__username=r.user),
-        "userdata": User.objects.filter(username=r.user),
+        "owner": RoomOwner.objects.get(user_id__username=r.user),
+
     }
     return render(r,'roomowner/owner_payment.html',data)
 
@@ -735,13 +767,19 @@ def owner_payment_paid(r):
         "gen": gen.aggregate(Sum('pg_amount'))['pg_amount__sum'] or 00.00,
         "payment": pay,
         "date": date,
-        "user": RoomOwner.objects.filter(user_id__username=r.user),
-        "userdata": User.objects.filter(username=r.user),
+        "owner": RoomOwner.objects.get(user_id__username=r.user),
+
     }
     return render(r,'roomowner/owner_payment_paid.html',data)
 
 @login_required(login_url=logins)
 def owner_payment_gen(r):
+    if r.is_ajax():
+        term = r.GET.get('term')
+        renter = User.objects.filter(roomrenter__rr_contact__exact=term)
+        response_content = list(renter.values())
+        return JsonResponse(response_content, safe=False)
+
     if r.method == 'POST':
         date = r.POST.get('month')
         m = datetime.strptime(date, '%Y-%m').date()
@@ -760,8 +798,8 @@ def owner_payment_gen(r):
         "gen": gen.aggregate(Sum('pg_amount'))['pg_amount__sum'] or 00.00,
         "payment": gen,
         "date": date,
-        "user": RoomOwner.objects.filter(user_id__username=r.user),
-        "userdata": User.objects.filter(username=r.user),
+        "owner": RoomOwner.objects.get(user_id__username=r.user),
+
     }
     return render(r, 'roomowner/owner_payment_gen.html', data)
 
@@ -769,8 +807,8 @@ def owner_payment_gen(r):
 def owner_payment_due(r):
     data = {
     "renter": RoomAllot.objects.filter(Q(user_id__username=r.user, ra_status='1') | Q(user_id__username=r.user, ra_status='2')),
-    "user": RoomOwner.objects.filter(user_id__username=r.user),
-    "userdata": User.objects.filter(username=r.user),
+    "owner": RoomOwner.objects.get(user_id__username=r.user),
+
     }
     return render(r,'roomowner/owner_payment_due.html',data)
 
@@ -778,8 +816,8 @@ def owner_payment_due(r):
 def owner_payment_advance(r):
     data = {
     "renter": RoomAllot.objects.filter(Q(user_id__username=r.user, ra_status='1') | Q(user_id__username=r.user, ra_status='2')),
-    "user": RoomOwner.objects.filter(user_id__username=r.user),
-    "userdata": User.objects.filter(username=r.user),
+    "owner": RoomOwner.objects.get(user_id__username=r.user),
+
     }
     return render(r,'roomowner/owner_payment_advance.html',data)
 

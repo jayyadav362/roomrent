@@ -4,9 +4,10 @@ from django.utils.text import slugify
 from datetime import datetime
 # from django.contrib.gis.db import models
 
+
 class State(models.Model):
     name = models.CharField(max_length=100,unique=True)
-    slug = models.SlugField()
+    slug = models.SlugField(blank=True,null=True)
 
     def __str__(self):
         return self.name
@@ -15,10 +16,11 @@ class State(models.Model):
         self.slug = slugify(self.name)
         super(State, self).save(*args,**kwargs)
 
+
 class City(models.Model):
     name = models.CharField(max_length=100)
     state = models.ForeignKey(State,on_delete=models.CASCADE)
-    slug = models.SlugField()
+    slug = models.SlugField(blank=True,null=True)
 
     def __str__(self):
         return self.name
@@ -27,6 +29,7 @@ class City(models.Model):
         self.slug = slugify(self.name)
         super(City, self).save(*args,**kwargs)
 
+
 class RoomOwner(models.Model):
     ro_id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(User,on_delete=models.CASCADE)
@@ -34,25 +37,48 @@ class RoomOwner(models.Model):
     ro_contact = models.CharField(max_length=10,unique=True)
     ro_street = models.CharField(max_length=200)
     ro_id_proof = models.ImageField(upload_to="profile/proof")
-    ro_house = models.CharField(max_length=100)
-    ro_house_image = models.ImageField(upload_to="image")
     state = models.ForeignKey(State,on_delete=models.CASCADE)
     city = models.ForeignKey(City,on_delete=models.CASCADE)
-    slug = models.SlugField()
-    #location = models.PointField()
+
+    def delete(self, *args, **kwargs):
+        self.ro_image.delete()
+        self.ro_id_proof.delete()
+        super(RoomOwner, self).delete(*args, **kwargs)
 
     def __str__(self):
         return self.user_id.first_name
 
+
+class OwnerHouse(models.Model):
+    ho_id = models.AutoField(primary_key=True)
+    user_id = models.ForeignKey(User,on_delete=models.CASCADE)
+    ho_contact = models.CharField(max_length=10,unique=True)
+    ho_street = models.CharField(max_length=200)
+    house_name = models.CharField(max_length=100)
+    house_image = models.ImageField(upload_to="image")
+    state = models.ForeignKey(State,on_delete=models.CASCADE)
+    city = models.ForeignKey(City,on_delete=models.CASCADE)
+    slug = models.SlugField(blank=True, null=True)
+    #location = models.PointField()
+
+
+
     def save(self,*args,**kwargs):
-        self.slug = slugify(self.ro_house)
-        super(RoomOwner, self).save(*args,**kwargs)
+        self.slug = slugify(self.house_name)
+        super(OwnerHouse, self).save(*args,**kwargs)
+
+    def delete(self, *args, **kwargs):
+        self.house_image.delete()
+        super(OwnerHouse, self).delete(*args, **kwargs)
+
+    def __str__(self):
+        return self.house_name
+
 
 class RoomType(models.Model):
     rt_id = models.AutoField(primary_key=True)
     rt_title = models.CharField(max_length=100)
-    slug = models.SlugField()
-
+    slug = models.SlugField(blank=True, null=True)
     def __str__(self):
         return self.rt_title
 
@@ -64,7 +90,7 @@ class RoomType(models.Model):
 class Room(models.Model):
     r_id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(User,on_delete=models.CASCADE)
-    house_id = models.ForeignKey(RoomOwner,on_delete=models.CASCADE)
+    house_id = models.ForeignKey(OwnerHouse,on_delete=models.CASCADE)
     r_title = models.CharField(max_length=100)
     r_rent = models.IntegerField()
     r_type = models.ForeignKey(RoomType,on_delete=models.DO_NOTHING)
@@ -74,8 +100,13 @@ class Room(models.Model):
     r_status = models.CharField(max_length=20, default='1',choices=(("0", "Pending"), ("1", "Active")))
     r_doc = models.DateTimeField(default=datetime.now(), blank=True)
 
+    def delete(self, *args, **kwargs):
+        self.r_image.delete()
+        super(Room, self).delete(*args, **kwargs)
+
     def __str__(self):
         return self.r_title+' | '+self.r_type.rt_title
+
 
 class RoomRenter(models.Model):
     rr_id = models.AutoField(primary_key=True)
@@ -87,21 +118,27 @@ class RoomRenter(models.Model):
     city = models.ForeignKey(City,on_delete=models.DO_NOTHING)
     rr_id_proof = models.ImageField(upload_to="profile/proof")
 
+    def delete(self, *args, **kwargs):
+        self.rr_image.delete()
+        self.rr_id_proof.delete()
+        super(RoomRenter, self).delete(*args, **kwargs)
+
     def __str__(self):
         return self.user_id.first_name
+
 
 class RoomAllot(models.Model):
     ra_id = models.AutoField(primary_key=True)
     ra_room_id = models.ForeignKey(Room, on_delete=models.DO_NOTHING)
-    house_id = models.ForeignKey(RoomOwner, on_delete=models.CASCADE)
+    house_id = models.ForeignKey(OwnerHouse, on_delete=models.CASCADE)
     user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING,related_name='user_id')
     renter = models.ForeignKey(User, on_delete=models.DO_NOTHING,related_name='renter')
     ra_doc = models.DateTimeField(default=datetime.now(), blank=True)
     ra_status = models.CharField(max_length=20, default='1',choices=(("0", "Request"), ("1", "Active"),("2","Pending")))
-    slug = models.SlugField()
-
+    slug = models.SlugField(blank=True, null=True)
     def __str__(self):
         return self.ra_room_id.r_title+' | '+self.renter.username
+
 
 class RoomQuery(models.Model):
     m_id = models.AutoField(primary_key=True)
@@ -114,6 +151,7 @@ class RoomQuery(models.Model):
     def __str__(self):
         return self.user_id.username+'|'+self.m_name
 
+
 class PaymentGenerate(models.Model):
     pg_id = models.AutoField(primary_key=True)
     pg_txn = models.CharField(max_length=100)
@@ -123,8 +161,7 @@ class PaymentGenerate(models.Model):
     pg_month = models.DateTimeField()
     pg_allot_id = models.ForeignKey(RoomAllot,on_delete=models.DO_NOTHING)
     pg_doc = models.DateTimeField(default=datetime.now(), blank=True)
-    slug = models.SlugField()
-
+    slug = models.SlugField(blank=True, null=True)
     def __str__(self):
         return self.pg_txn+' | '+self.pg_allot_id.ra_room_id.r_title+' | '+self.user_id.username
 
@@ -141,7 +178,7 @@ class PaymentPaid(models.Model):
     pp_amount = models.IntegerField()
     pp_allot_id = models.ForeignKey(RoomAllot,on_delete=models.DO_NOTHING)
     pp_doc = models.DateTimeField(default=datetime.now(), blank=True)
-    slug = models.SlugField()
+    slug = models.SlugField(blank=True,null=True)
 
     def __str__(self):
         return self.pp_txn+' | '+self.pp_allot_id.ra_room_id.r_title+' | '+self.renter_id.username

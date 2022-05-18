@@ -1,9 +1,16 @@
-{% extends 'roomowner/house_base.html' %}
+{% extends 'roomowner/owner_base.html' %}
 {% load template_tags %}
 {% block content %}
 <div class="col-lg-9 bg-white mb-2">
     <div class="card-header  text-center bg-info text-light">Renter Profile</div>
-
+{% for foo in messages %}
+                                <div class="alert {{ foo.tags }}  alert-dismissible fade show " role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    {{ foo }}
+                                </div>
+                        {% endfor %}
 <div class="row mt-2 mb-2">
     <div class="col-lg-4">
         <div class="">
@@ -73,7 +80,7 @@
     <div class="col-lg-12">
 {% for rm in room %}
     <!---modal--->
-    <div class="modal fade" id="payRent{{ rm.slug }}" role="dialog">
+    <div class="modal fade" id="payRent{{ rm.ra_id }}" role="dialog">
     <div class="modal-dialog">
         <form  class="well contact-form" method="post" action="">
             {% csrf_token %}
@@ -100,7 +107,7 @@
     <div class="card mt-2 mb-2">
     <div class="card-header bg-dark small">
         <div class="form-inline text-light">
-            Room no: <a href="{% url 'owner_room_view' rm.ra_room_id.slug %}" class="nav-link text-primary text-capitalize ml-2 m-0 p-0"> <span class="badge badge-primary p-1">{{ rm.ra_room_id.r_title }}</span> of {{ rm.ra_room_id.house_id.ro_id|room_owner_house }}</a>
+            Room no: <a href="{% url 'owner_room_view' rm.ra_room_id.r_id %}" class="nav-link text-primary text-capitalize ml-2 m-0 p-0"> <span class="badge badge-primary p-1">{{ rm.ra_room_id.r_title }}</span> of {{ rm.ra_room_id.house_id.ho_id|room_owner_house }}</a>
             <span class="text-warning ml-auto">Rent:  ₹{{ rm.ra_room_id.r_rent }} / {{ rm.ra_room_id|room_allot_count }} Renter</span>
             <span class="mx-auto text-info">
                 Status :
@@ -119,7 +126,7 @@
                     <span class="text-success">Advance : ₹ {{ rm|subtract }}</span>
                 {% endif %}
             </span>
-            <button type="button" class="btn btn-success btn-sm ml-auto m-0 p-0 px-1 small text-white-50" data-toggle="modal" data-target="#payRent{{ rm.slug }}">PAY RENT</button>
+            <button type="button" class="btn btn-success btn-sm ml-auto m-0 p-0 px-1 small text-white-50" data-toggle="modal" data-target="#payRent{{ rm.ra_id }}">PAY RENT</button>
         </div>
     </div>
     <div class="card-body m-1 p-1">
@@ -135,7 +142,6 @@
                             <th>Month</th>
                         </tr>
                         {% for pg in rm.paymentgenerate_set.all %}
-
                         <tr class="small">
                             <td>{{ pg.pg_txn }}</td>
                             <td>₹ {{ pg.pg_amount }}</td>

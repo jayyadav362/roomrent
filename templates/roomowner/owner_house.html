@@ -1,9 +1,17 @@
 {% extends 'roomowner/house_base.html' %}
 {% block content %}
 <div class="col-lg-9">
+    {% for foo in messages %}
+                                <div class="alert {{ foo.tags }}  alert-dismissible fade show " role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    {{ foo }}
+                                </div>
+                        {% endfor %}
 <div class="row">
     <div class="col-lg-4">
-            <img src="{{ user.0.ro_id_proof.url }}" alt="" class="" width="100%" height="250px">
+            <img src="{{ owner.ro_id_proof.url }}" alt="" class="" width="100%" height="250px">
             <form action="{% url 'owner_update_id_proof' %}" method="post" enctype="multipart/form-data" >
                     {% csrf_token %}
                     <div class="form-group">
@@ -18,35 +26,35 @@
         <div class="card">
             <div class="card-header">
                  <div class="form-inline">
-            <span class="">Profile Details</span>
-            <a href="{% url 'owner_update_house' user.0.slug %}" class="m-0 p-0 ml-auto"><i class="fas fa-edit fa-lg text-primary"></i></a>
+            <span class="">House Details</span>
+            <a href="{% url 'owner_update_house' house.slug %}" class="m-0 p-0 ml-auto"><i class="fas fa-edit fa-lg text-primary"></i></a>
         </div>
             </div>
             <div class="card-body">
                 <table class="table table-responsive-sm">
                     <tr class="small">
                         <th>House Name</th>
-                        <td>{{user.0.ro_house}}</td>
+                        <td>{{house.house_name}}</td>
                     </tr>
                     <tr class="small">
                         <th>Email</th>
-                        <td>{{ userdata.0.email }}</td>
+                        <td>{{ owner.user_id.email }}</td>
                     </tr>
                     <tr class="small">
                         <th>Contact</th>
-                        <td>{{ user.0.ro_contact }}</td>
+                        <td>{{ house.ho_contact }}</td>
                     </tr>
                     <tr class="small">
                         <th>Address</th>
-                        <td>{{ user.0.ro_street }},{{ user.0.city }},{{ user.0.state }}</td>
+                        <td>{{ house.ho_street }},{{ house.city }},{{ house.state }}</td>
                     </tr>
                 </table>
             </div>
         </div>
     </div>
     <div class="col-lg-5">
-            <img src="{{ user.0.ro_house_image.url }}" alt="" class="" width="100%" height="250px">
-            <form action="" method="post" enctype="multipart/form-data" >
+            <img src="{{ house.house_image.url }}" alt="" class="" width="100%" height="250px">
+            <form action="{% url 'owner_house' house.slug %}" method="post" enctype="multipart/form-data" >
                     {% csrf_token %}
                     <div class="form-group">
                         <label class="edit_image">

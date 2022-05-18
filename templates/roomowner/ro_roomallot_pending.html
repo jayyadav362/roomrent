@@ -25,12 +25,12 @@
                     {% for rp in roomallot_pending %}
                                     <tr class="small">
                                     <td class="text-light"><a href="{% url 'view_renter_profile' rp.renter.username %}" class="nav-link p-0 m-0">{{ rp.renter.first_name }} {{ rp.renter.last_name }}</a></td>
-                                    <td><a href="{% url 'owner_room_view' rp.ra_room_id.slug %}" class="nav-link p-0 m-0">{{ rp.ra_room_id.r_title }}</a></td>
+                                    <td><a href="{% url 'owner_room_view' rp.ra_room_id.r_id %}" class="nav-link p-0 m-0">{{ rp.ra_room_id.r_title }}</a></td>
                                     <td class="text-warning">Pending</td>
                                     <td>{{ rp.ra_doc|date:'d M,Y' }}</td>
                                     <td>
                                         <div class="form-inline">
-                                                <a href="{% url 'allot_active' rp.slug %}" class=" nav-link p-0 m-0"><i class="fas fa-check-circle fa-lg text-success"></i></a>
+                                                <a href="{% url 'allot_active' rp.ra_id %}" class=" nav-link p-0 m-0"><i class="fas fa-check-circle fa-lg text-success"></i></a>
                                         </div>
                                     </td>
                                     </tr>

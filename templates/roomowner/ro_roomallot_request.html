@@ -25,13 +25,13 @@
                     {% for rq in roomallot_request %}
                                     <tr class="small">
                                     <td class="text-light"><a href="{% url 'view_renter_profile' rq.renter.username %}" class="nav-link p-0 m-0">{{ rq.renter.first_name }} {{ rq.renter.last_name }}</a></td>
-                                    <td><a href="{% url 'owner_room_view' rq.ra_room_id.slug %}" class="nav-link p-0 m-0">{{ rq.ra_room_id.r_title }}</a></td>
+                                    <td><a href="{% url 'owner_room_view' rq.ra_room_id.r_id %}" class="nav-link p-0 m-0">{{ rq.ra_room_id.r_title }}</a></td>
                                     <td class="text-danger">Request Sent</td>
                                     <td>{{ rq.ra_doc|date:'d M,Y' }}</td>
                                     <td>
                                         <div class="form-inline">
-                                                <a href="{% url 'allot_active' rq.slug %}" class=" nav-link p-0 m-0"><i class="fas fa-check-circle fa-lg text-success"></i></a>
-                                                <a href="{% url 'allot_delete' rq.slug %}" class=" nav-link p-0 m-0 ml-2"><i class="far fa-times-circle fa-lg text-danger"></i></a>
+                                                <a href="{% url 'allot_active' rq.ra_id %}" class=" nav-link p-0 m-0"><i class="fas fa-check-circle fa-lg text-success"></i></a>
+                                                <a href="{% url 'allot_delete' rq.ra_id %}" class=" nav-link p-0 m-0 ml-2"><i class="far fa-times-circle fa-lg text-danger"></i></a>
                                         </div>
                                     </td>
                                     </tr>

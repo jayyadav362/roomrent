@@ -1,6 +1,14 @@
 {% extends 'roomowner/house_base.html' %}
 {% block content %}
     <div class="col-lg-9">
+        {% for foo in messages %}
+                                <div class="alert {{ foo.tags }}  alert-dismissible fade show " role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    {{ foo }}
+                                </div>
+                        {% endfor %}
     <div class="row mt-5">
         <div class="col-lg-6">
             <div class="card">

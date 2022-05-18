@@ -2,6 +2,14 @@
 {% load template_tags %}
 {% block content %}
 <div class="col-lg-9">
+    {% for foo in messages %}
+                                <div class="alert {{ foo.tags }}  alert-dismissible fade show " role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    {{ foo }}
+                                </div>
+                        {% endfor %}
 <div class="row">
     <div class="col-lg-6">
         <div class="card">
@@ -19,7 +27,7 @@
                             <td>
                                 <span class="text-success">Active</span>
                             </td>
-                            <td><a href="{% url 'room_view' r.ra_room_id.slug %}" class="m-0 p-0"><i class="fas fa-eye fa-lg text-info"></i></a></td>
+                            <td><a href="{% url 'room_view' r.ra_room_id.r_id %}" class="m-0 p-0"><i class="fas fa-eye fa-lg text-info"></i></a></td>
                             </tr>
                         {% empty %}
                             <tr>
@@ -46,7 +54,7 @@
                             <td>
                                 <span class="text-danger">Pending</span>
                             </td>
-                            <td><a href="{% url 'room_view' r.ra_room_id.slug %}" class="m-0 p-0"><i class="fas fa-eye fa-lg text-info"></i></a></td>
+                            <td><a href="{% url 'room_view' r.ra_room_id.r_id %}" class="m-0 p-0"><i class="fas fa-eye fa-lg text-info"></i></a></td>
                             </tr>
                         {% empty %}
                             <tr>

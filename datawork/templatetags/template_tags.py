@@ -31,23 +31,23 @@ def room_type(context):
 
 @register.filter
 def room_owner_contact(context):
-    qs = RoomOwner.objects.get(ro_id=context)
+    qs = OwnerHouse.objects.get(ho_id=context)
     if qs:
-        return qs.ro_contact
+        return qs.ho_contact
     else:
         return 0
 
 @register.filter
 def room_owner_house(context):
-    qs = RoomOwner.objects.get(ro_id=context)
+    qs = OwnerHouse.objects.get(ho_id=context)
     if qs:
-        return qs.ro_house
+        return qs.house_name
     else:
         return 0
 
 @register.filter
 def room_owner_slug(context):
-    qs = RoomOwner.objects.get(ro_id=context)
+    qs = OwnerHouse.objects.get(ho_id=context)
     if qs:
         return qs.slug
     else:

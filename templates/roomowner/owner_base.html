@@ -22,7 +22,7 @@
             <div class="col-lg-3">
                 <div class="card border-0 bg-light">
                     <center>
-                    <img src="{{ user.0.ro_image.url }}" class="shadow-sm mt-2" width="50%" height="150px" alt="logo">
+                    <img src="{{ owner.ro_image.url }}" class="shadow-sm mt-2" width="50%" height="150px" alt="logo">
                     <form action="{% url 'owner_update_image' %}" method="post" enctype="multipart/form-data" >
                     {% csrf_token %}
                         <label class="update_image">
@@ -31,14 +31,16 @@
                         </label>
                     </form>
                     <div class="card-body">
-                        <h1 class="text-truncate h6 p-0 m-0  text-center text-uppercase text-muted">{{ userdata.0.first_name }} {{ userdata.0.last_name }}</h1>
-                    </div>
+                    <div class="form-inline ml-4">
+                            <h1 class="ml-5 text-truncate h6 p-0 m-0  text-center text-uppercase text-muted">{{ request.user.first_name }} {{ request.user.last_name }}</h1>
+                            <a href="{% url 'owner_update_profile' %}" class="nav-link"><i class="fas fa-edit fa-lg "></i></a>
+                        </div>                    </div>
                    </center>
                 </div>
                 <ul class="list-group mt-1 ">
                           <li class="list-group-item bg-light"><a href="{% url 'owner_profile' %}" class="nav-link small p-0 m-0 ml-5">Dashboard</a></li>
                           <li class="list-group-item bg-light"><a href="{% url 'owner_payment' %}" class="nav-link small p-0 m-0 ml-5">Payment</a></li>
-                          <li class="list-group-item bg-light"><a href="{% url 'register_owner' %}" class="nav-link small p-0 m-0 ml-5">Add House</a></li>
+                          <li class="list-group-item bg-light"><a href="{% url 'add_house' %}" class="nav-link small p-0 m-0 ml-5">Add House</a></li>
                           <li class="list-group-item bg-light"><a href="{% url 'owner_room_query' %}" class="nav-link small p-0 m-0 ml-5">Room Query</a></li>
                           <li class="list-group-item bg-light"><a href="{% url 'room_allot_request' %}" class="nav-link small p-0 m-0 ml-5">Room Request</a></li>
                           <li class="list-group-item bg-light"><a href="{% url 'room_allot_pending' %}" class="nav-link small p-0 m-0 ml-5">Renter Pending</a></li>
@@ -56,26 +58,25 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <script>
     $(document).ready(function () {
-        $('#select_renter').select2({
+            $(".form-group>input,select,textarea").addClass("form-control");
+             $("#id_state").change(function () {
+                const url = $("#add_house").attr("data-cities-url");  // get the url of the `load_cities` view
+                const stateId = $(this).val();  // get the selected country ID from the HTML input
+
+                $.ajax({                       // initialize an AJAX request
+                    url: url,                    // set the url of the request (= /persons/ajax/load-cities/ )
+                    data: {
+                        'state_id': stateId       // add the country id to the GET parameters
+                    },
+                    success: function (data) {   // `data` is the return of the `load_cities` view function
+                        $("#id_city").html(data);  // replace the contents of the city input with the data that came from the server
+                    }
+                });
+
+            });
+            $('#renter_search').select2({
             ajax: {
-                url: '{% url 'room_allot' user.0.slug %}',
-                dataType: 'json',
-                processResults: function (data) {
-                    return {
-                        results: $.map(data, function (item) {
-                            return {id: item.id, text: item.first_name+" "+item.last_name};
-                        })
-                    };
-                }
-            },
-            minimumInputLength: 10
-        });
-        /*-------------------------------------------------------------------------*/
-        $(".form-group>input,select,textarea").addClass("form-control");
-        /*-------------------------------------------------------------------------*/
-        $('#renter_search').select2({
-            ajax: {
-                url: '{% url 'room_allot' user.0.slug %}',
+                url: '{% url 'owner_payment_gen' %}',
                 dataType: 'json',
                 processResults: function (data) {
                     return {
@@ -91,6 +92,7 @@
             var selected = $(this).select2('data')[0];
             location.href = 'http://127.0.0.1:8000/view_renter_profile/' + selected.username;
         });
+
     });
 
 </script>
