@@ -9,13 +9,13 @@
                                     {{ foo }}
                                 </div>
                         {% endfor %}
-<div class="row">
+<div class="row shadow-sm">
     <div class="col-lg-4">
-            <img src="{{ owner.ro_id_proof.url }}" alt="" class="" width="100%" height="250px">
-            <form action="{% url 'owner_update_id_proof' %}" method="post" enctype="multipart/form-data" >
+            <img src="{{ owner.ro_id_proof.url }}" alt="" class="rounded" width="100%" height="250px">
+            <form action="{% url 'owner_update_id_proof' house.slug %}" method="post" enctype="multipart/form-data" >
                     {% csrf_token %}
                     <div class="form-group">
-                        <label class="edit_image">
+                        <label class="edit_image text-muted">
                         <input type="file" hidden class="form-control" name="id_proof" onchange="this.form.submit()">
                             UPDATE ID Proof <i class="fas fa-image fa-lg "></i>
                         </label>
@@ -23,15 +23,15 @@
                 </form>
     </div>
     <div class="col-lg-8">
-        <div class="card">
-            <div class="card-header">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent">
                  <div class="form-inline">
-            <span class="">House Details</span>
-            <a href="{% url 'owner_update_house' house.slug %}" class="m-0 p-0 ml-auto"><i class="fas fa-edit fa-lg text-primary"></i></a>
+            <h4 class="" style="text-decoration: underline;">House Details</h4>
+            <a href="{% url 'owner_update_house' house.slug %}" class="m-0 p-0 ml-auto"><i class="fas fa-edit fa-lg text-secondary"></i></a>
         </div>
             </div>
             <div class="card-body">
-                <table class="table table-responsive-sm">
+                <table class="table table-responsive-sm table-borderless">
                     <tr class="small">
                         <th>House Name</th>
                         <td>{{house.house_name}}</td>
@@ -52,12 +52,12 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-5">
-            <img src="{{ house.house_image.url }}" alt="" class="" width="100%" height="250px">
+    <div class="col-lg-4">
+            <img src="{{ house.house_image.url }}" alt="" class="rounded" width="100%" height="250px">
             <form action="{% url 'owner_house' house.slug %}" method="post" enctype="multipart/form-data" >
                     {% csrf_token %}
                     <div class="form-group">
-                        <label class="edit_image">
+                        <label class="edit_image text-muted">
                         <input type="file" hidden class="form-control" name="house_image" onchange="this.form.submit()">
                             UPDATE HOUSE <i class="fas fa-image fa-lg "></i>
                         </label>

@@ -71,6 +71,8 @@ class AddHouseForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['city'].queryset = City.objects.none()
+        self.fields["state"].choices = [("", "Choose"), ] + list(self.fields["state"].choices)[1:]
+        self.fields["city"].choices = [("", "Choose"), ] + list(self.fields["city"].choices)[1:]
 
         if 'state' in self.data:
             try:
@@ -93,6 +95,12 @@ class AddRoomForm(ModelForm):
             "r_desc": 'Description'
         }
         fields = ['r_title','r_type','r_rent','r_image','r_desc']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["r_type"].choices = [("", "Choose"), ] + list(self.fields["r_type"].choices)[1:]
+
+
 
 
 class EditRoomForm(ModelForm):

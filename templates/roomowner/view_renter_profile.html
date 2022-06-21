@@ -1,8 +1,8 @@
 {% extends 'roomowner/owner_base.html' %}
 {% load template_tags %}
 {% block content %}
-<div class="col-lg-9 bg-white mb-2">
-    <div class="card-header  text-center bg-info text-light">Renter Profile</div>
+<div class="col-lg-9  mb-2">
+    <div class="card-header  text-center bg-transparent">Renter Profile</div>
 {% for foo in messages %}
                                 <div class="alert {{ foo.tags }}  alert-dismissible fade show " role="alert">
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -11,7 +11,7 @@
                                     {{ foo }}
                                 </div>
                         {% endfor %}
-<div class="row mt-2 mb-2">
+<div class="row mt-2 mb-2 shadow-sm">
     <div class="col-lg-4">
         <div class="">
             <center>
@@ -20,14 +20,14 @@
             <label for="" class="text-muted text-center h4 mt-2">{{ user_r.first_name }} {{ user_r.last_name }}</label>
                 </center>
         </div>
-        <div class="card">
-            <img src="{{ renter_profile.rr_id_proof.url }}" alt="" class="" width="100%" height="250px">
+        <div class="card border-0">
+            <img src="{{ renter_profile.rr_id_proof.url }}" alt="" class="rounded" width="100%" height="250px">
             <label for="" class="text-muted text-center mt-2">Id Proof</label>
         </div>
     </div>
     <div class="col-lg-8">
-        <div class="card border-0">
-                <table class="table table-responsive-sm bg-light">
+        <div class="card border-0 shadow-sm">
+                <table class="table table-responsive-sm table-borderless">
                     <tr class="small">
                         <th>Name</th>
                         <td>{{ user_r.first_name }} {{ user_r.last_name }}</td>
@@ -46,9 +46,9 @@
                     </tr>
                 </table>
         </div>
-        <div class="card">
+        <div class="card border-0 shadow-sm">
             <div class="card-body">
-            <table class="table table-responsive-sm">
+            <table class="table table-responsive-sm table-borderless">
                 <tr class="small">
                     <th>Room Name</th>
                     <th>Status</th>
@@ -56,7 +56,7 @@
                 </tr>
                 {% for rl in room_al %}
                     <tr class="small">
-                    <td><a href="{% url 'owner_room_view' rl.ra_room_id.slug %}" class="nav-link m-0 p-0">{{ rl.ra_room_id.r_title }}</a></td>
+                    <td><a href="{% url 'owner_room_view' rl.ra_room_id.r_id %}" class="nav-link m-0 p-0">{{ rl.ra_room_id.r_title }}</a></td>
                     <td>
                         {% if rl.ra_status == '1' %}
                             <span class="text-success">Active</span>
@@ -70,7 +70,7 @@
                     </tr>
                 {% empty %}
                         <tr>
-                            <td colspan="3"><div class="alert alert-danger h6 text-center p-3" role="alert">No room allot availables!</div></td>
+                            <td colspan="3"><div class="alert alert-danger h6 text-center" role="alert">No room allot availables!</div></td>
                         </tr>
                 {% endfor %}
             </table>
@@ -97,16 +97,16 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button  type="submit" class="btn btn-success">PAY</button>
+                    <button  type="submit" class="btn btn-info">PAY</button>
                 </div>
             </div>
         </form>
     </div>
 </div>
     <!-----end-modal---->
-    <div class="card mt-2 mb-2">
-    <div class="card-header bg-dark small">
-        <div class="form-inline text-light">
+    <div class="card mt-2 mb-2 border-0 shadow-sm">
+    <div class="card-header bg-transparent small">
+        <div class="form-inline text-muted">
             Room no: <a href="{% url 'owner_room_view' rm.ra_room_id.r_id %}" class="nav-link text-primary text-capitalize ml-2 m-0 p-0"> <span class="badge badge-primary p-1">{{ rm.ra_room_id.r_title }}</span> of {{ rm.ra_room_id.house_id.ho_id|room_owner_house }}</a>
             <span class="text-warning ml-auto">Rent:  ₹{{ rm.ra_room_id.r_rent }} / {{ rm.ra_room_id|room_allot_count }} Renter</span>
             <span class="mx-auto text-info">
@@ -135,7 +135,7 @@
         <div class="card border-0">
                 <div class="card-header small border-0">Payment Generate <span class="float-right text-danger">Total: ₹ {{ rm|sum_pg_amount }} </span></div>
                 <div class="card-body ">
-                    <table class="table table-responsive-sm ">
+                    <table class="table table-responsive-sm table-borderless">
                         <tr class="small">
                             <th>Txno.</th>
                             <th>Amount</th>
@@ -149,7 +149,7 @@
                         </tr>
                         {% empty %}
                             <tr>
-                                <td colspan="4"><div class="alert alert-danger h6 text-center p-3" role="alert">No Payment Generate availables!</div></td>
+                                <td colspan="4"><div class="alert alert-danger h6 text-center" role="alert">No Payment Generate availables!</div></td>
                             </tr>
                         {% endfor %}
                     </table>
@@ -160,7 +160,7 @@
         <div class="card border-0">
                 <div class="card-header small border-0">Payment Paid <span class="float-right text-primary"> Total: ₹ {{ rm|sum_pp_amount }}</span></div>
                 <div class="card-body ">
-                    <table class="table table-responsive-sm ">
+                    <table class="table table-responsive-sm table-borderless">
                         <tr class="small">
                             <th>Txno.</th>
                             <th>Amount</th>
@@ -174,7 +174,7 @@
                         </tr>
                         {% empty %}
                             <tr>
-                                <td colspan="4"><div class="alert alert-danger h6 text-center p-3" role="alert">No Payment Paid availables!</div></td>
+                                <td colspan="4"><div class="alert alert-danger h6 text-center" role="alert">No Payment Paid availables!</div></td>
                             </tr>
                         {% endfor %}
                     </table>

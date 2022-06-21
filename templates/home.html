@@ -1,25 +1,105 @@
-{% extends 'base.html' %}
-{% block content %}
-<div class="container">
-<div class="row mt-3">
-    <div class="col-lg-10 mx-auto">
-        <div class="card bg-light">
-            <div class="card-body">
-                <div class="container">
-                    <form action="{% url 'search_room' %}" method="get">
-                        <div class="row  ">
-                            <div class="col-lg-9 col-6 mt-2 mb-1 px-1">
-                                    <select name="city_search" id="city_search" class="form-control " >
-                                        <option selected disabled="true">Search city</option>
-                                    </select>
-                            </div>
-                            <div class="col-lg-2 col-6 mt-1 mb-1 mx-auto"><input type="submit" value="search" class="btn btn-outline-success btn-block p-1"></div>
-                        </div>
-                    </form>
-                </div>
-            </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Room Rent</title>
+     {% load static %}
+    {% load template_tags %}
+    <link rel="stylesheet" href="{% static 'bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+</head>
+<body>
+<header role="banner">
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="container">
+          <a class="navbar-brand" href="{% url 'homepage' %}">Room Rent</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarsExample05">
+              <ul class="navbar-nav ml-auto">
+
+
+            {% if request.user.is_authenticated %}
+                {%  if request.user|has_group:"renter" %}
+                    <li class="nav-item"><a href="{% url 'renter_profile' %}" class="nav-link ml-2">{{ request.user.first_name }} {{ request.user.last_name }}</a></li>
+                {% elif request.user|has_group:"owner" %}
+                    <li class="nav-item"><a href="{% url 'owner_profile' %}" class="nav-link ml-2">{{ request.user.first_name }} {{ request.user.last_name }}</a></li>
+                {% else %}
+                {% endif %}
+            <li class="nav-item"><a href="{% url 'logouts' %}" class="nav-link text-light btn btn-danger btn-sm p-1 mt-4">Logout</a></li>
+            {% else %}
+                <li class="nav-item"><a href="{% url 'user_register_renter' %} " class="nav-link">Renter Register</a></li>
+                <li class="nav-item"><a href="{% url 'user_register_owner' %}" class="nav-link">Owner Register</a></li>
+                <li class="nav-item"><a href="{% url 'logins' %}" class="nav-link">Login</a></li>
+            {% endif %}
+        </ul>
+            </ul>
+          </div>
+        </div>
+
+      </nav>
+    </header>
+<div class="hero" style="background-image: url({% static 'images/background.jpg' %});"></div>
+    <div class="container" style="margin-top:-500px;">
+<form action="{% url 'search_room' %}" method="get" >
+    <div class="row">
+        <div class="col-lg-10 col-9">
+            <select name="city_search" id="city_search" class="form-control" style="height:200px;">
+                <option selected disabled="true">Search city</option>
+            </select>
+        </div>
+        <div class="col-lg-2 col-3">
+            <input type="submit" value="search" class="btn btn-info btn-block p-1 rounded-0" style="font-size:12px;">
         </div>
     </div>
-</div>
-</div>
-{% endblock %}
+</form>
+</body>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+        $(document).ready(function () {
+            $(".form-group>input,select,textarea").addClass("form-control");
+             $("#id_state").change(function () {
+                const url = $("#register").attr("data-cities-url");  // get the url of the `load_cities` view
+                const stateId = $(this).val();  // get the selected country ID from the HTML input
+
+                $.ajax({                       // initialize an AJAX request
+                    url: url,                    // set the url of the request (= /persons/ajax/load-cities/ )
+                    data: {
+                        'state_id': stateId       // add the country id to the GET parameters
+                    },
+                    success: function (data) {   // `data` is the return of the `load_cities` view function
+                        $("#id_city").html(data);  // replace the contents of the city input with the data that came from the server
+                    }
+                });
+
+            });
+             $('#city_search').select2({
+            ajax: {
+                url: '{% url 'city_search' %}',
+                dataType: 'json',
+                processResults: function (response_content) {
+                    return {
+                        results: $.map(response_content, function (item) {
+                            return {id: item.name, text: item.name};
+                        })
+                    };
+                }
+            },
+            minimumInputLength: 2
+        });
+        });
+    </script>
+</html>

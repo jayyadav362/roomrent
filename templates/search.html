@@ -1,86 +1,68 @@
 {% extends 'base.html' %}
 {% load template_tags %}
 {% block content %}
-<div class="container">
-<div class="row mt-3 mb-3">
-    <div class="col-lg-10 mx-auto">
-        <div class="card bg-transparent">
-            <div class="card-body">
-                <div class="container">
-                    <form action="{% url 'search_room' %}" method="get">
+<form action="{% url 'search_room' %}" method="get">
+    <div class="col-lg-6 mx-auto mt-5">
                         <div class="row  ">
-                            <div class="col-lg-9 col-6 mt-2 mb-1 px-1">
+                            <div class="col-lg-10 col-9 mx-auto">
                                     <select name="city_search" id="city_search" class="form-control " >
                                         <option selected disabled="true">Search city</option>
                                     </select>
                             </div>
-                            <div class="col-lg-2 col-6 mt-1 mb-1 mx-auto"><input type="submit" value="search" class="btn btn-outline-success btn-block p-1"></div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-12 mt-3">
-        <div class="row">
-            <div class="col-lg-2">
-                <div class="card bg-transparent border-0">
-                    <div class="card-header bg-transparent text-warning">Room Types</div>
-                       <div class="list-group small bg-transparent border-0">
-                           <a href="{% url 'search_room' %}?city_search={{ request.GET.city_search}}" class="list-group-item list-group-item-action rounded-0  bg-transparent border-0 text-info">All Rooms</a>
-                           {% for t in type %}
-                           <a href="{% url 'room_type' t.slug %}?city_search={{ request.GET.city_search}}" class="list-group-item list-group-item-action rounded-0 bg-transparent border-0 text-info">{{ t.rt_title }}</a>
-                           {% empty %}
-                               <span class="disabled">Empty</span>
-                           {% endfor %}
-                       </div>
-                </div>
-            </div>
-            <div class="col-lg-10">
-            {% if count == 0 %}
-                <h6 class="text-danger ml-3 mb-3">No any rooms found in your area!</h6>
-            {% else %}
-                <h6 class="text-success ml-3 mb-3">({{ count }}) house found in your area.</h6>
-            {% endif %}
-                {% for h in house %}
-
-                    <div class="card mt-2">
-                        <div class="card-body small">
-                            <div class="row">
-                                <div class="col-lg-5">
-                                    <img src="{{ h.house_image.url }}" alt="" class=" w-100" height="200px">
-                                </div>
-                                <div class="col-lg-7">
-                                    <h6 class="text-center text-uppercase">{{ h.house_name }}</h6>
-                                    <p class="text-center">{{ h.ho_street }} ,{{ h.city }} ,{{ h.state }}</p>
-                                    <p class="text-success">Owner: {{ h.user_id.first_name }} {{ h.user_id.last_name }}</p>
-                                    <p class="text-success">Contact: {{ h.ho_contact }}</p>
-                                    <p class="text-success">Email: {{ h.user_id.email }}</p>
-                                    <div class="form-inline">
-                                      {% if h.ho_id|room_count == 0 %}
-                                          <div class="badge badge-danger p-1">No any Rooms</div>
-                                      {% else %}
-                                        <div class="badge badge-primary p-1">{{ h.ho_id|room_count }} Rooms</div>
-                                      {% endif %}
-                                      <a href="{% url 'house_view' h.slug %}" class="btn btn-success ml-auto">View Rooms</a>
-                                    </div>
-                                </div>
+                            <div class="col-lg-2 col-3 mx-auto">
+                                <input type="submit" value="search" class="btn btn-secondary btn-block p-1 rounded-0" style="font-size:12px;">
                             </div>
                         </div>
-                    <div class="card-footer">
-                        <div class="row no-gutters">
-                            {% for t in h.ho_id|room_type %}
-                                <div class="col-lg-2 col-6">
-                                    <div class="alert alert-primary small m-1 p-1 text-center text-muted" role="alert">{{ t }}</div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
+       </div>
+                    </form>
+
+<div class="list-container">
+<div class="left-col">
+    {% if count == 0 %}
+        <h5 class="text-danger">No any rooms found in your area!</h5>
+    {% else %}
+        <h5>({{ count }}) House found in your area</h5>
+    {% endif %}
+    {% for h in house %}
+<div class= "house">
+<div class="house-img">
+	<img src="{{ h.house_image.url }}">
+</div>
+<div class="house-info">
+	<p>{{ h.house_name }}</p>
+	<h3>{{ h.ho_street }} ,{{ h.city }} ,{{ h.state }}</h3>
+	<div class="row no-gutters">
+        {% for t in h.ho_id|room_type %}
+        <p class="small">{{ t }}/</p>
+        {% endfor %}
     </div>
+	<div class="house-price">
+        {% if h.ho_id|room_count == 0 %}
+		<p>No any Rooms</p>
+        {% else %}
+		<p>{{ h.ho_id|room_count }} Rooms</p>
+        {% endif %}
+		<a href="{% url 'house_view' h.slug %}" class="button">View Rooms</a>
+	</div>
+</div>
+</div>
+    {% endfor %}
+</div>
+<div class="right-col">
+	<div class="sidebar">
+        <p>Room Types</p>
+		<div class="filter">
+			<p><a href="{% url 'search_room' %}?city_search={{ request.GET.city_search}}" class="list-group-item list-group-item-action rounded-0  bg-transparent border-0 ">All Types</a>
+</p>
+		</div>
+        {% for t in type %}
+		<div class="filter">
+			<p><a href="{% url 'room_type' t.slug %}?city_search={{ request.GET.city_search}}" class="list-group-item list-group-item-action rounded-0 bg-transparent border-0 ">{{ t.rt_title }}</a></p>
+		</div>
+        {% empty %}
+            <span class="disabled">Empty</span>
+        {% endfor %}
+	</div>
 </div>
 </div>
 {% endblock %}

@@ -11,8 +11,8 @@
                         {% endfor %}
 <div class="row">
     <div class="col-lg-6 mx-auto">
-        <div class="card">
-            <div class="card-header  text-center bg-info text-light">Update Profile</div>
+        <div class="card border-0 shadow-sm">
+            <div class="card-header  text-center bg-transparent">Update Profile</div>
             <div class="card-body">
                 <form action="{% url 'owner_update_profile' %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
@@ -24,7 +24,7 @@
                         {{ profile }}
                     </div>
                     <div class="form-group">
-                        <input type="submit" value="Save" class="btn btn-block btn-success">
+                        <input type="submit" value="Save" class="btn btn-block btn-info">
                     </div>
                 </form>
             </div>

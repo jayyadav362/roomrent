@@ -5,25 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Room Rent</title>
     {% load static %}
+    {% load template_tags %}
     <link rel="stylesheet" href="{% static 'bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'style.css' %}">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 
 </head>
-<body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-info sticky-top">
-        <a href="{% url 'homepage' %}" class="navbar-brand">Room Rent</a>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-light sticky-top shadow-sm">
+    <div class="container">
+        <a href="{% url 'homepage' %}" class="navbar-brand text-dark text-uppercase "><h2 class="font-weight-bold">Room Rent</h2></a>
         <ul class="navbar-nav ml-auto">
-            <li class="nav-item"><a href="{% url 'renter_profile' %}" class="nav-link ml-2">{{ request.user.first_name }} {{ request.user.last_name }}</a></li>
-            <li class="nav-item"><a href="{% url 'logouts' %}" class="nav-link">Logout</a></li>
+
+
+            {% if request.user.is_authenticated %}
+                {%  if request.user|has_group:"renter" %}
+                    <li class="nav-item"><a href="{% url 'renter_profile' %}" class="nav-link text-muted ml-2">{{ request.user.first_name }} {{ request.user.last_name }}</a></li>
+                {% elif request.user|has_group:"owner" %}
+                    <li class="nav-item"><a href="{% url 'owner_profile' %}" class="nav-link text-muted ml-2">{{ request.user.first_name }} {{ request.user.last_name }}</a></li>
+                {% else %}
+                {% endif %}
+            <li class="nav-item"><a href="{% url 'logouts' %}" class="nav-link text-light btn btn-danger btn-sm">Logout</a></li>
+            {% else %}
+                <li class="nav-item"><a href="{% url 'user_register_renter' %} " class="nav-link text-muted">Renter Register</a></li>
+                <li class="nav-item"><a href="{% url 'user_register_owner' %}" class="nav-link text-muted">Owner Register</a></li>
+                <li class="nav-item"><a href="{% url 'logins' %}" class="nav-link text-muted">Login</a></li>
+            {% endif %}
         </ul>
-    </nav>
+    </div>
+</nav>
     <div class="container-fluid mt-3">
         <div class="row">
             <div class="col-lg-3">
-                <div class="card border-0 bg-light">
+                <div class="card shadow-sm border-0">
                     <center>
-                    <img src="{{ user.0.rr_image.url }}" class="shadow-sm mt-2" width="50%" height="150px" alt="logo">
+                    <img src="{{ user.0.rr_image.url }}" class="shadow-sm mt-2 rounded" width="50%" height="170px" alt="logo">
                     <form action="{% url 'renter_update_image' %}" method="post" enctype="multipart/form-data" >
                     {% csrf_token %}
                         <label class="update_image">
@@ -34,14 +50,15 @@
                     <div class="card-body">
                         <h1 class="text-truncate h6 p-0 m-0  text-center text-uppercase text-muted">{{ userdata.0.first_name }} {{ userdata.0.last_name }}</h1>
                     </div>
+                    <ul class="list-group mt-1 " style="text-decoration: underline;">
+                          <li class="list-group-item border-0"><a href="{% url 'renter_profile' %}" class="nav-link small p-0 m-0 text-muted">Dashboard</a></li>
+                          <li class="list-group-item border-0"><a href="{% url 'renter_payment' %}" class="nav-link small p-0 m-0 text-muted ">Payment</a></li>
+                          <li class="list-group-item border-0"><a href="{% url 'renter_rooms' %}" class="nav-link small p-0 m-0 text-muted ">My Rooms</a></li>
+                          <li class="list-group-item border-0"><a href="{% url 'password_change_renter' %}" class="nav-link small p-0 m-0 text-muted ">Settings</a></li>
+                </ul>
                    </center>
                 </div>
-                <ul class="list-group mt-1 ">
-                          <li class="list-group-item bg-light"><a href="{% url 'renter_profile' %}" class="nav-link small p-0 m-0 ml-5">Dashboard</a></li>
-                          <li class="list-group-item bg-light"><a href="{% url 'renter_payment' %}" class="nav-link small p-0 m-0 ml-5">Payment</a></li>
-                          <li class="list-group-item bg-light"><a href="{% url 'renter_rooms' %}" class="nav-link small p-0 m-0 ml-5">My Rooms</a></li>
-                          <li class="list-group-item bg-light"><a href="{% url 'password_change_renter' %}" class="nav-link small p-0 m-0 ml-5">Settings</a></li>
-                </ul>
+
             </div>
             {% block content %}{% endblock %}
         </div>

@@ -1,8 +1,8 @@
 {% extends 'roomowner/owner_base.html' %}
 {% block content %}
     <div class="col-lg-9">
-            <div class="card">
-                <div class="card-header">Rooms Query</div>
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-transparent">Rooms Query</div>
                 {% for foo in messages %}
                                 <div class="alert {{ foo.tags }}  alert-dismissible fade show " role="alert">
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -12,7 +12,7 @@
                                 </div>
                         {% endfor %}
                 <div class="card-body">
-                    <table class="table table-responsive-sm">
+                    <table class="table table-responsive-sm table-borderless">
                         <tr class="small">
                             <th>Name</th>
                             <th>Contact</th>
@@ -30,7 +30,7 @@
                                     </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="5"><div class="alert alert-danger h6 text-center p-3" role="alert">No room query availables!</div></td>
+                            <td colspan="5"><div class="alert alert-danger h6 text-center" role="alert">No room query availables!</div></td>
                         </tr>
                     {% endfor %}
                     </table>

@@ -2,9 +2,9 @@
 {% load template_tags %}
 {% block content %}
     <div class="col-lg-9">
-    <div class="row">
+    <div class="row shadow-sm">
         <div class="col-lg-6">
-            <div class="card">
+            <div class="card border-0 shadow-sm mb-2">
                 {% for foo in messages %}
                                 <div class="alert {{ foo.tags }}  alert-dismissible fade show " role="alert">
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -13,9 +13,9 @@
                                     {{ foo }}
                                 </div>
                         {% endfor %}
-                <div class="card-header">My Active Rooms</div>
+                <div class="card-header bg-transparent">My Active Rooms</div>
                 <div class="card-body ">
-                    <table class="table table-responsive-sm ">
+                    <table class="table table-responsive-sm table-borderless">
                         <tr class="small">
                             <th>Name</th>
                             <th>Allot</th>
@@ -45,7 +45,7 @@
                             </tr>
                         {% empty %}
                             <tr>
-                                <td colspan="4"><div class="alert alert-danger h6 text-center p-3" role="alert">No room availables!</div></td>
+                                <td colspan="4"><div class="alert alert-danger h6 text-center" role="alert">No room availables!</div></td>
                             </tr>
                         {% endfor %}
                     </table>
@@ -53,10 +53,10 @@
             </div>
         </div>
         <div class="col-lg-6">
-            <div class="card">
-                <div class="card-header">My Pending Rooms</div>
+            <div class="card border-0 shadow-sm mb-2">
+                <div class="card-header bg-transparent">My Pending Rooms</div>
                 <div class="card-body ">
-                    <table class="table table-responsive-sm ">
+                    <table class="table table-responsive-sm table-borderless">
                         <tr class="small">
                             <th>Name</th>
                             <th>Allot</th>
@@ -86,7 +86,7 @@
                             </tr>
                         {% empty %}
                             <tr>
-                                <td colspan="4"><div class="alert alert-danger h6 text-center p-3" role="alert">No pending room availables!</div></td>
+                                <td colspan="4"><div class="alert alert-danger h6 text-center" role="alert">No pending room availables!</div></td>
                             </tr>
                         {% endfor %}
                     </table>

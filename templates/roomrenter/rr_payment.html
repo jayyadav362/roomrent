@@ -3,9 +3,9 @@
 {% block content %}
 <div class="col-lg-9">
 {% for rm in room %}
-    <div class="card mt-2 mb-2">
-    <div class="card-header bg-dark small">
-        <div class="form-inline text-light">
+    <div class="card mt-2 mb-2 border-0 shadow-sm" >
+    <div class="card-header bg-transparent small">
+        <div class="form-inline text-muted">
             Room no: <a href="{% url 'room_view' rm.ra_room_id.r_id %}" class="nav-link text-primary text-capitalize ml-2 m-0 p-0"> <span class="badge badge-primary p-1">{{ rm.ra_room_id.r_title }}</span> of {{ rm.ra_room_id.house_id.ho_id|room_owner_house }}</a>
             <span class="text-warning ml-auto">Rent:  ₹{{ rm.ra_room_id.r_rent }} / {{ rm.ra_room_id|room_allot_count }} Renter</span>
             <span class=" ml-auto">
@@ -33,7 +33,7 @@
         <div class="card border-0">
                 <div class="card-header small border-0">Payment Generate <span class="float-right text-danger">Total: ₹ {{ rm|sum_pg_amount }} </span></div>
                 <div class="card-body ">
-                    <table class="table table-responsive-sm ">
+                    <table class="table table-responsive-sm table-borderless">
                         <tr class="small">
                             <th>Txno.</th>
                             <th>Amount</th>
@@ -59,7 +59,7 @@
         <div class="card border-0">
                 <div class="card-header small border-0">Payment Paid <span class="float-right text-primary"> Total: ₹ {{ rm|sum_pp_amount }}</span></div>
                 <div class="card-body ">
-                    <table class="table table-responsive-sm ">
+                    <table class="table table-responsive-sm table-borderless">
                         <tr class="small">
                             <th>Txno.</th>
                             <th>Amount</th>

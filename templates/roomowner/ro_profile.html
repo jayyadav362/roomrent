@@ -9,13 +9,13 @@
                                     {{ foo }}
                                 </div>
                         {% endfor %}
-                <div class="row">
+                <div class="row shadow-sm">
                     {% for house in house %}
-                    <div class="col-lg-3">
-                        <div class="card">
+                    <div class="col-lg-4">
+                        <div class="card border-0">
                                 <a href="{% url 'owner_house' house.slug %}" class="nav-link">
-                                    <img src="{{ house.house_image.url }}" alt="" width="100%" height="200px">
-                                    <p class="small text-muted text-center">{{ house.house_name }}</p>
+                                    <img src="{{ house.house_image.url }}" class="rounded" alt="" width="100%" height="200px">
+                                    <p class="small text-muted text-center mt-1">{{ house.house_name }}</p>
                                 </a>
                         </div>
                     </div>

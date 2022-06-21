@@ -3,10 +3,10 @@
     <div class="col-lg-9">
     <div class="row">
         <div class="col-lg-9 mx-auto">
-            <div class="card">
-                <div class="card-header">Rooms Allot Request</div>
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-transparent">Rooms Allot Request</div>
                 <div class="card-body">
-                    <table class="table table-responsive-sm">
+                    <table class="table table-responsive-sm table-borderless">
                         <tr class="small">
                         <th>Name</th>
                         <th>Room</th>
@@ -37,7 +37,7 @@
                                     </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="5"><div class="alert alert-danger h6 text-center p-3" role="alert">No renter request availables!</div></td>
+                            <td colspan="5"><div class="alert alert-danger h6 text-center" role="alert">No renter request availables!</div></td>
                         </tr>
                     {% endfor %}
                     </table>

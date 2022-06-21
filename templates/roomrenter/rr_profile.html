@@ -10,13 +10,13 @@
                                     {{ foo }}
                                 </div>
                         {% endfor %}
-<div class="row">
-    <div class="col-lg-4">
-            <img src="{{ user.0.rr_id_proof.url }}" alt="" class="" width="100%" height="250px">
+<div class="row shadow-sm">
+    <div class="col-lg-4 ">
+            <img src="{{ user.0.rr_id_proof.url }}" alt="" class="rounded" width="100%" height="250px">
             <form action="{% url 'renter_update_id_proof' %}" method="post" enctype="multipart/form-data" >
                     {% csrf_token %}
                     <div class="form-group">
-                        <label class="edit_image">
+                        <label class="edit_image text-muted">
                         <input type="file" hidden class="form-control" name="id_proof" onchange="this.form.submit()">
                             UPDATE ID Proof <i class="fas fa-image fa-lg "></i>
                         </label>
@@ -24,15 +24,15 @@
                 </form>
     </div>
     <div class="col-lg-8">
-        <div class="card">
-            <div class="card-header">
+        <div class="card border-0">
+            <div class="card-header bg-transparent">
                  <div class="form-inline">
-            <span class="">Profile Details</span>
-            <a href="{% url 'renter_update_profile' %}" class="m-0 p-0 ml-auto"><i class="fas fa-edit fa-lg text-primary"></i></a>
+            <h4 class="" style="text-decoration: underline;">Profile Details</h4>
+            <a href="{% url 'renter_update_profile' %}" class="m-0 p-0 ml-auto"><i class="fas fa-edit fa-lg text-secondary"></i></a>
         </div>
             </div>
             <div class="card-body small">
-                <table class="table table-responsive-sm">
+                <table class="table table-responsive-sm table-borderless">
                     <tr>
                         <th>Name</th>
                         <td>{{ userdata.0.first_name }} {{ userdata.0.last_name }}</td>
@@ -52,12 +52,9 @@
                 </table>
             </div>
         </div>
-        <div class="row">
-
-        </div>
     </div>
     <div class="col-lg-12 mt-2">
-        <div class="card">
+        <div class="card border-0">
             {% for foo in messages %}
                 <div class="alert {{ foo.tags }}  alert-dismissible fade show " role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -66,9 +63,9 @@
                     {{ foo }}
                 </div>
             {% endfor %}
-            <div class="card-header">Room Request</div>
+            <div class="card-header bg-transparent" style="text-decoration: underline;">Room Request</div>
             <div class="card-body">
-                <table class="table table-responsive-sm">
+                <table class="table table-responsive-sm table-borderless">
                     <tr class="small">
                         <th>Room</th>
                         <th>House Name</th>

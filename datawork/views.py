@@ -448,9 +448,9 @@ def owner_update_image(r):
     return render(r, 'roomowner/ro_profile.html', data)
 
 @login_required(login_url=logins)
-def owner_update_id_proof(r):
+def owner_update_id_proof(r,h_id):
     owner = RoomOwner.objects.get(user_id__username=r.user)
-    house = OwnerHouse.objects.get(user_id__username=r.user)
+    house = OwnerHouse.objects.get(slug=h_id)
     if r.method == "POST":
         owner.ro_id_proof = r.FILES['id_proof']
         owner.save()
@@ -463,12 +463,13 @@ def owner_update_house(r,h_id):
     if r.method == "POST":
         if form.is_valid():
             form.save()
-            return redirect('owner_profile')
+            return redirect("../owner_house/" + str(house.slug))
     else:
         form = UpdateHouseForm(instance=house)
     data = {
         "form":form,
         "owner": RoomOwner.objects.get(user_id__username=r.user),
+        "house": OwnerHouse.objects.get(slug=h_id)
     }
     return render(r,'roomowner/update_house.html',data)
 
@@ -514,7 +515,7 @@ def add_room(r,r_id):
             d.slug = str(r.user) + '-' + r.POST.get('r_title')
             d.save()
             messages.success(r, 'Room add was successfully!')
-            return redirect('owner_profile')
+            return redirect('../owner_rooms/'+str(house.slug))
     data = {
         "form": rm,
         "owner": RoomOwner.objects.get(user_id__username=r.user),
